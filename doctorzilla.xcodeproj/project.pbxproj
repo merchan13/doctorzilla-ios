@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FA4C7CE01EC3CA2800A58937 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4C7CDF1EC3CA2800A58937 /* LoginViewController.swift */; };
+		FA4C7CE21EC3CC8E00A58937 /* RecoverPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4C7CE11EC3CC8E00A58937 /* RecoverPasswordViewController.swift */; };
 		FAF7322F1E9044C700FA6030 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF7322E1E9044C700FA6030 /* AppDelegate.swift */; };
 		FAF732311E9044C700FA6030 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF732301E9044C700FA6030 /* ViewController.swift */; };
 		FAF732341E9044C700FA6030 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAF732321E9044C700FA6030 /* Main.storyboard */; };
@@ -34,6 +36,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		FA4C7CDF1EC3CA2800A58937 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		FA4C7CE11EC3CC8E00A58937 /* RecoverPasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecoverPasswordViewController.swift; sourceTree = "<group>"; };
 		FAF7322B1E9044C700FA6030 /* doctorzilla.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = doctorzilla.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAF7322E1E9044C700FA6030 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FAF732301E9044C700FA6030 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -103,6 +107,8 @@
 				FAF732351E9044C700FA6030 /* Assets.xcassets */,
 				FAF732371E9044C700FA6030 /* LaunchScreen.storyboard */,
 				FAF7323A1E9044C700FA6030 /* Info.plist */,
+				FA4C7CDF1EC3CA2800A58937 /* LoginViewController.swift */,
+				FA4C7CE11EC3CC8E00A58937 /* RecoverPasswordViewController.swift */,
 			);
 			path = doctorzilla;
 			sourceTree = "<group>";
@@ -262,7 +268,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA4C7CE01EC3CA2800A58937 /* LoginViewController.swift in Sources */,
 				FAF732311E9044C700FA6030 /* ViewController.swift in Sources */,
+				FA4C7CE21EC3CC8E00A58937 /* RecoverPasswordViewController.swift in Sources */,
 				FAF7322F1E9044C700FA6030 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -514,6 +522,7 @@
 				FAF732551E9044C700FA6030 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		FAF732561E9044C700FA6030 /* Build configuration list for PBXNativeTarget "doctorzillaTests" */ = {
 			isa = XCConfigurationList;
@@ -522,6 +531,7 @@
 				FAF732581E9044C700FA6030 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		FAF732591E9044C700FA6030 /* Build configuration list for PBXNativeTarget "doctorzillaUITests" */ = {
 			isa = XCConfigurationList;
@@ -530,6 +540,7 @@
 				FAF7325B1E9044C700FA6030 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
