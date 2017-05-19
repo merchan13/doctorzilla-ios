@@ -1,0 +1,6 @@
+framework module Pods_doctorzillaUITests {
+  umbrella header "Pods-doctorzillaUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}

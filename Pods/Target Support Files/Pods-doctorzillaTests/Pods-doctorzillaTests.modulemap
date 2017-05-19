@@ -1,0 +1,6 @@
+framework module Pods_doctorzillaTests {
+  umbrella header "Pods-doctorzillaTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
