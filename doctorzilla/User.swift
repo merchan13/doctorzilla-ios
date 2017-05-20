@@ -30,6 +30,7 @@ class User {
     }
     
     func signIn(email: String, password: String, completed: @escaping DownloadComplete) {
+		
         let parameters: Parameters = [
             "user_login": [
                 "email": email,
@@ -43,7 +44,9 @@ class User {
             
                 if let token = result["auth_token"] as? String {
                     AuthToken.sharedInstance.token = token
-                }
+				} else {
+					AuthToken.sharedInstance.token = ""
+				}
 
             }
             completed()

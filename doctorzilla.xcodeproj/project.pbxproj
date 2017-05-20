@@ -13,9 +13,9 @@
 		FA00E8331ECE694700600EC3 /* AuthToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00E8321ECE694700600EC3 /* AuthToken.swift */; };
 		FA00E8351ECE6D7F00600EC3 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00E8341ECE6D7F00600EC3 /* User.swift */; };
 		FA00E8371ECE6E3E00600EC3 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00E8361ECE6E3E00600EC3 /* Constants.swift */; };
-		FA2260611EC4F54400963182 /* UserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2260601EC4F54400963182 /* UserViewController.swift */; };
 		FA4C7CE01EC3CA2800A58937 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4C7CDF1EC3CA2800A58937 /* LoginViewController.swift */; };
 		FA4C7CE21EC3CC8E00A58937 /* RecoverPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4C7CE11EC3CC8E00A58937 /* RecoverPasswordViewController.swift */; };
+		FA87B6E71ECFFC85003C0DF4 /* DashboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA87B6E61ECFFC85003C0DF4 /* DashboardViewController.swift */; };
 		FAF7322F1E9044C700FA6030 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF7322E1E9044C700FA6030 /* AppDelegate.swift */; };
 		FAF732341E9044C700FA6030 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAF732321E9044C700FA6030 /* Main.storyboard */; };
 		FAF732361E9044C700FA6030 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FAF732351E9044C700FA6030 /* Assets.xcassets */; };
@@ -54,9 +54,9 @@
 		FA00E8321ECE694700600EC3 /* AuthToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthToken.swift; sourceTree = "<group>"; };
 		FA00E8341ECE6D7F00600EC3 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		FA00E8361ECE6E3E00600EC3 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		FA2260601EC4F54400963182 /* UserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserViewController.swift; sourceTree = "<group>"; };
 		FA4C7CDF1EC3CA2800A58937 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		FA4C7CE11EC3CC8E00A58937 /* RecoverPasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecoverPasswordViewController.swift; sourceTree = "<group>"; };
+		FA87B6E61ECFFC85003C0DF4 /* DashboardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashboardViewController.swift; sourceTree = "<group>"; };
 		FAF7322B1E9044C700FA6030 /* doctorzilla.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = doctorzilla.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAF7322E1E9044C700FA6030 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FAF732331E9044C700FA6030 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -154,10 +154,10 @@
 				FAF7323A1E9044C700FA6030 /* Info.plist */,
 				FA4C7CDF1EC3CA2800A58937 /* LoginViewController.swift */,
 				FA4C7CE11EC3CC8E00A58937 /* RecoverPasswordViewController.swift */,
-				FA2260601EC4F54400963182 /* UserViewController.swift */,
 				FA00E8321ECE694700600EC3 /* AuthToken.swift */,
 				FA00E8341ECE6D7F00600EC3 /* User.swift */,
 				FA00E8361ECE6E3E00600EC3 /* Constants.swift */,
+				FA87B6E61ECFFC85003C0DF4 /* DashboardViewController.swift */,
 			);
 			path = doctorzilla;
 			sourceTree = "<group>";
@@ -465,12 +465,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				FA4C7CE01EC3CA2800A58937 /* LoginViewController.swift in Sources */,
-				FA2260611EC4F54400963182 /* UserViewController.swift in Sources */,
 				FA00E8351ECE6D7F00600EC3 /* User.swift in Sources */,
 				FA4C7CE21EC3CC8E00A58937 /* RecoverPasswordViewController.swift in Sources */,
 				FA00E8371ECE6E3E00600EC3 /* Constants.swift in Sources */,
 				FA00E8331ECE694700600EC3 /* AuthToken.swift in Sources */,
 				FAF7322F1E9044C700FA6030 /* AppDelegate.swift in Sources */,
+				FA87B6E71ECFFC85003C0DF4 /* DashboardViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

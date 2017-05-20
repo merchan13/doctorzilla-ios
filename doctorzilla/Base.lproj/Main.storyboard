@@ -67,7 +67,7 @@
                                 <rect key="frame" x="47" y="113" width="280" height="120"/>
                             </imageView>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="tWl-2V-dtW">
-                                <rect key="frame" x="169" y="68" width="37" height="37"/>
+                                <rect key="frame" x="169" y="272" width="37" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="color" red="0.12941176469999999" green="0.10980392160000001" blue="0.37254901959999998" alpha="1" colorSpace="calibratedRGB"/>
                             </activityIndicatorView>
@@ -95,11 +95,59 @@
                         <outlet property="activityIndicatorView" destination="tWl-2V-dtW" id="XVt-DD-2D6"/>
                         <outlet property="emailTextField" destination="XsI-Om-5wT" id="Bda-xj-DYK"/>
                         <outlet property="passwordTextField" destination="2px-sK-kVl" id="6DR-Qv-wju"/>
+                        <segue destination="yrd-hC-EEW" kind="presentation" id="vcH-7F-tRk"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2466" y="143"/>
+        </scene>
+        <!--Dashboard View Controller-->
+        <scene sceneID="iBx-v2-ZmL">
+            <objects>
+                <viewController storyboardIdentifier="dashboardView" id="yrd-hC-EEW" customClass="DashboardViewController" customModule="doctorzilla" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="riX-8e-LXo"/>
+                        <viewControllerLayoutGuide type="bottom" id="xF4-yK-N9W"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ADu-nc-0vg">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Bienvenido Dr." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eq8-z2-O2p">
+                                <rect key="frame" x="16" y="297" width="343" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Token:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iBa-LY-C4k">
+                                <rect key="frame" x="16" y="331" width="343" height="19"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uf7-Qp-Vr0">
+                                <rect key="frame" x="140" y="358" width="94" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Cerras sesión"/>
+                                <connections>
+                                    <action selector="logoutButtonTapped:" destination="yrd-hC-EEW" eventType="touchUpInside" id="2tQ-dV-h5q"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="doctorLabel" destination="eq8-z2-O2p" id="ai9-cL-bgb"/>
+                        <outlet property="tokenLabel" destination="iBa-LY-C4k" id="3kZ-hn-Wi2"/>
+                        <segue destination="BYZ-38-t0r" kind="presentation" id="wpF-3A-LJK"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MFb-K6-3oC" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3320.8000000000002" y="142.57871064467767"/>
         </scene>
         <!--Recover Password View Controller-->
         <scene sceneID="UY3-MS-MHH">

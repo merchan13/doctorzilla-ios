@@ -29,15 +29,23 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
 
         user.signIn(email: userEmail, password: userPassword) {
-            if AuthToken.sharedInstance.token != nil {
+            if AuthToken.sharedInstance.token != "" && AuthToken.sharedInstance.token != nil {
                 DispatchQueue.main.async {
-                    print("valido")
-                    self.activityIndicatorView.stopAnimating()
+					self.activityIndicatorView.stopAnimating()
+					
+					let vc = self.storyboard?.instantiateViewController(withIdentifier: "dashboardView")
+					self.present(vc!, animated: true, completion: nil)
                 }
             } else {
                 DispatchQueue.main.async {
-                    print("no valido")
                     self.activityIndicatorView.stopAnimating()
+					
+					let alertController = UIAlertController(title: "Error", message: "La contraseña o correo que introdujo son inválidos", preferredStyle: .alert)
+					
+					let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+					alertController.addAction(defaultAction)
+					
+					self.present(alertController, animated: true, completion: nil)
                 }
             }
         }
@@ -48,11 +56,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-    
+        
     //Cerrar teclado cuando se toca cualquier espacio de la pantalla.
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
