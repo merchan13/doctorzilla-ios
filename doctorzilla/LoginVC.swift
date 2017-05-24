@@ -1,5 +1,5 @@
 //
-//  LoginViewController.swift
+//  LoginVC.swift
 //  doctorzilla
 //
 //  Created by Javier Merchán on 5/10/17.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LoginViewController: UIViewController, UITextFieldDelegate {
+class LoginVC: UIViewController, UITextFieldDelegate {
     
     @IBOutlet var emailTextField: UITextField!
     @IBOutlet var passwordTextField: UITextField!
@@ -33,8 +33,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 DispatchQueue.main.async {
 					self.activityIndicatorView.stopAnimating()
 					
-					let vc = self.storyboard?.instantiateViewController(withIdentifier: "dashboardView")
-					self.present(vc!, animated: true, completion: nil)
+					self.performSegue(withIdentifier: "DashboardVC", sender: self.user)
                 }
             } else {
                 DispatchQueue.main.async {
@@ -59,18 +58,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
     //Cerrar teclado cuando se toca cualquier espacio de la pantalla.
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
         self.view.endEditing(true)
-        
     }
     
     //Cerrar teclado cuando se presiona "return"
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        
         textField.resignFirstResponder()
-        
         return true
-        
     }
     
 }
