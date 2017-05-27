@@ -15,6 +15,8 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 	@IBOutlet weak var searchBar: UISearchBar!
 	@IBOutlet weak var collection: UICollectionView!
 	
+	var user: User!
+	
 	var medrecord = [MedicalRecord]()
 	var filteredRecord = [MedicalRecord]()
 	var inSearchMode = false
@@ -29,11 +31,16 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		searchBar.returnKeyType = UIReturnKeyType.done
 		
 		parseMedicalRecords {
+			self.parseRecordsCSV()
 			self.collection.reloadData()
 		}
+		
     }
 	
 	func parseMedicalRecords(completed: @escaping DownloadComplete) {
+		
+		let medicalRecordCSV = MedicalRecordCSV()
+		var csvText = "id,document,lastName\n"
 		
 		let url = "\(URL_BASE)\(URL_MEDICAL_RECORDS)"
 		
@@ -44,22 +51,49 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		Alamofire.request(url, method: .get, headers: headers).responseJSON { response in
 			
 			if let recordDictionary = response.result.value as? [Dictionary<String, AnyObject>]{
-			
+		
 				for rec in recordDictionary {
-					
 					let recordId = rec["id"] as! Int
 					let document = "\(rec["document_type"]!)-\(rec["document"]!)"
 					let lastName = rec["last_name"] as! String
 					
-					let medrec = MedicalRecord(recordId: recordId, lastName: lastName, document: document)
+					let newLine = "\(recordId),\(document),\(lastName)\n"
+					csvText.append(newLine)
+				}
+				
+				medicalRecordCSV.create(csvText: csvText)
+		
+			}
+			completed()
+		}
+		
+	}
+	
+	func parseRecordsCSV() {
+		
+		if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+			
+			let path = dir.appendingPathComponent(RECORDS_CSV)
+			
+			do {
+				let csv = try CSV(contentsOfURL: path)
+				let rows = csv.rows
+				
+				for row in rows {
 					
+					let recordId = Int(row["id"]!)!
+					let document = row["document"]!
+					let lastName = row["lastName"]!
+					
+					let medrec = MedicalRecord(recordId: recordId, document: document, lastName: lastName)
 					self.medrecord.append(medrec)
 					
 				}
 				
+			} catch let err as NSError {
+				print(err.debugDescription)
 			}
-			
-			completed()
+		
 		}
 		
 	}
@@ -87,21 +121,17 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		/*
+
 		var medrec: MedicalRecord
 		
 		if inSearchMode {
-			
 			medrec = filteredRecord[indexPath.row]
-			
 		} else {
-			
 			medrec = medrecord[indexPath.row]
-			
 		}
 		
 		performSegue(withIdentifier: "MedicalRecordVC", sender: medrec)
-		*/
+
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -111,7 +141,7 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		} else {
 			return medrecord.count
 		}
-		//return 30
+		
 	}
 	
 	func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -146,14 +176,26 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 	}
 	
 	@IBAction func logoutButtonTapped(_ sender: Any) {
-		
+	
 		AuthToken.sharedInstance.token = ""
-		dismiss(animated: true, completion: nil)
 		
+		//user = User()
+		//user.signOut()
+		
+		dismiss(animated: true, completion: nil)
+	
 	}
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		// ...
+		
+		if segue.identifier == "MedicalRecordVC" {
+			if let recordVC = segue.destination as? MedicalRecordVC {
+				if let medrec = sender as? MedicalRecord {
+					recordVC.medrecord = medrec
+				}
+			}
+		}
+		
 	}
 	
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
