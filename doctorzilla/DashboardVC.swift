@@ -26,12 +26,14 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		
 		collection.dataSource = self
 		collection.delegate = self
+		
 		searchBar.delegate = self
 		
 		searchBar.returnKeyType = UIReturnKeyType.done
 		
 		parseMedicalRecords {
 			self.parseRecordsCSV()
+			
 			self.collection.reloadData()
 		}
 		

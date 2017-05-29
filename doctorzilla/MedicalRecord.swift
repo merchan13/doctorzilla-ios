@@ -28,6 +28,7 @@ class MedicalRecord {
 	private var _weight: Int!
 	private var _pressure_d: String!
 	private var _pressure_s: String!
+	private var _backgrounds: [String: String] = ["Familiares":" ", "Alergias":"", "Diábetes":"", "Asma":"", "Cardiopatías":"", "Medicamentos":"", "Quirúrgicos":"", "Otros":""]
 	
 	var recordId: Int {
 		if _recordId == nil {
@@ -141,6 +142,10 @@ class MedicalRecord {
 		return _pressure_s
 	}
 	
+	var backgrounds: [String: String] {
+		return _backgrounds
+	}
+	
 	init(recordId: Int, document: String, lastName: String) {
 		
 		self._recordId = recordId
@@ -211,18 +216,48 @@ class MedicalRecord {
 					if let height = physicData["height"] as? Int {
 						self._height = height
 					}
-					// Height
+					// Weight
 					if let weight = physicData["weight"] as? Int {
 						self._weight = weight
 					}
-					// Height
+					// Pressure D
 					if let pressure_d = physicData["pressure_d"] as? String {
 						self._pressure_d = pressure_d
 					}
-					// Height
+					// Pressure S
 					if let pressure_s = physicData["pressure_s"] as? String {
 						self._pressure_s = pressure_s
 					}
+				}
+				
+				// BACKGROUNDS
+				if let backgrounds = dict["backgrounds"] as? Dictionary<String, [String]> {
+					
+					if let family = backgrounds["Familiares"]{
+						self._backgrounds["Familiares"] = self.parseDescriptions(descriptions: family)
+					}
+					if let allergy = backgrounds["Alergias"]{
+						self._backgrounds["Alergias"] = self.parseDescriptions(descriptions: allergy)
+					}
+					if let diabetes = backgrounds["Diábetes"]{
+						self._backgrounds["Diábetes"] = self.parseDescriptions(descriptions: diabetes)
+					}
+					if let asthma = backgrounds["asma"]{
+						self._backgrounds["Asma"] = self.parseDescriptions(descriptions: asthma)
+					}
+					if let heart = backgrounds["Cardiopatías"]{
+						self._backgrounds["Cardiopatías"] = self.parseDescriptions(descriptions: heart)
+					}
+					if let medicine = backgrounds["Medicamentos"]{
+						self._backgrounds["Medicamentos"] = self.parseDescriptions(descriptions: medicine)
+					}
+					if let surgical = backgrounds["Quirúrgicos"]{
+						self._backgrounds["Quirúrgicos"] = self.parseDescriptions(descriptions: surgical)
+					}
+					if let other = backgrounds["Otros"]{
+						self._backgrounds["Otros"] = self.parseDescriptions(descriptions: other)
+					}
+			
 				}
 				
 			}
@@ -231,4 +266,77 @@ class MedicalRecord {
 		
 	}
 	
+	func parseDescriptions(descriptions: [String]) -> String {
+		var bgDescription = ""
+		
+		for description in descriptions {
+			bgDescription += "\(description)\n"
+		}
+		
+		return bgDescription
+	}
+	
+	func age() -> Int {
+		var age = 0
+
+		let dateFormatter = DateFormatter()
+		
+		dateFormatter.dateFormat = "yyyy-MM-dd"
+		
+		if let birthday = self._birthday {
+			if let date = dateFormatter.date(from: birthday) {
+				let components = Calendar.current.dateComponents([.year], from: date, to: Date())
+				
+				age = components.year!
+			}
+		}
+		
+		return age
+	}
+	
+	func parsedFirstConsultationDate() -> String {
+		var parsedDate = " "
+		
+		let dateFormatterGet = DateFormatter()
+		dateFormatterGet.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+		
+		let dateFormatterResult = DateFormatter()
+		dateFormatterResult.dateFormat = "MMM dd yyyy"
+		
+		if let firstConsultation = self._firstConsultation {
+			if let date: Date = dateFormatterGet.date(from: firstConsultation){
+				parsedDate = dateFormatterResult.string(from: date)
+			}
+		}
+		
+		return parsedDate
+	}
+	
+	func parsedBirthdayDate() -> String {
+		var parsedDate = " "
+		
+		let dateFormatterGet = DateFormatter()
+		dateFormatterGet.dateFormat = "yyyy-MM-dd"
+		
+		let dateFormatterResult = DateFormatter()
+		dateFormatterResult.dateFormat = "MMM dd yyyy"
+		
+		if let birthday = self._birthday {
+			if let date: Date = dateFormatterGet.date(from: birthday) {
+				parsedDate = dateFormatterResult.string(from: date)
+			}
+		}
+
+		return parsedDate
+	}
+	
+	func IMC() -> Double {
+		if self.weight != 0 && self.height != 0 {
+			let imc = ((Double(self.weight))/(pow(Double(self.height)/100, 2)) * 100).rounded() / 100
+			return imc
+		} else {
+			return 0.0
+		}
+	}
+
 }

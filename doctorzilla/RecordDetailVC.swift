@@ -8,8 +8,7 @@
 
 import UIKit
 
-class RecordDetailVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource,
-	UICollectionViewDelegateFlowLayout {
+class RecordDetailVC: UIViewController {
 
 	@IBOutlet weak var fullNameLabel: UILabel!
 	@IBOutlet weak var documentLabel: UILabel!
@@ -25,9 +24,17 @@ class RecordDetailVC: UIViewController, UICollectionViewDelegate, UICollectionVi
 	@IBOutlet weak var heigthLabel: UILabel!
 	@IBOutlet weak var IMCLabel: UILabel!
 	@IBOutlet weak var pressureLabel: UILabel!
+	@IBOutlet weak var familyBgTextView: UITextView!
+	@IBOutlet weak var allergyBgTextView: UITextView!
+	@IBOutlet weak var diabetesBgTextView: UITextView!
+	@IBOutlet weak var asthmaBgTextView: UITextView!
+	@IBOutlet weak var heartBgTextView: UITextView!
+	@IBOutlet weak var medicineBgTextView: UITextView!
+	@IBOutlet weak var surgicalBgTextView: UITextView!
+	@IBOutlet weak var otherBgTextView: UITextView!
 	
 	var medrecord: MedicalRecord!
-	var background = [Background]()
+	var backgrounds: [String: String]!
 	
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,13 +49,8 @@ class RecordDetailVC: UIViewController, UICollectionViewDelegate, UICollectionVi
 	func updateUI() {
 		fullNameLabel.text = "\(self.medrecord.name) \(self.medrecord.lastName)"
 		documentLabel.text = self.medrecord.document
-		/*
-		
-		birthdayLabel.text = "\(self.medrecord.birthday) (\(self.medrecord.age) años)"
-		
-		*/
-		birthdayLabel.text = "\(self.medrecord.birthday) (años)"
-		firstConsultationLabel.text = self.medrecord.firstConsultation
+		birthdayLabel.text = "\(self.medrecord.parsedBirthdayDate()) (\(self.medrecord.age()) años)"
+		firstConsultationLabel.text = self.medrecord.parsedFirstConsultationDate()
 		occupationLabel.text = self.medrecord.occupation
 		emailLabel.text = self.medrecord.email
 		phoneLabel.text = self.medrecord.phone
@@ -57,43 +59,19 @@ class RecordDetailVC: UIViewController, UICollectionViewDelegate, UICollectionVi
 		referredByLabel.text = self.medrecord.referredBy
 		weightLabel.text = "\(self.medrecord.weight) kg."
 		heigthLabel.text = "\(self.medrecord.height) m."
-		IMCLabel.text = "??"
+		IMCLabel.text = "\(self.medrecord.IMC())"
 		pressureLabel.text = "\(self.medrecord.pressure_s)/\(self.medrecord.pressure_d)"
 		
-	}
-	
-	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+		self.backgrounds = self.medrecord.backgrounds
 		
-		if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BackgroundCell", for: indexPath) as? BackgroundCell {
-			
-			let bg: Background!
-			
-			bg = background[indexPath.row]
-			
-			cell.configureCell(bg)
-			
-			return cell
-			
-		} else {
-			return UICollectionViewCell()
-		}
-		
+		familyBgTextView.text = self.backgrounds["Familiares"]
+		allergyBgTextView.text = self.backgrounds["Alergias"]
+		diabetesBgTextView.text = self.backgrounds["Diábetes"]
+		asthmaBgTextView.text = self.backgrounds["Asma"]
+		heartBgTextView.text = self.backgrounds["Cardiopatías"]
+		medicineBgTextView.text = self.backgrounds["Medicinas"]
+		surgicalBgTextView.text = self.backgrounds["Quirúrgicos"]
+		otherBgTextView.text = self.backgrounds["Otros"]
 	}
 	
-	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		// Do nothing
-	}
-	
-	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return 8
-	}
-	
-	func numberOfSections(in collectionView: UICollectionView) -> Int {
-		return 1
-	}
-	
-	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-		return CGSize(width: 260, height: 50)
-	}
-
 }

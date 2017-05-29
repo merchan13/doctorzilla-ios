@@ -10,16 +10,8 @@ import Foundation
 
 class Background {
 
-	private var _backgroundId: Int!
 	private var _backgroundType: String!
 	private var _backgroundDescription: String!
-	
-	var backgroundId: Int {
-		if _backgroundId == nil {
-			_backgroundId = 0
-		}
-		return _backgroundId
-	}
 	
 	var backgroundType: String {
 		if _backgroundType == nil {
@@ -35,9 +27,8 @@ class Background {
 		return _backgroundDescription
 	}
 	
-	init(backgroundId: Int, backgroundType: String, backgroundDescription: String) {
+	init(backgroundType: String, backgroundDescription: String) {
 		
-		self._backgroundId = backgroundId
 		self._backgroundType = backgroundType
 		self._backgroundDescription = backgroundDescription
 		

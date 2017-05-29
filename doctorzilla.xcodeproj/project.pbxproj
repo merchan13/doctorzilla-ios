@@ -18,7 +18,6 @@
 		FA518F791ED3ED6100EAC1C4 /* MedRecordCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA518F781ED3ED6100EAC1C4 /* MedRecordCell.swift */; };
 		FA518F7B1ED3F19F00EAC1C4 /* MedicalRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA518F7A1ED3F19F00EAC1C4 /* MedicalRecord.swift */; };
 		FA87B6E71ECFFC85003C0DF4 /* DashboardVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA87B6E61ECFFC85003C0DF4 /* DashboardVC.swift */; };
-		FAC6063B1ED90C3400726AA0 /* BackgroundCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC6063A1ED90C3400726AA0 /* BackgroundCell.swift */; };
 		FAC6063D1ED911FD00726AA0 /* Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC6063C1ED911FD00726AA0 /* Background.swift */; };
 		FAF7322F1E9044C700FA6030 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF7322E1E9044C700FA6030 /* AppDelegate.swift */; };
 		FAF732341E9044C700FA6030 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAF732321E9044C700FA6030 /* Main.storyboard */; };
@@ -70,7 +69,6 @@
 		FA518F781ED3ED6100EAC1C4 /* MedRecordCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MedRecordCell.swift; sourceTree = "<group>"; };
 		FA518F7A1ED3F19F00EAC1C4 /* MedicalRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MedicalRecord.swift; sourceTree = "<group>"; };
 		FA87B6E61ECFFC85003C0DF4 /* DashboardVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashboardVC.swift; sourceTree = "<group>"; };
-		FAC6063A1ED90C3400726AA0 /* BackgroundCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundCell.swift; sourceTree = "<group>"; };
 		FAC6063C1ED911FD00726AA0 /* Background.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Background.swift; sourceTree = "<group>"; };
 		FAF7322B1E9044C700FA6030 /* doctorzilla.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = doctorzilla.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAF7322E1E9044C700FA6030 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -162,7 +160,6 @@
 			isa = PBXGroup;
 			children = (
 				FA518F781ED3ED6100EAC1C4 /* MedRecordCell.swift */,
-				FAC6063A1ED90C3400726AA0 /* BackgroundCell.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -554,7 +551,6 @@
 				FA00E8331ECE694700600EC3 /* AuthToken.swift in Sources */,
 				FAF7322F1E9044C700FA6030 /* AppDelegate.swift in Sources */,
 				FA87B6E71ECFFC85003C0DF4 /* DashboardVC.swift in Sources */,
-				FAC6063B1ED90C3400726AA0 /* BackgroundCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
