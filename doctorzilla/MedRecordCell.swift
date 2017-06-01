@@ -26,7 +26,21 @@ class MedRecordCell: UICollectionViewCell {
 		
 		nameLabel.text = self.medrecord.lastName.capitalized
 		idLabel.text = self.medrecord.document
-		//thumbImage.image = UIImage(...
+		
+		/*
+		let url = URL(string: self.medrecord.imageURL)!
+		
+		DispatchQueue.global().async {
+			do {
+				let data = try Data(contentsOf: url)
+				DispatchQueue.global().sync {
+					thumbImage.image = UIImage(data: data)
+				}
+			} catch {
+				// handle error
+			}
+		}
+		*/
 		
 	}
 	

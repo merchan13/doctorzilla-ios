@@ -10,6 +10,7 @@ import Foundation
 
 class Background {
 
+	private var _backgroundURL: String!
 	private var _backgroundType: String!
 	private var _backgroundDescription: String!
 	
@@ -32,6 +33,7 @@ class Background {
 		self._backgroundType = backgroundType
 		self._backgroundDescription = backgroundDescription
 		
+		//self._backgroundURL = "\(URL_BASE)\(URL_BACKGROUNDS)\(self.backgroundId)"
 	}
 
 }

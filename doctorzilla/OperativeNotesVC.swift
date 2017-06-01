@@ -14,5 +14,5 @@ class OperativeNotesVC: UIViewController {
         super.viewDidLoad()
 		
     }
-
+	
 }

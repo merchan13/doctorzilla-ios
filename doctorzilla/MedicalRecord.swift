@@ -30,6 +30,8 @@ class MedicalRecord {
 	private var _pressure_s: String!
 	private var _backgrounds: [String: String] = ["Familiares":" ", "Alergias":"", "Diábetes":"", "Asma":"", "Cardiopatías":"", "Medicamentos":"", "Quirúrgicos":"", "Otros":""]
 	
+	private var _consultations = [Consultation]()
+	
 	var recordId: Int {
 		if _recordId == nil {
 			_recordId = 0
@@ -146,6 +148,10 @@ class MedicalRecord {
 		return _backgrounds
 	}
 	
+	var consultations: [Consultation] {
+		return _consultations
+	}
+	
 	init(recordId: Int, document: String, lastName: String) {
 		
 		self._recordId = recordId
@@ -181,8 +187,10 @@ class MedicalRecord {
 				}
 				
 				// OCCUPATION
-				if let occupation = dict["occupation"] as? String {
-					self._occupation = occupation
+				if let occupationDict = dict["occupation"] as? Dictionary<String, AnyObject> {
+					if let occupation = occupationDict["name"] as? String {
+						self._occupation = occupation
+					}
 				}
 				
 				// EMAIL
@@ -201,8 +209,10 @@ class MedicalRecord {
 				}
 				
 				// INSURANCE
-				if let insurance = dict["insurance"] as? String {
-					self._insurance = insurance
+				if let insuranceDict = dict["insurance"] as? Dictionary<String, AnyObject> {
+					if let insurance = insuranceDict["name"] as? String {
+						self._insurance = insurance
+					}
 				}
 				
 				// REFERRED BY
@@ -242,7 +252,7 @@ class MedicalRecord {
 					if let diabetes = backgrounds["Diábetes"]{
 						self._backgrounds["Diábetes"] = self.parseDescriptions(descriptions: diabetes)
 					}
-					if let asthma = backgrounds["asma"]{
+					if let asthma = backgrounds["Asma"]{
 						self._backgrounds["Asma"] = self.parseDescriptions(descriptions: asthma)
 					}
 					if let heart = backgrounds["Cardiopatías"]{
@@ -264,6 +274,55 @@ class MedicalRecord {
 			completed()
 		}
 		
+	}
+	
+	func downloadConsultations(completed: @escaping DownloadComplete) {
+		
+		let consultationURL = "\(URL_BASE)\(URL_CONSULTATIONS)"
+		
+		let headers: HTTPHeaders = [
+			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
+		]
+		
+		let parameters: Parameters = [
+			"record": recordId
+		]
+		
+		Alamofire.request(consultationURL, method: .get, parameters: parameters, headers: headers).responseJSON { (response) in
+	
+			if let dict = response.result.value as? [Dictionary<String, AnyObject>] {
+				
+				self._consultations.removeAll()
+				
+				for cnslttn in dict {
+					
+					var id = 0
+					var date = ""
+					var reason = ""
+					
+					// ID
+					if let cnslttnId = cnslttn["id"] as? Int {
+						id = cnslttnId
+					}
+					
+					// DATE
+					if let cnslttnDate = cnslttn["created_at"] as? String {
+						date = cnslttnDate
+					}
+					
+					// REASON
+					if let cnslttnReason = cnslttn["reason"] as? Dictionary<String, AnyObject> {
+						if let reasonDesc = cnslttnReason["description"] as? String {
+							reason = reasonDesc
+						}
+					}
+					
+					self._consultations.append(Consultation(consultationId: id, date: date, reason: reason))
+				}
+
+			}
+			completed()
+		}
 	}
 	
 	func parseDescriptions(descriptions: [String]) -> String {
@@ -301,7 +360,7 @@ class MedicalRecord {
 		dateFormatterGet.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
 		
 		let dateFormatterResult = DateFormatter()
-		dateFormatterResult.dateFormat = "MMM dd yyyy"
+		dateFormatterResult.dateFormat = "dd MMM yyyy"
 		
 		if let firstConsultation = self._firstConsultation {
 			if let date: Date = dateFormatterGet.date(from: firstConsultation){
@@ -319,7 +378,7 @@ class MedicalRecord {
 		dateFormatterGet.dateFormat = "yyyy-MM-dd"
 		
 		let dateFormatterResult = DateFormatter()
-		dateFormatterResult.dateFormat = "MMM dd yyyy"
+		dateFormatterResult.dateFormat = "dd MMM yyyy"
 		
 		if let birthday = self._birthday {
 			if let date: Date = dateFormatterGet.date(from: birthday) {

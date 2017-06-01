@@ -24,6 +24,8 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
     override func viewDidLoad() {
         super.viewDidLoad()
 		
+		print(AuthToken.sharedInstance.token)
+		
 		collection.dataSource = self
 		collection.delegate = self
 		
