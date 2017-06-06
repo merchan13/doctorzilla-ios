@@ -32,14 +32,14 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		searchBar.delegate = self
 		
 		searchBar.returnKeyType = UIReturnKeyType.done
-		
+    }
+	
+	override func viewDidAppear(_ animated: Bool) {
 		parseMedicalRecords {
 			self.parseRecordsCSV()
-			
 			self.collection.reloadData()
 		}
-		
-    }
+	}
 	
 	func parseMedicalRecords(completed: @escaping DownloadComplete) {
 		
@@ -74,32 +74,27 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 	}
 	
 	func parseRecordsCSV() {
-		
 		if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-			
 			let path = dir.appendingPathComponent(RECORDS_CSV)
+			self.medrecord.removeAll()
 			
 			do {
 				let csv = try CSV(contentsOfURL: path)
 				let rows = csv.rows
 				
 				for row in rows {
-					
 					let recordId = Int(row["id"]!)!
 					let document = row["document"]!
 					let lastName = row["lastName"]!
 					
 					let medrec = MedicalRecord(recordId: recordId, document: document, lastName: lastName)
 					self.medrecord.append(medrec)
-					
 				}
 				
 			} catch let err as NSError {
 				print(err.debugDescription)
 			}
-		
 		}
-		
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -121,7 +116,6 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		} else {
 			return UICollectionViewCell()
 		}
-		
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -135,7 +129,6 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		}
 		
 		performSegue(withIdentifier: "MedicalRecordVC", sender: medrec)
-
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

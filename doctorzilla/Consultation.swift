@@ -136,6 +136,9 @@ class Consultation {
 		
 		Alamofire.request(_consultationURL, method: .get, headers: headers).responseJSON { (response) in
 			
+			self._backgrounds.removeAll()
+			self._physicalExams.removeAll()
+			
 			if let dict = response.result.value as? Dictionary<String, AnyObject> {
 				
 				// AFFLICTION
@@ -181,8 +184,10 @@ class Consultation {
 				}
 				
 				// PLAN
-				if let plan = dict["plan"] as? String {
-					self._plan = plan
+				if let planDict = dict["plan"] as? Dictionary<String, AnyObject> {
+					if let plan = planDict["description"] as? String! {
+						self._plan = plan
+					}
 				}
 				
 				// BACKGROUNDS

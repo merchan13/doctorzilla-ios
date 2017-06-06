@@ -20,12 +20,14 @@ class BackgroundCell: UICollectionViewCell {
 	}
 	
 	func configureCell(_ background: Background) {
-		
 		self.background = background
-		
 		typeLabel.text = self.background.backgroundType
 		descriptionTextView.text = self.background.backgroundDescription
-		
+	}
+	
+	func configureCell(bgType: String, description: String) {
+		typeLabel.text = bgType
+		descriptionTextView.text = description
 	}
 	
 }

@@ -8,7 +8,8 @@
 
 import UIKit
 
-class ConsultationDetailVC: UIViewController {
+class ConsultationDetailVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource,
+UICollectionViewDelegateFlowLayout {
 
 	@IBOutlet weak var reasonLabel: UILabel!
 	@IBOutlet weak var afflictionTextView: UITextView!
@@ -31,8 +32,20 @@ class ConsultationDetailVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 		
+		backgroundCollection.dataSource = self
+		PECollection.dataSource = self
+		
+		backgroundCollection.delegate = self
+		PECollection.delegate = self
+		
 		self.consultation.downloadConsultationDetails {
 			self.updateUI()
+			
+			self.backgrounds = self.consultation.backgrounds
+			self.physicalExams = self.consultation.physicalExams
+			
+			self.backgroundCollection.reloadData()
+			self.PECollection.reloadData()
 		}
     }
 	
@@ -53,6 +66,52 @@ class ConsultationDetailVC: UIViewController {
 	
 	@IBAction func backButtonTapped(_ sender: Any) {
 		dismiss(animated: true, completion: nil)
+	}
+	
+	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+		
+		if collectionView == self.backgroundCollection {
+			if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BackgroundCell", for: indexPath) as? BackgroundCell {
+			
+				let bg: Background!
+				bg = backgrounds[indexPath.row]
+				cell.configureCell(bg)
+			
+				return cell
+			}
+		} else {
+			if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PECell", for: indexPath) as? PECell {
+				
+				let pe: PhysicalExam!
+				pe = physicalExams[indexPath.row]
+				cell.configureCell(pe)
+				
+				return cell
+			}
+		}
+		
+		return UICollectionViewCell()
+		
+	}
+	
+	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+		if collectionView == self.backgroundCollection {
+			return backgrounds.count
+		}
+		
+		return physicalExams.count
+	}
+	
+	func numberOfSections(in collectionView: UICollectionView) -> Int {
+		return 1
+	}
+	
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+		if collectionView == self.backgroundCollection {
+			return CGSize(width: 277, height: 65)
+		}
+		
+		return CGSize(width: 277, height: 90)
 	}
 	
 }

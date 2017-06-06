@@ -22,6 +22,8 @@ class MedicalRecord {
 	private var _email: String!
 	private var _phone: String!
 	private var _cellphone: String!
+	private var _address: String!
+	private var _gender: String!
 	private var _insurance: String!
 	private var _referredBy: String!
 	private var _height: Int!
@@ -102,6 +104,20 @@ class MedicalRecord {
 		return _cellphone
 	}
 	
+	var address: String {
+		if _address == nil {
+			_address = ""
+		}
+		return _address
+	}
+	
+	var gender: String {
+		if _gender == nil {
+			_gender = ""
+		}
+		return _gender
+	}
+	
 	var insurance: String {
 		if _insurance == nil {
 			_insurance = ""
@@ -176,6 +192,11 @@ class MedicalRecord {
 					self._name = name
 				}
 				
+				// LASTNAME
+				if let lastname = dict["last_name"] as? String {
+					self._lastName = lastname
+				}
+				
 				// BIRTHDAY
 				if let birthday = dict["birthday"] as? String {
 					self._birthday = birthday
@@ -206,6 +227,16 @@ class MedicalRecord {
 				// CELLPHONE
 				if let cellphone = dict["cellphone_number"] as? String {
 					self._cellphone = cellphone
+				}
+				
+				// ADDRESS
+				if let address = dict["address"] as? String {
+					self._address = address
+				}
+				
+				// GENDER
+				if let gender = dict["gender"] as? String {
+					self._gender = gender
 				}
 				
 				// INSURANCE
@@ -273,7 +304,6 @@ class MedicalRecord {
 			}
 			completed()
 		}
-		
 	}
 	
 	func downloadConsultations(completed: @escaping DownloadComplete) {
@@ -325,13 +355,55 @@ class MedicalRecord {
 		}
 	}
 	
+	func updateRecord(name: String, lastName: String, occupation: Int, birthday: String, gender: String,
+	                  phone: String, cellphone: String, email: String, address: String, referredBy: String,
+	                  insurance: Int, completed: @escaping DownloadComplete) {
+	
+		let headers: HTTPHeaders = [
+			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
+		]
+		
+		let parameters: Parameters = [
+			"medical_record": [
+				"name": name,
+				"last_name": lastName,
+				"occupation_id": occupation,
+				"birthday": birthday,
+				"gender": gender,
+				"phone_number": phone,
+				"cellphone_number": cellphone,
+				"email": email,
+				"address": address,
+				"referred_by": referredBy,
+				"insurance_id": insurance
+			]
+		]
+		
+		Alamofire.request("\(URL_BASE)\(URL_MEDICAL_RECORDS)\(recordId)", method: .put, parameters: parameters, headers: headers).responseJSON { response in
+			
+			//print(response.response?.statusCode)
+			
+			completed()
+		}
+	}
+	
+	func backgroundsArray () -> [Background] {
+		var bgs = [Background]()
+		
+		for (key, value) in self._backgrounds {
+			if value != "" {
+				bgs.append(Background(backgroundType: key, backgroundDescription: value))
+			}
+		}
+		return bgs
+	}
+	
 	func parseDescriptions(descriptions: [String]) -> String {
 		var bgDescription = ""
 		
 		for description in descriptions {
 			bgDescription += "\(description)\n"
 		}
-		
 		return bgDescription
 	}
 	
@@ -349,7 +421,6 @@ class MedicalRecord {
 				age = components.year!
 			}
 		}
-		
 		return age
 	}
 	
@@ -367,7 +438,6 @@ class MedicalRecord {
 				parsedDate = dateFormatterResult.string(from: date)
 			}
 		}
-		
 		return parsedDate
 	}
 	
@@ -385,8 +455,21 @@ class MedicalRecord {
 				parsedDate = dateFormatterResult.string(from: date)
 			}
 		}
-
 		return parsedDate
+	}
+	
+	func birthdayToDate() -> Date {
+		let date = Date()
+		
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "yyyy-MM-dd"
+		
+		if let birthday = self._birthday {
+			if let date: Date = dateFormatter.date(from: birthday) {
+				return date
+			}
+		}
+		return date
 	}
 	
 	func IMC() -> Double {

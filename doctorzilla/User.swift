@@ -38,7 +38,7 @@ class User {
             ]
         ]
         
-        Alamofire.request("http://doctorzilla-api.herokuapp.com/sign-in", method: .post, parameters: parameters, encoding: JSONEncoding.default).responseJSON { response in
+        Alamofire.request("\(URL_BASE)\(URL_SIGN_IN)", method: .post, parameters: parameters, encoding: JSONEncoding.default).responseJSON { response in
 			
             if let result = response.result.value as? Dictionary<String, AnyObject>{
 				
