@@ -13,6 +13,7 @@
 		FA00E8331ECE694700600EC3 /* AuthToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00E8321ECE694700600EC3 /* AuthToken.swift */; };
 		FA00E8351ECE6D7F00600EC3 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00E8341ECE6D7F00600EC3 /* User.swift */; };
 		FA00E8371ECE6E3E00600EC3 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00E8361ECE6E3E00600EC3 /* Constants.swift */; };
+		FA10252D1EE7CF8C00F6E085 /* RealmObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA10252C1EE7CF8C00F6E085 /* RealmObjects.swift */; };
 		FA3A9CF91EE1DDBB000EAB8B /* EditRecordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3A9CF81EE1DDBB000EAB8B /* EditRecordVC.swift */; };
 		FA3A9CFD1EE1DE0F000EAB8B /* EditConsultationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3A9CFC1EE1DE0F000EAB8B /* EditConsultationVC.swift */; };
 		FA4C7CE01EC3CA2800A58937 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4C7CDF1EC3CA2800A58937 /* LoginVC.swift */; };
@@ -76,6 +77,7 @@
 		FA00E8321ECE694700600EC3 /* AuthToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthToken.swift; sourceTree = "<group>"; };
 		FA00E8341ECE6D7F00600EC3 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		FA00E8361ECE6E3E00600EC3 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		FA10252C1EE7CF8C00F6E085 /* RealmObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmObjects.swift; sourceTree = "<group>"; };
 		FA3A9CF81EE1DDBB000EAB8B /* EditRecordVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditRecordVC.swift; sourceTree = "<group>"; };
 		FA3A9CFC1EE1DE0F000EAB8B /* EditConsultationVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditConsultationVC.swift; sourceTree = "<group>"; };
 		FA4C7CDF1EC3CA2800A58937 /* LoginVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
@@ -204,6 +206,7 @@
 				FAE8E7AA1EDFAF5400E1489C /* PhysicalExam.swift */,
 				FAACA5091EE5DEAA006C39BB /* Insurance.swift */,
 				FAACA50B1EE5DEB5006C39BB /* Occupation.swift */,
+				FA10252C1EE7CF8C00F6E085 /* RealmObjects.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -579,6 +582,7 @@
 				FADF11561EDE186000BB54E7 /* ConsultationDetailVC.swift in Sources */,
 				FA00E8351ECE6D7F00600EC3 /* User.swift in Sources */,
 				FA4C7CE21EC3CC8E00A58937 /* RecoverPasswordVC.swift in Sources */,
+				FA10252D1EE7CF8C00F6E085 /* RealmObjects.swift in Sources */,
 				FAF9A7AE1EDCA735004CECF8 /* Consultation.swift in Sources */,
 				FAC6063D1ED911FD00726AA0 /* Background.swift in Sources */,
 				FAACA50A1EE5DEAA006C39BB /* Insurance.swift in Sources */,

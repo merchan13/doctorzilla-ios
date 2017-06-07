@@ -77,7 +77,7 @@ class EditRecordVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSour
 	@IBAction func saveChangedButtonTapped(_ sender: UIButton) {
 		let refreshAlert = UIAlertController(title: "Alerta", message: "¿Está seguro de que quiere editar la Historia Médica?", preferredStyle: UIAlertControllerStyle.alert)
 		
-		refreshAlert.addAction(UIAlertAction(title: "Si", style: .default, handler: { (action: UIAlertAction!) in
+		refreshAlert.addAction(UIAlertAction(title: "Si", style: .destructive, handler: { (action: UIAlertAction!) in
 			
 			var updatedGen = ""
 			

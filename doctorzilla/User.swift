@@ -12,6 +12,7 @@ import Alamofire
 class User {
     
     var _email: String!
+	var _password: String!
     
     var email: String {
         if _email == nil {
@@ -19,8 +20,6 @@ class User {
         }
         return _email
     }
-    
-    var _password: String!
     
     var password: String {
         if _password == nil {
