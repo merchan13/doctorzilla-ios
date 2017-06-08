@@ -9,6 +9,7 @@ target 'doctorzilla' do
   pod 'Alamofire', '~> 4.4'
   pod 'SwiftyJSON'
   pod 'RealmSwift'
+  pod 'ReachabilitySwift', '~> 3'
 
   target 'doctorzillaTests' do
     inherit! :search_paths

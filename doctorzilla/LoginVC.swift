@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ReachabilitySwift
 
 class LoginVC: UIViewController, UITextFieldDelegate {
     
@@ -48,8 +49,6 @@ class LoginVC: UIViewController, UITextFieldDelegate {
                 }
             }
         }
-        
-        
     }
     
     override func viewDidLoad() {
@@ -67,5 +66,21 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         return true
     }
     
+}
+
+extension LoginVC: NetworkStatusListener {
+	
+	func networkStatusDidChange(status: Reachability.NetworkStatus) {
+		
+		switch status {
+		case .notReachable:
+			debugPrint("ViewController: Network became unreachable")
+		case .reachableViaWiFi:
+			debugPrint("ViewController: Network reachable through WiFi")
+		case .reachableViaWWAN:
+			debugPrint("ViewController: Network reachable through Cellular Data")
+		}
+		
+	}
 }
 

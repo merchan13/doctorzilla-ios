@@ -28,6 +28,7 @@
 		FAC6063D1ED911FD00726AA0 /* Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC6063C1ED911FD00726AA0 /* Background.swift */; };
 		FADF11561EDE186000BB54E7 /* ConsultationDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADF11551EDE186000BB54E7 /* ConsultationDetailVC.swift */; };
 		FADF11581EDE20AA00BB54E7 /* ConsultationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADF11571EDE20AA00BB54E7 /* ConsultationCell.swift */; };
+		FAE3BB951EE8FE76005E3904 /* ReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE3BB941EE8FE76005E3904 /* ReachabilityManager.swift */; };
 		FAE8E7A71EDF774F00E1489C /* BackgroundCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE8E7A61EDF774F00E1489C /* BackgroundCell.swift */; };
 		FAE8E7A91EDF776000E1489C /* PECell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE8E7A81EDF776000E1489C /* PECell.swift */; };
 		FAE8E7AB1EDFAF5400E1489C /* PhysicalExam.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE8E7AA1EDFAF5400E1489C /* PhysicalExam.swift */; };
@@ -92,6 +93,7 @@
 		FAC6063C1ED911FD00726AA0 /* Background.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Background.swift; sourceTree = "<group>"; };
 		FADF11551EDE186000BB54E7 /* ConsultationDetailVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsultationDetailVC.swift; sourceTree = "<group>"; };
 		FADF11571EDE20AA00BB54E7 /* ConsultationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsultationCell.swift; sourceTree = "<group>"; };
+		FAE3BB941EE8FE76005E3904 /* ReachabilityManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReachabilityManager.swift; sourceTree = "<group>"; };
 		FAE8E7A61EDF774F00E1489C /* BackgroundCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundCell.swift; sourceTree = "<group>"; };
 		FAE8E7A81EDF776000E1489C /* PECell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PECell.swift; sourceTree = "<group>"; };
 		FAE8E7AA1EDFAF5400E1489C /* PhysicalExam.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhysicalExam.swift; sourceTree = "<group>"; };
@@ -199,13 +201,13 @@
 		FA518F711ED3BA6600EAC1C4 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				FA00E8341ECE6D7F00600EC3 /* User.swift */,
-				FA518F7A1ED3F19F00EAC1C4 /* MedicalRecord.swift */,
 				FAC6063C1ED911FD00726AA0 /* Background.swift */,
 				FAF9A7AD1EDCA735004CECF8 /* Consultation.swift */,
-				FAE8E7AA1EDFAF5400E1489C /* PhysicalExam.swift */,
 				FAACA5091EE5DEAA006C39BB /* Insurance.swift */,
+				FA518F7A1ED3F19F00EAC1C4 /* MedicalRecord.swift */,
 				FAACA50B1EE5DEB5006C39BB /* Occupation.swift */,
+				FAE8E7AA1EDFAF5400E1489C /* PhysicalExam.swift */,
+				FA00E8341ECE6D7F00600EC3 /* User.swift */,
 				FA10252C1EE7CF8C00F6E085 /* RealmObjects.swift */,
 			);
 			name = Model;
@@ -220,6 +222,7 @@
 				FAF9528D1ED622E400E3D2EA /* MedicalRecordCSV.swift */,
 				FAACA50D1EE5E1BD006C39BB /* DataHelper.swift */,
 				FAACA50F1EE67BAE006C39BB /* Extensions.swift */,
+				FAE3BB941EE8FE76005E3904 /* ReachabilityManager.swift */,
 			);
 			name = Util;
 			sourceTree = "<group>";
@@ -578,6 +581,7 @@
 				FA4C7CE01EC3CA2800A58937 /* LoginVC.swift in Sources */,
 				FAE8E7A91EDF776000E1489C /* PECell.swift in Sources */,
 				FAACA50C1EE5DEB5006C39BB /* Occupation.swift in Sources */,
+				FAE3BB951EE8FE76005E3904 /* ReachabilityManager.swift in Sources */,
 				FAF9529C1ED6A35E00E3D2EA /* ConsultationsVC.swift in Sources */,
 				FADF11561EDE186000BB54E7 /* ConsultationDetailVC.swift in Sources */,
 				FA00E8351ECE6D7F00600EC3 /* User.swift in Sources */,

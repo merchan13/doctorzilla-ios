@@ -24,6 +24,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>ReachabilitySwift.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Realm.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -42,17 +47,17 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>035F3FAFABE4AE267825C87B38358394</key>
+		<key>3282278CE6744A30C4487C62B2979CA7</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>2FBF8F9970D3625416B29A4F8961AD9D</key>
+		<key>422A4EBA623411C9D5DBB85704A224D6</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>65939CC418C9A097E6B2438FF337A26C</key>
+		<key>57B6F5D86586AF314181C4765E0CC579</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -62,17 +67,22 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>80C0BB6CAE2F114F4A1A2ACFD5364F7E</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
 		<key>88E9EC28B8B46C3631E6B242B50F4442</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>D27FACE05D4F4A2624D5FDDDCE607E0D</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>DBC4DE547983DD1C64363C12D68A757F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>F9A6FA7E9BB7446DFC09FA27460ED222</key>
 		<dict>
 			<key>primary</key>
 			<true/>
