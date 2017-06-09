@@ -11,8 +11,8 @@ import Alamofire
 
 class User {
     
-    var _email: String!
-	var _password: String!
+    private var _email: String!
+	private var _password: String!
     
     var email: String {
         if _email == nil {
@@ -43,6 +43,8 @@ class User {
 				
                 if let token = result["auth_token"] as? String {
                     AuthToken.sharedInstance.token = token
+					self._email = email
+					self._password = password
 				} else {
 					AuthToken.sharedInstance.token = ""
 				}

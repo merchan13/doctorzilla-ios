@@ -170,6 +170,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		FA2D9DB61EEA77EF00671107 /* Realm Model */ = {
+			isa = PBXGroup;
+			children = (
+				FA10252C1EE7CF8C00F6E085 /* RealmObjects.swift */,
+			);
+			name = "Realm Model";
+			sourceTree = "<group>";
+		};
 		FA518F6F1ED3BA3B00EAC1C4 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
@@ -208,7 +216,6 @@
 				FAACA50B1EE5DEB5006C39BB /* Occupation.swift */,
 				FAE8E7AA1EDFAF5400E1489C /* PhysicalExam.swift */,
 				FA00E8341ECE6D7F00600EC3 /* User.swift */,
-				FA10252C1EE7CF8C00F6E085 /* RealmObjects.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -260,6 +267,7 @@
 		FAF7322D1E9044C700FA6030 /* doctorzilla */ = {
 			isa = PBXGroup;
 			children = (
+				FA2D9DB61EEA77EF00671107 /* Realm Model */,
 				FA518F711ED3BA6600EAC1C4 /* Model */,
 				FA518F701ED3BA4300EAC1C4 /* View */,
 				FA518F6F1ED3BA3B00EAC1C4 /* Controller */,

@@ -41,11 +41,11 @@ class ReachabilityManager: NSObject {
 		
 		switch reachability.currentReachabilityStatus {
 		case .notReachable:
-			debugPrint("Network became unreachable")
+			print("\nNetwork became unreachable")
 		case .reachableViaWiFi:
-			debugPrint("Network reachable through WiFi")
+			print("\nNetwork reachable through WiFi")
 		case .reachableViaWWAN:
-			debugPrint("Network reachable through Cellular Data")
+			print("\nNetwork reachable through Cellular Data")
 		}
 		
 		// Sending message to each of the delegates
@@ -64,7 +64,7 @@ class ReachabilityManager: NSObject {
 		do{
 			try reachability.startNotifier()
 		}catch{
-			debugPrint("Could not start reachability notifier")
+			print("\nCould not start reachability notifier")
 		}
 	}
 	
