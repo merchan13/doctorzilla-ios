@@ -30,6 +30,7 @@ class MedicalRecord {
 	private var _weight: Int!
 	private var _pressure_d: String!
 	private var _pressure_s: String!
+	private var _lastUpdate: String!
 	private var _backgrounds: [String: String] = ["Familiares":" ", "Alergias":"", "Diábetes":"", "Asma":"", "Cardiopatías":"", "Medicamentos":"", "Quirúrgicos":"", "Otros":""]
 	
 	private var _consultations = [Consultation]()
@@ -160,6 +161,13 @@ class MedicalRecord {
 		return _pressure_s
 	}
 	
+	var lastUpdate: String {
+		if _lastUpdate == nil {
+			_lastUpdate = ""
+		}
+		return _lastUpdate
+	}
+	
 	var backgrounds: [String: String] {
 		return _backgrounds
 	}
@@ -178,7 +186,6 @@ class MedicalRecord {
 	}
 	
 	func downloadRecordDetails(completed: @escaping DownloadComplete) {
-		
 		let headers: HTTPHeaders = [
 			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
 		]
@@ -251,6 +258,11 @@ class MedicalRecord {
 					self._referredBy = referredBy
 				}
 				
+				// LAST UPDATE DATE
+				if let lastUpdate = dict["updated_at"] as? String {
+					self._lastUpdate = lastUpdate
+				}
+				
 				// PHYSIC DATA
 				if let physicData = dict["physic_data"] as? Dictionary<String, AnyObject> {
 					// Height
@@ -307,7 +319,6 @@ class MedicalRecord {
 	}
 	
 	func downloadConsultations(completed: @escaping DownloadComplete) {
-		
 		let consultationURL = "\(URL_BASE)\(URL_CONSULTATIONS)"
 		
 		let headers: HTTPHeaders = [
@@ -319,16 +330,15 @@ class MedicalRecord {
 		]
 		
 		Alamofire.request(consultationURL, method: .get, parameters: parameters, headers: headers).responseJSON { (response) in
-	
 			if let dict = response.result.value as? [Dictionary<String, AnyObject>] {
 				
 				self._consultations.removeAll()
 				
 				for cnslttn in dict {
-					
 					var id = 0
 					var date = ""
 					var reason = ""
+					var reasonId = 0
 					
 					// ID
 					if let cnslttnId = cnslttn["id"] as? Int {
@@ -345,11 +355,12 @@ class MedicalRecord {
 						if let reasonDesc = cnslttnReason["description"] as? String {
 							reason = reasonDesc
 						}
+						if let rsnId = cnslttnReason["id"] as? Int {
+							reasonId = rsnId
+						}
 					}
-					
-					self._consultations.append(Consultation(consultationId: id, date: date, reason: reason))
+					self._consultations.append(Consultation(consultationId: id, date: date, reason: reason, reasonId: reasonId))
 				}
-
 			}
 			completed()
 		}

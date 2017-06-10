@@ -47,7 +47,6 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
-		
 		checkNetwork()
 		
 		if networkConnection {
@@ -56,9 +55,11 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 				self.collection.reloadData()
 			}
 		} else {
-			print("\nCargar historias de la BD")
+			parseMedicalRecordsRLM {
+				self.parseRecordsCSV()
+				self.collection.reloadData()
+			}
 		}
-		
 	}
 	
 	override func viewDidDisappear(_ animated: Bool) {
@@ -66,12 +67,10 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		ReachabilityManager.shared.removeListener(listener: self)
 	}
 	
-	// 1. Get MedicalRecords data from server, if networkStatus == false then get the data from Realm.
+	// 1. Get MedicalRecords data from server
 	func parseMedicalRecords(completed: @escaping DownloadComplete) {
-		
 		let medicalRecordCSV = MedicalRecordCSV()
 		var csvText = "id,document,lastName\n"
-		
 		let url = "\(URL_BASE)\(URL_MEDICAL_RECORDS)"
 		
 		let headers: HTTPHeaders = [
@@ -79,11 +78,8 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		]
 		
 		Alamofire.request(url, method: .get, headers: headers).responseJSON { response in
-			
 			if let recordDictionary = response.result.value as? [Dictionary<String, AnyObject>]{
-				
 				try! self.realm.write {
-			
 					for rec in recordDictionary {
 						let recordId = rec["id"] as! Int
 						let document = "\(rec["document_type"]!)-\(rec["document"]!)"
@@ -93,12 +89,14 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 						csvText.append(newLine)
 					
 						//Save to Realm
-						let rMedRecord = RMedicalRecord()
-						rMedRecord.id = recordId
-						rMedRecord.document = document
-						rMedRecord.lastName = lastName
-						self.realm.add(rMedRecord, update: true)
-						self.rUser.medrecords.append(rMedRecord)
+						if self.realm.object(ofType: RMedicalRecord.self, forPrimaryKey: recordId) == nil {
+							let rMedRecord = RMedicalRecord()
+							rMedRecord.id = recordId
+							rMedRecord.document = document
+							rMedRecord.lastName = lastName
+							self.realm.add(rMedRecord, update: true)
+							self.rUser.medrecords.append(rMedRecord)
+						}
 					}
 				}
 				medicalRecordCSV.create(csvText: csvText)
@@ -107,7 +105,27 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		}
 	}
 	
-	// 2. Parse MedicalRecords data into a CSV file.
+	// 1.1. Get MedicalRecords data from Realm DB
+	func parseMedicalRecordsRLM(completed: @escaping DownloadComplete) {
+		let medicalRecordCSV = MedicalRecordCSV()
+		var csvText = "id,document,lastName\n"
+		
+		let recordsRealm = realm.objects(RMedicalRecord.self)
+		
+		for rec in recordsRealm {
+			let recordId = rec.id
+			let document = rec.document
+			let lastName = rec.lastName
+			
+			let newLine = "\(recordId),\(document),\(lastName)\n"
+			csvText.append(newLine)
+		}
+		
+		medicalRecordCSV.create(csvText: csvText)
+		completed()
+	}
+	
+	// 2. Load MedicalRecords data from CSV file.
 	func parseRecordsCSV() {
 		if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
 			let path = dir.appendingPathComponent(RECORDS_CSV)
@@ -133,7 +151,6 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-		
 		if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MedRecordCell", for: indexPath) as? MedRecordCell {
 			
 			let medrec: MedicalRecord!

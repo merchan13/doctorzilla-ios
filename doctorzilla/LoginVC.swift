@@ -26,10 +26,6 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
 		
 		print("\nPath to Realm file: " + realm.configuration.fileURL!.absoluteString)
-		
-		if let userInRealm = self.realm.object(ofType: RUser.self, forPrimaryKey: 1) {
-			self.rUser = userInRealm
-		}
     }
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -59,11 +55,13 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 						self.activityIndicatorView.stopAnimating()
 						
 						try! self.realm.write {
-							let rUser = RUser()
-							rUser.id = 1
-							rUser.email = self.user.email
-							rUser.password = self.user.password
-							self.realm.add(rUser, update: true)
+							if self.realm.object(ofType: RUser.self, forPrimaryKey: 1) == nil {
+								let rUser = RUser()
+								rUser.id = 1
+								rUser.email = self.user.email
+								rUser.password = self.user.password
+								self.realm.add(rUser, update: true)
+							}
 						}
 						
 						self.performSegue(withIdentifier: "DashboardVC", sender: self.user)
@@ -71,17 +69,14 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 				} else {
 					DispatchQueue.main.async {
 						self.activityIndicatorView.stopAnimating()
-						
-						let alertController = UIAlertController(title: "Error", message: "La contraseña o correo que introdujo son inválidos", preferredStyle: .alert)
-						
-						let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-						alertController.addAction(defaultAction)
-						
-						self.present(alertController, animated: true, completion: nil)
+						self.loginAlert()
 					}
 				}
 			}
 		} else {
+			if let userInRealm = self.realm.object(ofType: RUser.self, forPrimaryKey: 1) {
+				self.rUser = userInRealm
+			}
 			if self.rUser.signIn(email: userEmail, password: userPassword) {
 				DispatchQueue.main.async {
 					self.activityIndicatorView.stopAnimating()
@@ -91,16 +86,19 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 			} else {
 				DispatchQueue.main.async {
 					self.activityIndicatorView.stopAnimating()
-					
-					let alertController = UIAlertController(title: "Error", message: "La contraseña o correo que introdujo son inválidos", preferredStyle: .alert)
-					
-					let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-					alertController.addAction(defaultAction)
-					
-					self.present(alertController, animated: true, completion: nil)
+					self.loginAlert()
 				}
 			}
 		}
+	}
+	
+	func loginAlert() {
+		let alertController = UIAlertController(title: "Error", message: "La contraseña o correo que introdujo son inválidos", preferredStyle: .alert)
+		
+		let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+		alertController.addAction(defaultAction)
+		
+		self.present(alertController, animated: true, completion: nil)
 	}
 	
     //Cerrar teclado cuando se toca cualquier espacio de la pantalla.

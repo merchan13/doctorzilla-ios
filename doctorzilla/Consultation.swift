@@ -15,8 +15,10 @@ class Consultation {
 	private var _consultationId: Int!
 	private var _date: String!
 	private var _reason: String!
+	private var _reasonId: Int!
 	private var _affliction: String!
 	private var _diagnostic: String!
+	private var _diagnosticId: Int!
 	private var _evolution: String!
 	private var _height: Int!
 	private var _weight: Int!
@@ -24,6 +26,7 @@ class Consultation {
 	private var _pressure_d: String!
 	private var _note: String!
 	private var _plan: String!
+	private var _planId: Int!
 	private var _backgrounds = [Background]()
 	private var _physicalExams = [PhysicalExam]()
 	
@@ -48,6 +51,13 @@ class Consultation {
 		return _reason
 	}
 	
+	var reasonId: Int {
+		if _reasonId == nil {
+			_reasonId = 0
+		}
+		return _reasonId
+	}
+	
 	var affliction: String {
 		if _affliction == nil {
 			_affliction = ""
@@ -60,6 +70,13 @@ class Consultation {
 			_diagnostic = ""
 		}
 		return _diagnostic
+	}
+	
+	var diagnosticId: Int {
+		if _diagnosticId == nil {
+			_diagnosticId = 0
+		}
+		return _diagnosticId
 	}
 	
 	var evolution: String {
@@ -111,6 +128,13 @@ class Consultation {
 		return _plan
 	}
 	
+	var planId: Int {
+		if _planId == nil {
+			_planId = 0
+		}
+		return _planId
+	}
+	
 	var backgrounds: [Background] {
 		return _backgrounds
 	}
@@ -119,11 +143,12 @@ class Consultation {
 		return _physicalExams
 	}
 	
-	init(consultationId: Int, date: String, reason: String) {
+	init(consultationId: Int, date: String, reason: String, reasonId: Int) {
 		
 		self._consultationId = consultationId
 		self._date = date
 		self._reason = reason
+		self._reasonId = reasonId
 		
 		self._consultationURL = "\(URL_BASE)\(URL_CONSULTATIONS)\(self.consultationId)/"
 	}
@@ -150,6 +175,9 @@ class Consultation {
 				if let diagnosticDict = dict["diagnostic"] as? Dictionary<String, AnyObject> {
 					if let diagnostic = diagnosticDict["description"] as? String {
 						self._diagnostic = diagnostic
+					}
+					if let diagnosticId = diagnosticDict["id"] as? Int {
+						self._diagnosticId = diagnosticId
 					}
 				}
 				
@@ -185,8 +213,11 @@ class Consultation {
 				
 				// PLAN
 				if let planDict = dict["plan"] as? Dictionary<String, AnyObject> {
-					if let plan = planDict["description"] as? String! {
+					if let plan = planDict["description"] as? String {
 						self._plan = plan
+					}
+					if let planId = planDict["id"] as? Int {
+						self._planId = planId
 					}
 				}
 				

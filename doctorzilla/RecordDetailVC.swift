@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import RealmSwift
+import ReachabilitySwift
 
 class RecordDetailVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource,
 UICollectionViewDelegateFlowLayout {
@@ -27,9 +29,11 @@ UICollectionViewDelegateFlowLayout {
 	@IBOutlet weak var pressureLabel: UILabel!
 	@IBOutlet weak var backgroundCollection: UICollectionView!
 	
-	
 	var medrecord: MedicalRecord!
 	var backgrounds = [Background]()
+	let realm = try! Realm()
+	
+	var networkConnection = false
 	
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,7 +44,6 @@ UICollectionViewDelegateFlowLayout {
 	}
 	
 	func setDetails() {
-		
 		backgroundCollection.dataSource = self
 		backgroundCollection.delegate = self
 		
@@ -48,6 +51,29 @@ UICollectionViewDelegateFlowLayout {
 			self.updateUI()
 			self.backgrounds = self.medrecord.backgroundsArray()
 			self.backgroundCollection.reloadData()
+			
+			// Save to Realm
+			try! self.realm.write {
+				let rMedRecord = RMedicalRecord()
+				rMedRecord.id = self.medrecord.recordId
+				rMedRecord.document = self.medrecord.document
+				rMedRecord.name = self.medrecord.name
+				rMedRecord.lastName = self.medrecord.lastName
+				rMedRecord.birthday = self.medrecord.birthday
+				rMedRecord.firstConsultation = self.medrecord.firstConsultation
+				rMedRecord.email = self.medrecord.email
+				rMedRecord.phone = self.medrecord.phone
+				rMedRecord.cellphone = self.medrecord.cellphone
+				rMedRecord.address = self.medrecord.address
+				rMedRecord.gender = self.medrecord.gender
+				rMedRecord.referredBy = self.medrecord.referredBy
+				rMedRecord.height = self.medrecord.height
+				rMedRecord.weight = self.medrecord.weight
+				rMedRecord.pressure_d = self.medrecord.pressure_d
+				rMedRecord.pressure_s = self.medrecord.pressure_s
+				rMedRecord.lastUpdate = self.medrecord.lastUpdate
+				self.realm.add(rMedRecord, update: true)
+			}
 		}
 	}
 	
@@ -73,7 +99,6 @@ UICollectionViewDelegateFlowLayout {
 	}
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		
 		if segue.identifier == "EditRecordVC" {
 			if let editRecordVC = segue.destination as? EditRecordVC {
 				if let medrec = sender as? MedicalRecord {
@@ -81,11 +106,9 @@ UICollectionViewDelegateFlowLayout {
 				}
 			}
 		}
-		
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-		
 		if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BackgroundCell", for: indexPath) as? BackgroundCell {
 			
 			let bg: Background!
@@ -109,6 +132,32 @@ UICollectionViewDelegateFlowLayout {
 	
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		return CGSize(width: 285, height: 100)
+	}
+	
+}
+
+extension RecordDetailVC: NetworkStatusListener {
+	
+	func networkStatusDidChange(status: Reachability.NetworkStatus) {
+		switch status {
+		case .notReachable:
+			networkConnection = false
+		case .reachableViaWiFi:
+			networkConnection = true
+		case .reachableViaWWAN:
+			networkConnection = true
+		}
+	}
+	
+	func checkNetwork() {
+		switch ReachabilityManager.shared.reachability.currentReachabilityStatus {
+		case .notReachable:
+			networkConnection = false
+		case .reachableViaWiFi:
+			networkConnection = true
+		case .reachableViaWWAN:
+			networkConnection = true
+		}
 	}
 	
 }

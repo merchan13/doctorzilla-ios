@@ -26,9 +26,11 @@ class MedicalRecordVC: UIViewController {
 		
 		self.detailVC.medrecord = medrecord
 		self.consultationVC.medrecord = medrecord
+		//self.noteVC.medrecord = medrecord
 		
 		self.detailVC.setDetails()
 		self.consultationVC.setDetails()
+		//self.noteVC.setDetails()
     }
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -37,6 +39,9 @@ class MedicalRecordVC: UIViewController {
 		}
 		if let vc = segue.destination as? ConsultationsVC, segue.identifier == "ConsultationsVC" {
 			self.consultationVC = vc
+		}
+		if let vc = segue.destination as? OperativeNotesVC, segue.identifier == "OperativeNotesVC" {
+			self.noteVC = vc
 		}
 	}
 	
