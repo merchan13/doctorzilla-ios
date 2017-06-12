@@ -13,6 +13,7 @@ import ReachabilitySwift
 class RecordDetailVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource,
 UICollectionViewDelegateFlowLayout {
 
+	@IBOutlet weak var profilePictureImage: UIImageView!
 	@IBOutlet weak var fullNameLabel: UILabel!
 	@IBOutlet weak var documentLabel: UILabel!
 	@IBOutlet weak var birthdayLabel: UILabel!
@@ -78,6 +79,7 @@ UICollectionViewDelegateFlowLayout {
 	}
 	
 	func updateUI() {
+		profilePictureImage.image = UIImage(data: self.medrecord.profilePic as Data)
 		fullNameLabel.text = "\(self.medrecord.name) \(self.medrecord.lastName)"
 		documentLabel.text = self.medrecord.document
 		birthdayLabel.text = "\(self.medrecord.parsedBirthdayDate()) (\(self.medrecord.age()) años)"

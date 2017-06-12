@@ -27,6 +27,7 @@ class RMedicalRecord: Object {
 	dynamic var pressure_d = ""
 	dynamic var pressure_s = ""
 	dynamic var lastUpdate = ""
+	dynamic var profilePic = NSData()
 	
 	// Has many:
 	let backgrounds = List<RBackground>()

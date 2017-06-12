@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -153,7 +153,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="138" height="120"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ryan.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="nwp-9R-FHO">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="drzilla_imagotipo_color_1" translatesAutoresizingMaskIntoConstraints="NO" id="nwp-9R-FHO">
                                                     <rect key="frame" x="0.0" y="0.0" width="138" height="85"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="85" id="dlY-39-6LC"/>
@@ -675,7 +675,7 @@
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yhe-Vq-I4H">
                                 <rect key="frame" x="0.0" y="0.0" width="304" height="790"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ryan.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="sdc-Va-7TD">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="drzilla_imagotipo_color_1" translatesAutoresizingMaskIntoConstraints="NO" id="sdc-Va-7TD">
                                         <rect key="frame" x="90" y="1" width="125" height="125"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="125" id="0ND-8S-dyl"/>
@@ -1104,6 +1104,7 @@
                         <outlet property="occupationLabel" destination="Wkx-kA-MHS" id="P7e-Zh-tZl"/>
                         <outlet property="phoneLabel" destination="LdV-Td-CH9" id="g25-bs-hkN"/>
                         <outlet property="pressureLabel" destination="u14-GA-7vp" id="dsc-jy-Lie"/>
+                        <outlet property="profilePictureImage" destination="sdc-Va-7TD" id="UcA-Ee-PJZ"/>
                         <outlet property="referredByLabel" destination="hIf-rp-fT0" id="Ahr-3z-6oi"/>
                         <outlet property="weightLabel" destination="o41-Kt-ALa" id="wZJ-fa-Ub4"/>
                         <segue destination="lHQ-DL-76Y" kind="presentation" identifier="EditRecordVC" id="f86-ei-sIr"/>
@@ -2031,7 +2032,6 @@
         <image name="menubtn" width="20" height="14"/>
         <image name="presupuestos" width="25" height="25"/>
         <image name="recipes" width="25" height="25"/>
-        <image name="ryan.jpg" width="200" height="200"/>
         <image name="selectcontact_btn" width="12" height="21"/>
     </resources>
 </document>

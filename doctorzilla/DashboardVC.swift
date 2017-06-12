@@ -8,6 +8,7 @@
 
 import UIKit
 import Alamofire
+import AlamofireImage
 import RealmSwift
 import ReachabilitySwift
 
@@ -51,12 +52,13 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		
 		if networkConnection {
 			parseMedicalRecords {
-				self.parseRecordsCSV()
 				self.collection.reloadData()
+				self.dowloadProfilePictures {
+					self.collection.reloadData()
+				}
 			}
 		} else {
 			parseMedicalRecordsRLM {
-				self.parseRecordsCSV()
 				self.collection.reloadData()
 			}
 		}
@@ -67,10 +69,8 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		ReachabilityManager.shared.removeListener(listener: self)
 	}
 	
-	// 1. Get MedicalRecords data from server
+	// Get MedicalRecords data from server
 	func parseMedicalRecords(completed: @escaping DownloadComplete) {
-		let medicalRecordCSV = MedicalRecordCSV()
-		var csvText = "id,document,lastName\n"
 		let url = "\(URL_BASE)\(URL_MEDICAL_RECORDS)"
 		
 		let headers: HTTPHeaders = [
@@ -79,36 +79,24 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		
 		Alamofire.request(url, method: .get, headers: headers).responseJSON { response in
 			if let recordDictionary = response.result.value as? [Dictionary<String, AnyObject>]{
-				try! self.realm.write {
-					for rec in recordDictionary {
-						let recordId = rec["id"] as! Int
-						let document = "\(rec["document_type"]!)-\(rec["document"]!)"
-						let lastName = rec["last_name"] as! String
+				self.medrecord.removeAll()
+				
+				for rec in recordDictionary {
+					let recordId = rec["id"] as! Int
+					let document = "\(rec["document_type"]!)-\(rec["document"]!)"
+					let lastName = rec["last_name"] as! String
+					let profilePicURL = rec["profile_picture"] as! String
 					
-						let newLine = "\(recordId),\(document),\(lastName)\n"
-						csvText.append(newLine)
-					
-						//Save to Realm
-						if self.realm.object(ofType: RMedicalRecord.self, forPrimaryKey: recordId) == nil {
-							let rMedRecord = RMedicalRecord()
-							rMedRecord.id = recordId
-							rMedRecord.document = document
-							rMedRecord.lastName = lastName
-							self.realm.add(rMedRecord, update: true)
-							self.rUser.medrecords.append(rMedRecord)
-						}
-					}
+					let medrec = MedicalRecord(recordId: recordId, document: document, lastName: lastName, profilePicURL: profilePicURL)
+					self.medrecord.append(medrec)
 				}
-				medicalRecordCSV.create(csvText: csvText)
 			}
 			completed()
 		}
 	}
 	
-	// 1.1. Get MedicalRecords data from Realm DB
+	// Get MedicalRecords data from Realm DB
 	func parseMedicalRecordsRLM(completed: @escaping DownloadComplete) {
-		let medicalRecordCSV = MedicalRecordCSV()
-		var csvText = "id,document,lastName\n"
 		
 		let recordsRealm = realm.objects(RMedicalRecord.self)
 		
@@ -116,36 +104,39 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 			let recordId = rec.id
 			let document = rec.document
 			let lastName = rec.lastName
+			let profilePic = rec.profilePic
 			
-			let newLine = "\(recordId),\(document),\(lastName)\n"
-			csvText.append(newLine)
+			let medrec = MedicalRecord(recordId: recordId, document: document, lastName: lastName, profilePic: profilePic)
+			self.medrecord.append(medrec)
 		}
-		
-		medicalRecordCSV.create(csvText: csvText)
 		completed()
 	}
 	
-	// 2. Load MedicalRecords data from CSV file.
-	func parseRecordsCSV() {
-		if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-			let path = dir.appendingPathComponent(RECORDS_CSV)
-			
-			self.medrecord.removeAll()
-			
-			do {
-				let csv = try CSV(contentsOfURL: path)
-				let rows = csv.rows
-				
-				for row in rows {
-					let recordId = Int(row["id"]!)!
-					let document = row["document"]!
-					let lastName = row["lastName"]!
-					let medrec = MedicalRecord(recordId: recordId, document: document, lastName: lastName)
-					self.medrecord.append(medrec)
+	// Download MedicalRecord profile pictures
+	func dowloadProfilePictures(completed: @escaping DownloadComplete) {
+		for rec in self.medrecord {
+			Alamofire.request(rec.profilePicURL).responseImage { response in
+				if let image = response.result.value {
+					let size = CGSize(width: 100.0, height: 100.0)
+					let resizedImage = image.af_imageAspectScaled(toFit: size)
+					let circularImage = resizedImage.af_imageRoundedIntoCircle()
+					let imageData:NSData = UIImagePNGRepresentation(circularImage)! as NSData
+					rec.profilePic = imageData
+					
+					//Save to Realm
+					try! self.realm.write {
+						if self.realm.object(ofType: RMedicalRecord.self, forPrimaryKey: rec.recordId) == nil {
+							let rMedRecord = RMedicalRecord()
+							rMedRecord.id = rec.recordId
+							rMedRecord.document = rec.document
+							rMedRecord.lastName = rec.lastName
+							self.realm.add(rMedRecord, update: true)
+							self.rUser.medrecords.append(rMedRecord)
+						}
+						self.realm.object(ofType: RMedicalRecord.self, forPrimaryKey: rec.recordId)?.profilePic = rec.profilePic
+					}
 				}
-				
-			} catch let err as NSError {
-				print(err.debugDescription)
+				completed()
 			}
 		}
 	}

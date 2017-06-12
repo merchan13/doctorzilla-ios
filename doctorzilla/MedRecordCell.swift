@@ -21,27 +21,16 @@ class MedRecordCell: UICollectionViewCell {
 	}
 	
 	func configureCell(_ medrecord: MedicalRecord) {
-		
 		self.medrecord = medrecord
 		
 		nameLabel.text = self.medrecord.lastName.capitalized
 		idLabel.text = self.medrecord.document
 		
-		/*
-		let url = URL(string: self.medrecord.imageURL)!
-		
-		DispatchQueue.global().async {
-			do {
-				let data = try Data(contentsOf: url)
-				DispatchQueue.global().sync {
-					thumbImage.image = UIImage(data: data)
-				}
-			} catch {
-				// handle error
-			}
+		if self.medrecord.profilePic.length == 0 {
+			thumbImage.image = UIImage(named: "drzilla_imagotipo_color_2")
+		} else {
+			thumbImage.image = UIImage(data: self.medrecord.profilePic as Data)
 		}
-		*/
-		
 	}
 	
 }

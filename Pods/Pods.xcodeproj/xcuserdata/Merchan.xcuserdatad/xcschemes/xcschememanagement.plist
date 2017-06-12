@@ -9,6 +9,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>AlamofireImage.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-doctorzilla.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -47,17 +52,12 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>3282278CE6744A30C4487C62B2979CA7</key>
+		<key>160C12D8187C7559BDD393C3D19AE3F2</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>422A4EBA623411C9D5DBB85704A224D6</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>57B6F5D86586AF314181C4765E0CC579</key>
+		<key>5779B4E5FCF504F590C0BA91A87A08A2</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -72,7 +72,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D27FACE05D4F4A2624D5FDDDCE607E0D</key>
+		<key>8E131C1502562EBB5C775D945CC6D528</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>9EFE4C70245EE2857D336B8B9FA4E825</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>CBDAE4B263413BC855594AF7FFF0CD97</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -82,7 +92,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>F9A6FA7E9BB7446DFC09FA27460ED222</key>
+		<key>FF55940360BE19EC1BA917523D9D9600</key>
 		<dict>
 			<key>primary</key>
 			<true/>

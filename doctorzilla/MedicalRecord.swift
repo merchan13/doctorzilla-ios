@@ -16,6 +16,8 @@ class MedicalRecord {
 	private var _document: String!
 	private var _name: String!
 	private var _lastName: String!
+	private var _profilePicURL: String!
+	private var _profilePic: NSData!
 	private var _birthday: String!
 	private var _firstConsultation: String!
 	private var _occupation: String!
@@ -61,6 +63,24 @@ class MedicalRecord {
 			_lastName = ""
 		}
 		return _lastName
+	}
+	
+	var profilePicURL: String {
+		if _profilePicURL == nil {
+			_profilePicURL = ""
+		}
+		return _profilePicURL
+	}
+	
+	var profilePic: NSData {
+		get {
+			if _profilePic == nil {
+				_profilePic = NSData()
+			}
+			return _profilePic
+		} set {
+			_profilePic = (newValue)
+		}
 	}
 	
 	var birthday: String {
@@ -181,6 +201,26 @@ class MedicalRecord {
 		self._recordId = recordId
 		self._document = document
 		self._lastName = lastName
+		
+		self._medrecordURL = "\(URL_BASE)\(URL_MEDICAL_RECORDS)\(self.recordId)/"
+	}
+	
+	init(recordId: Int, document: String, lastName: String, profilePicURL: String) {
+		
+		self._recordId = recordId
+		self._document = document
+		self._lastName = lastName
+		self._profilePicURL = profilePicURL
+		
+		self._medrecordURL = "\(URL_BASE)\(URL_MEDICAL_RECORDS)\(self.recordId)/"
+	}
+	
+	init(recordId: Int, document: String, lastName: String, profilePic: NSData) {
+		
+		self._recordId = recordId
+		self._document = document
+		self._lastName = lastName
+		self._profilePic = profilePic
 		
 		self._medrecordURL = "\(URL_BASE)\(URL_MEDICAL_RECORDS)\(self.recordId)/"
 	}

@@ -20,12 +20,11 @@ class ConsultationCell: UITableViewCell {
     }
 	
 	func updateUI(consultation: Consultation) {
-	
 		self.consultation = consultation
 		
 		dateLabel.text = self.consultation.parsedConsultationDate()
 		reasonLabel.text = self.consultation.reason
-		
+
 	}
 
 }

@@ -23,9 +23,6 @@ class RUser: Object {
 	
 	func signIn(email: String, password: String) -> Bool {
 		
-		print(self.email, email)
-		print(self.password, password)
-		
 		if email == self.email && password == self.password {
 			return true
 		} else {
