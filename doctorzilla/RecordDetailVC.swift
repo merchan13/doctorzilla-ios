@@ -31,7 +31,7 @@ UICollectionViewDelegateFlowLayout {
 	@IBOutlet weak var backgroundCollection: UICollectionView!
 	
 	var medrecord: MedicalRecord!
-	var backgrounds = [Background]()
+	var rMedrecord: RMedicalRecord!
 	let realm = try! Realm()
 	
 	var networkConnection = false
@@ -48,33 +48,15 @@ UICollectionViewDelegateFlowLayout {
 		backgroundCollection.dataSource = self
 		backgroundCollection.delegate = self
 		
-		self.medrecord.downloadRecordDetails {
-			self.updateUI()
-			self.backgrounds = self.medrecord.backgroundsArray()
-			self.backgroundCollection.reloadData()
-			
-			// Save to Realm
-			try! self.realm.write {
-				let rMedRecord = RMedicalRecord()
-				rMedRecord.id = self.medrecord.recordId
-				rMedRecord.document = self.medrecord.document
-				rMedRecord.name = self.medrecord.name
-				rMedRecord.lastName = self.medrecord.lastName
-				rMedRecord.birthday = self.medrecord.birthday
-				rMedRecord.firstConsultation = self.medrecord.firstConsultation
-				rMedRecord.email = self.medrecord.email
-				rMedRecord.phone = self.medrecord.phone
-				rMedRecord.cellphone = self.medrecord.cellphone
-				rMedRecord.address = self.medrecord.address
-				rMedRecord.gender = self.medrecord.gender
-				rMedRecord.referredBy = self.medrecord.referredBy
-				rMedRecord.height = self.medrecord.height
-				rMedRecord.weight = self.medrecord.weight
-				rMedRecord.pressure_d = self.medrecord.pressure_d
-				rMedRecord.pressure_s = self.medrecord.pressure_s
-				rMedRecord.lastUpdate = self.medrecord.lastUpdate
-				self.realm.add(rMedRecord, update: true)
+		checkNetwork()
+		
+		if networkConnection {
+			self.medrecord.downloadRecordDetails {
+				self.updateUI()
+				self.backgroundCollection.reloadData()
 			}
+		} else {
+			self.updateUIRLM()
 		}
 	}
 	
@@ -96,15 +78,44 @@ UICollectionViewDelegateFlowLayout {
 		pressureLabel.text = "\(self.medrecord.pressure_s)/\(self.medrecord.pressure_d)"
 	}
 	
+	func updateUIRLM() {
+		profilePictureImage.image = UIImage(data: self.rMedrecord.profilePic as Data)
+		fullNameLabel.text = "\(self.rMedrecord.name) \(self.rMedrecord.lastName)"
+		documentLabel.text = self.rMedrecord.document
+		birthdayLabel.text = "\(self.rMedrecord.parsedBirthdayDate()) (\(self.rMedrecord.age()) años)"
+		firstConsultationLabel.text = self.rMedrecord.parsedFirstConsultationDate()
+		occupationLabel.text = self.rMedrecord.occupation?.name
+		emailLabel.text = self.rMedrecord.email
+		phoneLabel.text = self.rMedrecord.phone
+		cellphoneLabel.text = self.rMedrecord.cellphone
+		insuranceLabel.text = self.rMedrecord.insurance?.name
+		referredByLabel.text = self.rMedrecord.referredBy
+		weightLabel.text = "\(self.rMedrecord.weight) kg."
+		heigthLabel.text = "\(self.rMedrecord.height) m."
+		IMCLabel.text = "\(self.rMedrecord.IMC())"
+		pressureLabel.text = "\(self.rMedrecord.pressure_s)/\(self.rMedrecord.pressure_d)"
+	}
+	
 	@IBAction func editButtonTapped(_ sender: Any) {
-		performSegue(withIdentifier: "EditRecordVC", sender: self.medrecord)
+		if networkConnection {
+			performSegue(withIdentifier: "EditRecordVC", sender: self.medrecord)
+		} else {
+			performSegue(withIdentifier: "EditRecordVC", sender: self.rMedrecord)
+		}
+		
 	}
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.identifier == "EditRecordVC" {
 			if let editRecordVC = segue.destination as? EditRecordVC {
-				if let medrec = sender as? MedicalRecord {
-					editRecordVC.medrecord = medrec
+				if networkConnection {
+					if let medrec = sender as? MedicalRecord {
+						editRecordVC.medrecord = medrec
+					}
+				} else {
+					if let rMedrec = sender as? RMedicalRecord {
+						editRecordVC.rMedrecord = rMedrec
+					}
 				}
 			}
 		}
@@ -112,12 +123,18 @@ UICollectionViewDelegateFlowLayout {
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BackgroundCell", for: indexPath) as? BackgroundCell {
+			if networkConnection {
+				let bg: Background!
+				bg = self.medrecord.backgroundsArray()[indexPath.row]
+				cell.configureCell(bg)
+				return cell
+			} else {
+				let bg: RBackground!
+				bg = self.rMedrecord.backgroundsArray()[indexPath.row]
+				cell.configureCell(bg)
+				return cell
+			}
 			
-			let bg: Background!
-			bg = backgrounds[indexPath.row]
-			cell.configureCell(bg)
-			
-			return cell
 		} else {
 			return UICollectionViewCell()
 		}
@@ -125,7 +142,11 @@ UICollectionViewDelegateFlowLayout {
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return backgrounds.count
+		if networkConnection {
+			return self.medrecord.backgroundsArray().count
+		} else {
+			return self.rMedrecord.backgroundsArray().count
+		}
 	}
 	
 	func numberOfSections(in collectionView: UICollectionView) -> Int {

@@ -13,9 +13,6 @@ class ROccupation: Object {
 	dynamic var id = 0
 	dynamic var name = ""
 	
-	// Has many:
-	let medrecords = List<RMedicalRecord>()
-	
 	override static func primaryKey() -> String? {
 		return "id"
 	}

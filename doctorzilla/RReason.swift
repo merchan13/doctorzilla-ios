@@ -13,9 +13,6 @@ class RReason: Object {
 	dynamic var id = 0
 	dynamic var reasonDescription = ""
 	
-	// Has many:
-	let consultations = List<RConsultation>()
-	
 	override static func primaryKey() -> String? {
 		return "id"
 	}

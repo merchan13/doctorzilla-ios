@@ -11,6 +11,8 @@ import RealmSwift
 
 class RPhysicalExam: Object {
 	dynamic var id = 0
+	dynamic var examType = ""
+	dynamic var observation = ""
 	
 	override static func primaryKey() -> String? {
 		return "id"

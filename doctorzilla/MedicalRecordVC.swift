@@ -10,16 +10,17 @@ import UIKit
 
 class MedicalRecordVC: UIViewController {
 	
+	@IBOutlet weak var segmentedControl: UISegmentedControl!
+	@IBOutlet weak var detailView: UIView!
+	@IBOutlet weak var consultationView: UIView!
+	@IBOutlet weak var operativeNoteView: UIView!
+	
 	var detailVC: RecordDetailVC!
 	var consultationVC: ConsultationsVC!
 	var noteVC: OperativeNotesVC!
 	
 	var medrecord: MedicalRecord!
-	
-	@IBOutlet weak var segmentedControl: UISegmentedControl!
-	@IBOutlet weak var detailView: UIView!
-	@IBOutlet weak var consultationView: UIView!
-	@IBOutlet weak var operativeNoteView: UIView!
+	var rMedrecord: RMedicalRecord!
 	
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +28,10 @@ class MedicalRecordVC: UIViewController {
 		self.detailVC.medrecord = medrecord
 		self.consultationVC.medrecord = medrecord
 		//self.noteVC.medrecord = medrecord
+		
+		self.detailVC.rMedrecord = rMedrecord
+		self.consultationVC.rMedrecord = rMedrecord
+		//self.noteVC.rMedrecord = rMedrecord
 		
 		self.detailVC.setDetails()
 		self.consultationVC.setDetails()

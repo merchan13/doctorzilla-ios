@@ -7,8 +7,10 @@
 //
 
 import UIKit
+import RealmSwift
+import ReachabilitySwift
 
-class EditRecordVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate {
+class EditRecordVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate, UITextViewDelegate {
 
 	@IBOutlet weak var nameTextField: UITextField!
 	@IBOutlet weak var lastNameTextField: UITextField!
@@ -23,17 +25,27 @@ class EditRecordVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSour
 	@IBOutlet weak var insurancePickerView: UIPickerView!
 	
 	var medrecord: MedicalRecord!
-	var occupations = [Occupation]()
-	var insurances = [Insurance]()
+	var rMedrecord: RMedicalRecord!
+	var occupations: Results<ROccupation>!
+	var insurances: Results<RInsurance>!
 	var genders = ["Masculino","Femenino"]
+	let realm = try! Realm()
+	
+	var networkConnection = false
 	
     override func viewDidLoad() {
         super.viewDidLoad()
 		
 		self.nameTextField.delegate = self
 		self.lastNameTextField.delegate = self
+		self.phoneTextField.delegate = self
+		self.cellphoneTextField.delegate = self
+		self.emailTextField.delegate = self
+		self.addressTextView.delegate = self
+		self.referredByTextField.delegate = self
 		
-		let dataHelper = DataHelper()
+		self.occupations = self.realm.objects(ROccupation.self)
+		self.insurances = self.realm.objects(RInsurance.self)
 		
 		self.occupationPickerView.delegate = self
 		self.occupationPickerView.dataSource = self
@@ -42,57 +54,102 @@ class EditRecordVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSour
 		self.genderPickerView.delegate = self
 		self.genderPickerView.dataSource = self
 		
-		dataHelper.downloadOccupations {
-			self.occupations = dataHelper.occupations
-			self.occupationPickerView.reloadComponent(0)
-			self.occupationPickerView.selectRow(self.occupations.index(where: {$0.name == self.medrecord.occupation})!, inComponent: 0, animated: true)
-		}
-		
-		dataHelper.downloadInsurances {
-			self.insurances = dataHelper.insurances
-			self.insurancePickerView.reloadComponent(0)
-			self.insurancePickerView.selectRow(self.insurances.index(where: {$0.name == self.medrecord.insurance})!, inComponent: 0, animated: true)
-		}
-		
 		loadValues()
     }
 	
 	func loadValues() {
-		self.nameTextField.text = self.medrecord.name
-		self.lastNameTextField.text = self.medrecord.lastName
-		self.birthdayDatePicker.date = self.medrecord.birthdayToDate()
-		self.phoneTextField.text = self.medrecord.phone
-		self.cellphoneTextField.text = self.medrecord.cellphone
-		self.emailTextField.text = self.medrecord.email
-		self.addressTextView.text = self.medrecord.address
-		self.referredByTextField.text = self.medrecord.referredBy
+		checkNetwork()
 		
-		if self.medrecord.gender == "masculine" {
-			self.genderPickerView.selectRow(0, inComponent: 0, animated: true)
-		} else if self.medrecord.gender == "femenine" {
-			self.genderPickerView.selectRow(1, inComponent: 0, animated: true)
+		if networkConnection {
+			self.nameTextField.text = self.medrecord.name
+			self.lastNameTextField.text = self.medrecord.lastName
+			self.birthdayDatePicker.date = self.medrecord.birthdayToDate()
+			self.phoneTextField.text = self.medrecord.phone
+			self.cellphoneTextField.text = self.medrecord.cellphone
+			self.emailTextField.text = self.medrecord.email
+			self.addressTextView.text = self.medrecord.address
+			self.referredByTextField.text = self.medrecord.referredBy
+			
+			self.occupationPickerView.selectRow(self.occupations.index(where: {$0.name == self.medrecord.occupation})!, inComponent: 0, animated: true)
+			self.insurancePickerView.selectRow(self.insurances.index(where: {$0.name == self.medrecord.insurance})!, inComponent: 0, animated: true)
+			
+			if self.medrecord.gender == "masculine" {
+				self.genderPickerView.selectRow(0, inComponent: 0, animated: true)
+			} else if self.medrecord.gender == "femenine" {
+				self.genderPickerView.selectRow(1, inComponent: 0, animated: true)
+			}
+		} else {
+			self.nameTextField.text = self.rMedrecord.name
+			self.lastNameTextField.text = self.rMedrecord.lastName
+			self.birthdayDatePicker.date = self.rMedrecord.birthdayToDate()
+			self.phoneTextField.text = self.rMedrecord.phone
+			self.cellphoneTextField.text = self.rMedrecord.cellphone
+			self.emailTextField.text = self.rMedrecord.email
+			self.addressTextView.text = self.rMedrecord.address
+			self.referredByTextField.text = self.rMedrecord.referredBy
+			
+			self.occupationPickerView.selectRow(self.occupations.index(where: {$0.name == self.rMedrecord.occupation?.name})!, inComponent: 0, animated: true)
+			self.insurancePickerView.selectRow(self.insurances.index(where: {$0.name == self.rMedrecord.insurance?.name})!, inComponent: 0, animated: true)
+			
+			if self.rMedrecord.gender == "masculine" {
+				self.genderPickerView.selectRow(0, inComponent: 0, animated: true)
+			} else if self.rMedrecord.gender == "femenine" {
+				self.genderPickerView.selectRow(1, inComponent: 0, animated: true)
+			}
 		}
 	}
 	
 	@IBAction func saveChangedButtonTapped(_ sender: UIButton) {
 		let refreshAlert = UIAlertController(title: "Alerta", message: "¿Está seguro de que quiere editar la Historia Médica?", preferredStyle: UIAlertControllerStyle.alert)
-		
 		refreshAlert.addAction(UIAlertAction(title: "Si", style: .destructive, handler: { (action: UIAlertAction!) in
-			
 			var updatedGen = ""
-			
 			if self.genderPickerView.selectedRow(inComponent: 0) == 0 {
 				updatedGen = "masculine"
 			} else if self.genderPickerView.selectedRow(inComponent: 0) == 1 {
 				updatedGen = "femenine"
 			}
 			
-			self.medrecord.updateRecord(name: self.nameTextField.text!, lastName: self.lastNameTextField.text!,
-			                            occupation: self.occupations[self.occupationPickerView.selectedRow(inComponent: 0)].occupationId,
-			                            birthday: self.birthdayDatePicker.date.fromDatePickerToString(),
-			                            gender: updatedGen, phone: self.phoneTextField.text!, cellphone: self.cellphoneTextField.text!, email: self.emailTextField.text!,
-			                            address: self.addressTextView.text!, referredBy: self.referredByTextField.text!,
-			                            insurance: self.insurances[self.insurancePickerView.selectedRow(inComponent: 0)].insuranceId) {
+			let name = self.nameTextField.text!
+			let lastName = self.lastNameTextField.text!
+			let occupation = self.occupations[self.occupationPickerView.selectedRow(inComponent: 0)].id
+			let birthday = self.birthdayDatePicker.date.fromDatePickerToString
+			let gender = updatedGen
+			let phone = self.phoneTextField.text!
+			let cellphone = self.cellphoneTextField.text!
+			let email = self.emailTextField.text!
+			let address = self.addressTextView.text!
+			let referredBy = self.referredByTextField.text!
+			let insurance = self.insurances[self.insurancePickerView.selectedRow(inComponent: 0)].id
+			
+			if self.networkConnection {
+				self.medrecord.updateRecord(name: name,
+				                            lastName: lastName,
+				                            occupation: occupation,
+				                            birthday: birthday,
+				                            gender: gender,
+				                            phone: phone,
+				                            cellphone: cellphone,
+				                            email: email,
+				                            address: address,
+				                            referredBy: referredBy,
+				                            insurance: insurance) {
+					self.dismiss(animated: true, completion: nil)
+				}
+			} else {
+				try! self.realm.write {
+					self.rMedrecord.name = name
+					self.rMedrecord.lastName = lastName
+					self.rMedrecord.occupation = self.realm.object(ofType: ROccupation.self, forPrimaryKey: occupation)
+					self.rMedrecord.birthday = birthday
+					self.rMedrecord.gender = gender
+					self.rMedrecord.phone = phone
+					self.rMedrecord.cellphone = cellphone
+					self.rMedrecord.email = email
+					self.rMedrecord.address = address
+					self.rMedrecord.referredBy = referredBy
+					self.rMedrecord.insurance = self.realm.object(ofType: RInsurance.self, forPrimaryKey: insurance)
+					self.rMedrecord.lastUpdate = Date().iso8601
+				}
 				self.dismiss(animated: true, completion: nil)
 			}
 		}))
@@ -139,7 +196,44 @@ class EditRecordVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSour
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		self.nameTextField.resignFirstResponder()
 		self.lastNameTextField.resignFirstResponder()
+		self.phoneTextField.resignFirstResponder()
+		self.cellphoneTextField.resignFirstResponder()
+		self.emailTextField.resignFirstResponder()
+		self.referredByTextField.resignFirstResponder()
 		return true
 	}
+	
+	func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+		if(text == "\n") {
+			textView.resignFirstResponder()
+			return false
+		}
+		return true
+	}
+}
 
+extension EditRecordVC: NetworkStatusListener {
+	
+	func networkStatusDidChange(status: Reachability.NetworkStatus) {
+		switch status {
+		case .notReachable:
+			networkConnection = false
+		case .reachableViaWiFi:
+			networkConnection = true
+		case .reachableViaWWAN:
+			networkConnection = true
+		}
+	}
+	
+	func checkNetwork() {
+		switch ReachabilityManager.shared.reachability.currentReachabilityStatus {
+		case .notReachable:
+			networkConnection = false
+		case .reachableViaWiFi:
+			networkConnection = true
+		case .reachableViaWWAN:
+			networkConnection = true
+		}
+	}
+	
 }

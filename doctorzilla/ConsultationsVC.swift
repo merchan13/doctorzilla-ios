@@ -8,52 +8,38 @@
 
 import UIKit
 import RealmSwift
+import ReachabilitySwift
 
 class ConsultationsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
 	@IBOutlet weak var tableView: UITableView!
 	
 	var medrecord: MedicalRecord!
+	var rMedrecord: RMedicalRecord!
 	var consultations = [Consultation]()
-	
 	let realm = try! Realm()
+	
+	var networkConnection = false
 	
     override func viewDidLoad() {
         super.viewDidLoad()
     }
 	
 	func setDetails() {
-		self.medrecord.downloadConsultations {
-			self.tableView.delegate = self
-			self.tableView.dataSource = self
-			
-			self.consultations = self.medrecord.consultations
-			
-			self.tableView.reloadData()
-			
-			try! self.realm.write {
-				for consultation in self.consultations {
-					if self.realm.object(ofType: RConsultation.self, forPrimaryKey: consultation.consultationId) == nil {
-						let rConsultation = RConsultation()
-						rConsultation.id = consultation.consultationId
-						rConsultation.date = consultation.date
-						
-						var rReason = RReason()
-						if consultation.reason != "" {
-							if let existingReason = self.realm.object(ofType: RReason.self, forPrimaryKey: consultation.reasonId) {
-								rReason = existingReason
-							} else {
-								rReason.id = consultation.reasonId
-								rReason.reasonDescription = consultation.reason
-								self.realm.add(rReason, update: true)
-							}
-						}
-						
-						self.realm.add(rConsultation, update: true)
-						rReason.consultations.append(rConsultation)
-					}
-				}
+		
+		checkNetwork()
+		
+		if networkConnection {
+			self.medrecord.downloadConsultations {
+				self.tableView.delegate = self
+				self.tableView.dataSource = self
+				
+				self.consultations = self.medrecord.consultations
+				
+				self.tableView.reloadData()
 			}
+		} else {
+			//
 		}
 	}
 	
@@ -82,6 +68,32 @@ class ConsultationsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
 			if let consultation = sender as? Consultation {
 				vc.consultation = consultation
 			}
+		}
+	}
+	
+}
+
+extension ConsultationsVC: NetworkStatusListener {
+	
+	func networkStatusDidChange(status: Reachability.NetworkStatus) {
+		switch status {
+		case .notReachable:
+			networkConnection = false
+		case .reachableViaWiFi:
+			networkConnection = true
+		case .reachableViaWWAN:
+			networkConnection = true
+		}
+	}
+	
+	func checkNetwork() {
+		switch ReachabilityManager.shared.reachability.currentReachabilityStatus {
+		case .notReachable:
+			networkConnection = false
+		case .reachableViaWiFi:
+			networkConnection = true
+		case .reachableViaWWAN:
+			networkConnection = true
 		}
 	}
 	

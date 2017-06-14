@@ -19,31 +19,14 @@ class RConsultation: Object {
 	dynamic var pressure_s = ""
 	dynamic var pressure_d = ""
 	dynamic var note = ""
+	dynamic var diagnostic: RDiagnostic?
+	dynamic var reason: RReason?
+	dynamic var plan: RPlan?
 	
 	// Has many:
 	let backgrounds = List<RBackground>()
 	let physicalExams = List<RPhysicalExam>()
-	
-	// Belongs to:
-	private let diagnostics = LinkingObjects(fromType: RDiagnostic.self, property: "consultations")
-	private let reasons = LinkingObjects(fromType: RReason.self, property: "consultations")
-	
-	// To-one relationship:
-	private let plans = LinkingObjects(fromType: RPlan.self, property: "consultations")
-	
-	var diagnostic: RDiagnostic {
-		return self.diagnostics.first!
-	}
-	
-	var plan: RPlan {
-		return self.plans.first!
-	}
-	
-	var reason: RReason {
-		return self.reasons.first!
-	}
-	
-	
+		
 	override static func primaryKey() -> String? {
 		return "id"
 	}

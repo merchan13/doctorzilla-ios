@@ -132,7 +132,7 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
-                            <searchBar contentMode="redraw" searchBarStyle="minimal" translatesAutoresizingMaskIntoConstraints="NO" id="6l9-XZ-u37">
+                            <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Busqueda de historias..." translatesAutoresizingMaskIntoConstraints="NO" id="6l9-XZ-u37">
                                 <rect key="frame" x="0.0" y="64" width="320" height="44"/>
                                 <textInputTraits key="textInputTraits"/>
                             </searchBar>
@@ -568,7 +568,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="1xp-jU-I8J">
-                                <rect key="frame" x="16" y="130" width="288" height="200.5"/>
+                                <rect key="frame" x="16" y="130" width="288" height="202.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Recuperar contraseña" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KWb-Dp-adA">
                                         <rect key="frame" x="0.0" y="0.0" width="288" height="30"/>
@@ -588,10 +588,9 @@
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
                                     </textField>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FZm-Wi-1Gy">
-                                        <rect key="frame" x="0.0" y="127.5" width="288" height="32"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FZm-Wi-1Gy">
+                                        <rect key="frame" x="0.0" y="127.5" width="288" height="34"/>
                                         <color key="backgroundColor" red="0.12941176469999999" green="0.10980392160000001" blue="0.37254901959999998" alpha="1" colorSpace="calibratedRGB"/>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
                                         <state key="normal" title="Recuperar">
                                             <color key="titleColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803915" alpha="1" colorSpace="calibratedRGB"/>
                                         </state>
@@ -600,7 +599,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oTo-76-H50">
-                                        <rect key="frame" x="0.0" y="169.5" width="288" height="31"/>
+                                        <rect key="frame" x="0.0" y="171.5" width="288" height="31"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="16"/>
                                         <state key="normal" title="Regresar al inicio de sesión"/>
                                         <connections>
@@ -1035,13 +1034,12 @@
                                     </collectionView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jbn-Ty-siS">
                                         <rect key="frame" x="82" y="701" width="140" height="45"/>
-                                        <color key="backgroundColor" red="0.25882352941176467" green="0.54509803921568623" blue="0.792156862745098" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="140" id="YuX-lX-krs"/>
                                             <constraint firstAttribute="height" constant="45" id="kei-2M-Mrb"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
-                                        <state key="normal" title="Editar Historia">
+                                        <state key="normal" title="Editar Historia" backgroundImage="expensebutton">
                                             <color key="titleColor" red="0.98039215690000003" green="0.98039215690000003" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                         </state>
                                         <connections>
@@ -1285,12 +1283,11 @@
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bfa-No-zlA">
                                         <rect key="frame" x="77" y="906" width="150" height="45"/>
-                                        <color key="backgroundColor" red="0.25882352941176467" green="0.54509803921568623" blue="0.792156862745098" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="45" id="1Bx-8Y-JHm"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
-                                        <state key="normal" title="Guardar cambios">
+                                        <state key="normal" title="Guardar cambios" backgroundImage="income_button">
                                             <color key="titleColor" red="0.98039215690000003" green="0.98039215690000003" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                         </state>
                                         <connections>
@@ -1830,13 +1827,12 @@
                                     </textView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y5F-7f-nX1">
                                         <rect key="frame" x="85" y="885" width="150" height="45"/>
-                                        <color key="backgroundColor" red="0.25882352941176467" green="0.54509803921568623" blue="0.792156862745098" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="45" id="PHm-0E-Bfo"/>
                                             <constraint firstAttribute="width" constant="150" id="xxj-Fk-NGz"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
-                                        <state key="normal" title="Editar Consulta">
+                                        <state key="normal" title="Editar Consulta" backgroundImage="expensebutton">
                                             <color key="titleColor" red="0.98039215690000003" green="0.98039215690000003" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                         </state>
                                     </button>
@@ -2027,7 +2023,9 @@
         <image name="drzilla_imagotipo_color_1" width="1080" height="1080"/>
         <image name="drzilla_imagotipo_color_2" width="1080" height="1080"/>
         <image name="drzilla_logo_color" width="1231" height="494"/>
+        <image name="expensebutton" width="150" height="38"/>
         <image name="historias" width="25" height="25"/>
+        <image name="income_button" width="150" height="38"/>
         <image name="informes" width="25" height="25"/>
         <image name="menubtn" width="20" height="14"/>
         <image name="presupuestos" width="25" height="25"/>

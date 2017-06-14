@@ -20,8 +20,10 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 	
 	var user: User!
 	var rUser: RUser!
-	var medrecord = [MedicalRecord]()
-	var filteredRecord = [MedicalRecord]()
+	var medrecords = [MedicalRecord]()
+	var rMedrecords = [RMedicalRecord]()
+	var filteredRecords = [MedicalRecord]()
+	var rFilteredRecords = [RMedicalRecord]()
 	var inSearchMode = false
 	let realm = try! Realm()
 	
@@ -33,8 +35,6 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		if AuthToken.sharedInstance.token != "" {
 			print(AuthToken.sharedInstance.token)
 		}
-		
-		self.rUser = realm.object(ofType: RUser.self, forPrimaryKey: 1)
 		
 		collection.dataSource = self
 		collection.delegate = self
@@ -61,6 +61,7 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 			parseMedicalRecordsRLM {
 				self.collection.reloadData()
 			}
+			
 		}
 	}
 	
@@ -79,7 +80,7 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		
 		Alamofire.request(url, method: .get, headers: headers).responseJSON { response in
 			if let recordDictionary = response.result.value as? [Dictionary<String, AnyObject>]{
-				self.medrecord.removeAll()
+				self.medrecords.removeAll()
 				
 				for rec in recordDictionary {
 					let recordId = rec["id"] as! Int
@@ -88,7 +89,7 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 					let profilePicURL = rec["profile_picture"] as! String
 					
 					let medrec = MedicalRecord(recordId: recordId, document: document, lastName: lastName, profilePicURL: profilePicURL)
-					self.medrecord.append(medrec)
+					self.medrecords.append(medrec)
 				}
 			}
 			completed()
@@ -99,22 +100,16 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 	func parseMedicalRecordsRLM(completed: @escaping DownloadComplete) {
 		
 		let recordsRealm = realm.objects(RMedicalRecord.self)
-		
+		self.rMedrecords.removeAll()
 		for rec in recordsRealm {
-			let recordId = rec.id
-			let document = rec.document
-			let lastName = rec.lastName
-			let profilePic = rec.profilePic
-			
-			let medrec = MedicalRecord(recordId: recordId, document: document, lastName: lastName, profilePic: profilePic)
-			self.medrecord.append(medrec)
+			self.rMedrecords.append(rec)
 		}
 		completed()
 	}
 	
 	// Download MedicalRecord profile pictures
 	func dowloadProfilePictures(completed: @escaping DownloadComplete) {
-		for rec in self.medrecord {
+		for rec in self.medrecords {
 			Alamofire.request(rec.profilePicURL).responseImage { response in
 				if let image = response.result.value {
 					let size = CGSize(width: 100.0, height: 100.0)
@@ -123,17 +118,9 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 					let imageData:NSData = UIImagePNGRepresentation(circularImage)! as NSData
 					rec.profilePic = imageData
 					
-					//Save to Realm
+					//Save to Realm profile pictures.
 					try! self.realm.write {
-						if self.realm.object(ofType: RMedicalRecord.self, forPrimaryKey: rec.recordId) == nil {
-							let rMedRecord = RMedicalRecord()
-							rMedRecord.id = rec.recordId
-							rMedRecord.document = rec.document
-							rMedRecord.lastName = rec.lastName
-							self.realm.add(rMedRecord, update: true)
-							self.rUser.medrecords.append(rMedRecord)
-						}
-						self.realm.object(ofType: RMedicalRecord.self, forPrimaryKey: rec.recordId)?.profilePic = rec.profilePic
+						self.realm.create(RMedicalRecord.self, value: ["id": rec.recordId, "profilePic": rec.profilePic], update: true)
 					}
 				}
 				completed()
@@ -143,38 +130,65 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MedRecordCell", for: indexPath) as? MedRecordCell {
-			
-			let medrec: MedicalRecord!
-			
-			if inSearchMode {
-				medrec = filteredRecord[indexPath.row]
-				cell.configureCell(medrec)
+			if networkConnection {
+				let medrec: MedicalRecord!
+				if inSearchMode {
+					medrec = filteredRecords[indexPath.row]
+					cell.configureCell(medrec)
+				} else {
+					medrec = medrecords[indexPath.row]
+					cell.configureCell(medrec)
+				}
+				return cell
 			} else {
-				medrec = medrecord[indexPath.row]
-				cell.configureCell(medrec)
+				let medrec: RMedicalRecord!
+				if inSearchMode {
+					medrec = rFilteredRecords[indexPath.row]
+					cell.configureCell(medrec)
+				} else {
+					medrec = rMedrecords[indexPath.row]
+					cell.configureCell(medrec)
+				}
+				return cell
 			}
-
-			return cell
 		} else {
 			return UICollectionViewCell()
 		}
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		var medrec: MedicalRecord
-		if inSearchMode {
-			medrec = filteredRecord[indexPath.row]
+		if networkConnection {
+			var medrec: MedicalRecord
+			if inSearchMode {
+				medrec = filteredRecords[indexPath.row]
+			} else {
+				medrec = medrecords[indexPath.row]
+			}
+			performSegue(withIdentifier: "MedicalRecordVC", sender: medrec)
 		} else {
-			medrec = medrecord[indexPath.row]
+			var rMedrec: RMedicalRecord
+			if inSearchMode {
+				rMedrec = rFilteredRecords[indexPath.row]
+			} else {
+				rMedrec = rMedrecords[indexPath.row]
+			}
+			performSegue(withIdentifier: "MedicalRecordVC", sender: rMedrec)
 		}
-		performSegue(withIdentifier: "MedicalRecordVC", sender: medrec)
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		if inSearchMode {
-			return filteredRecord.count
+		if networkConnection {
+			if inSearchMode {
+				return filteredRecords.count
+			} else {
+				return medrecords.count
+			}
 		} else {
-			return medrecord.count
+			if inSearchMode {
+				return rFilteredRecords.count
+			} else {
+				return rMedrecords.count
+			}
 		}
 	}
 	
@@ -198,7 +212,11 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		} else {
 			inSearchMode = true
 			let criteria = searchBar.text!
-			filteredRecord = medrecord.filter({$0.lastName.range(of: criteria) != nil || $0.document.range(of: criteria) != nil})
+			if networkConnection {
+				filteredRecords = medrecords.filter({$0.lastName.range(of: criteria) != nil || $0.document.range(of: criteria) != nil})
+			} else {
+				rFilteredRecords = rMedrecords.filter({$0.lastName.range(of: criteria) != nil || $0.document.range(of: criteria) != nil})
+			}
 			collection.reloadData()
 		}
 	}
@@ -213,8 +231,14 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.identifier == "MedicalRecordVC" {
 			if let recordVC = segue.destination as? MedicalRecordVC {
-				if let medrec = sender as? MedicalRecord {
-					recordVC.medrecord = medrec
+				if networkConnection {
+					if let medrec = sender as? MedicalRecord {
+						recordVC.medrecord = medrec
+					}
+				} else {
+					if let rMedrec = sender as? RMedicalRecord {
+						recordVC.rMedrecord = rMedrec
+					}
 				}
 			}
 		}

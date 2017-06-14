@@ -15,6 +15,7 @@ class MedRecordCell: UICollectionViewCell {
 	@IBOutlet weak var idLabel: UILabel!
 	
 	var medrecord: MedicalRecord!
+	var rMedrecord: RMedicalRecord!
 	
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
@@ -30,6 +31,19 @@ class MedRecordCell: UICollectionViewCell {
 			thumbImage.image = UIImage(named: "drzilla_imagotipo_color_2")
 		} else {
 			thumbImage.image = UIImage(data: self.medrecord.profilePic as Data)
+		}
+	}
+	
+	func configureCell(_ rMedrecord: RMedicalRecord) {
+		self.rMedrecord = rMedrecord
+		
+		nameLabel.text = self.rMedrecord.lastName.capitalized
+		idLabel.text = self.rMedrecord.document
+		
+		if self.rMedrecord.profilePic.length == 0 {
+			thumbImage.image = UIImage(named: "drzilla_imagotipo_color_2")
+		} else {
+			thumbImage.image = UIImage(data: self.rMedrecord.profilePic as Data)
 		}
 	}
 	

@@ -14,6 +14,7 @@ class BackgroundCell: UICollectionViewCell {
 	@IBOutlet weak var descriptionTextView: UITextView!
 	
 	var background: Background!
+	var rBackground: RBackground!
 	
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
@@ -25,9 +26,9 @@ class BackgroundCell: UICollectionViewCell {
 		descriptionTextView.text = self.background.backgroundDescription
 	}
 	
-	func configureCell(bgType: String, description: String) {
-		typeLabel.text = bgType
-		descriptionTextView.text = description
+	func configureCell(_ rBackground: RBackground) {
+		self.rBackground = rBackground
+		typeLabel.text = self.rBackground.backgroundType
+		descriptionTextView.text = self.rBackground.backgroundDescription
 	}
-	
 }

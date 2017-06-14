@@ -14,9 +14,7 @@ class RPlan: Object {
 	dynamic var planDescription = ""
 	dynamic var emergency = false
 	dynamic var updatedAt = ""
-	
-	// To-one relationship:
-	let consultations = List<RConsultation>()
+	dynamic var consultation: RConsultation?
 	
 	override static func primaryKey() -> String? {
 		return "id"

@@ -14,9 +14,6 @@ class RUser: Object {
 	dynamic var email = ""
 	dynamic var password = ""
 	
-	// Has many:
-	let medrecords = List<RMedicalRecord>()
-	
 	override static func primaryKey() -> String? {
 		return "id"
 	}
