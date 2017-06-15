@@ -148,7 +148,7 @@ class EditRecordVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSour
 					self.rMedrecord.address = address
 					self.rMedrecord.referredBy = referredBy
 					self.rMedrecord.insurance = self.realm.object(ofType: RInsurance.self, forPrimaryKey: insurance)
-					self.rMedrecord.lastUpdate = Date().iso8601
+					self.rMedrecord.lastUpdate = Date().iso8601.dateFromISO8601!
 				}
 				self.dismiss(animated: true, completion: nil)
 			}

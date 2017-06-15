@@ -32,7 +32,7 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
     override func viewDidLoad() {
         super.viewDidLoad()
 		
-		if AuthToken.sharedInstance.token != "" {
+		if AuthToken.sharedInstance.token != nil {
 			print(AuthToken.sharedInstance.token)
 		}
 		

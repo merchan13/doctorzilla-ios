@@ -13,6 +13,7 @@ class RBackground: Object {
 	dynamic var id = 0
 	dynamic var backgroundType = ""
 	dynamic var backgroundDescription = ""
+	dynamic var lastUpdate = Date()
 		
 	override static func primaryKey() -> String? {
 		return "id"

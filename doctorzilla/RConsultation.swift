@@ -22,6 +22,7 @@ class RConsultation: Object {
 	dynamic var diagnostic: RDiagnostic?
 	dynamic var reason: RReason?
 	dynamic var plan: RPlan?
+	dynamic var lastUpdate = Date()
 	
 	// Has many:
 	let backgrounds = List<RBackground>()

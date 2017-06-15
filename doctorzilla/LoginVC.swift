@@ -67,6 +67,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 						self.dowloadInsurances {
 							self.dowloadDiagnostics {
 								self.dowloadReasons {
+									
 									self.dowloadRecords {
 										DispatchQueue.main.async {
 											self.activityIndicatorView.stopAnimating()
@@ -100,6 +101,34 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 			if self.rUser.signIn(email: userEmail, password: userPassword) {
 				DispatchQueue.main.async {
 					self.activityIndicatorView.stopAnimating()
+					
+					
+					/*
+					
+						PROBAR CONSULTAS REALM
+					
+					*/
+					
+					// Cómo leer fecha guarada en realm en UTC iso8601
+					let veras = self.realm.object(ofType: RMedicalRecord.self, forPrimaryKey: 5)?.lastUpdate.iso8601
+					print("FECHA DE REALM (con iso8601) \(veras!)\n\n")
+					
+					// Obtener records MAS recientes
+					let masActuales = self.realm.objects(RMedicalRecord.self).filter("lastUpdate > %@", "2017-07-01T02:20:42Z".dateFromISO8601!)
+					print(masActuales)
+					
+					//Obtener el record MAS reciente
+					let records = self.realm.objects(RMedicalRecord.self)
+					let actDate = records.max(ofProperty: "lastUpdate") as Date?
+					let dataString = actDate?.iso8601
+					print(dataString!)
+					
+					
+					
+					
+					
+					
+					
 					
 					self.performSegue(withIdentifier: "DashboardVC", sender: self.rUser)
 				}
@@ -304,7 +333,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 						}
 						// LAST UPDATE DATE
 						if let lastUpdate = rec["updated_at"] as? String {
-							rMedRecord.lastUpdate = lastUpdate
+							rMedRecord.lastUpdate = lastUpdate.dateFromISO8601!
 						}
 						// PHYSIC DATA
 						if let physicData = rec["physic_data"] as? Dictionary<String, AnyObject> {
