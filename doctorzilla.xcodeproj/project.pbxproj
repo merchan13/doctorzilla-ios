@@ -25,6 +25,7 @@
 		FA2D0AD51EEBA393009BFBFA /* RPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2D0AD41EEBA393009BFBFA /* RPlan.swift */; };
 		FA3A9CF91EE1DDBB000EAB8B /* EditRecordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3A9CF81EE1DDBB000EAB8B /* EditRecordVC.swift */; };
 		FA3A9CFD1EE1DE0F000EAB8B /* EditConsultationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3A9CFC1EE1DE0F000EAB8B /* EditConsultationVC.swift */; };
+		FA4596001EF32C28008DF158 /* RSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4595FF1EF32C28008DF158 /* RSync.swift */; };
 		FA4C7CE01EC3CA2800A58937 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4C7CDF1EC3CA2800A58937 /* LoginVC.swift */; };
 		FA4C7CE21EC3CC8E00A58937 /* RecoverPasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4C7CE11EC3CC8E00A58937 /* RecoverPasswordVC.swift */; };
 		FA4D055F1EF21C77005574B1 /* Synchronize.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4D055E1EF21C77005574B1 /* Synchronize.swift */; };
@@ -97,6 +98,7 @@
 		FA2D0AD41EEBA393009BFBFA /* RPlan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPlan.swift; sourceTree = "<group>"; };
 		FA3A9CF81EE1DDBB000EAB8B /* EditRecordVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditRecordVC.swift; sourceTree = "<group>"; };
 		FA3A9CFC1EE1DE0F000EAB8B /* EditConsultationVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditConsultationVC.swift; sourceTree = "<group>"; };
+		FA4595FF1EF32C28008DF158 /* RSync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSync.swift; sourceTree = "<group>"; };
 		FA4C7CDF1EC3CA2800A58937 /* LoginVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		FA4C7CE11EC3CC8E00A58937 /* RecoverPasswordVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecoverPasswordVC.swift; sourceTree = "<group>"; };
 		FA4D055E1EF21C77005574B1 /* Synchronize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Synchronize.swift; sourceTree = "<group>"; };
@@ -197,6 +199,7 @@
 				FA2D0AD41EEBA393009BFBFA /* RPlan.swift */,
 				FA2D0AC21EEB99A7009BFBFA /* RReason.swift */,
 				FA2D0AC81EEB99D3009BFBFA /* RUser.swift */,
+				FA4595FF1EF32C28008DF158 /* RSync.swift */,
 			);
 			name = "Realm Model";
 			sourceTree = "<group>";
@@ -643,6 +646,7 @@
 				FAF7322F1E9044C700FA6030 /* AppDelegate.swift in Sources */,
 				FA87B6E71ECFFC85003C0DF4 /* DashboardVC.swift in Sources */,
 				FAACA5101EE67BAE006C39BB /* Extensions.swift in Sources */,
+				FA4596001EF32C28008DF158 /* RSync.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

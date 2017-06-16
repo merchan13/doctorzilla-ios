@@ -33,7 +33,7 @@ class MedicalRecord {
 	private var _pressure_d: String!
 	private var _pressure_s: String!
 	private var _lastUpdate: String!
-	private var _backgrounds: [String: String] = ["Familiares":" ", "Alergias":"", "Diábetes":"", "Asma":"", "Cardiopatías":"", "Medicamentos":"", "Quirúrgicos":"", "Otros":""]
+	private var _backgrounds: [String: String] = ["Familiares":"", "Alergias":"", "Diábetes":"", "Asma":"", "Cardiopatías":"", "Medicamentos":"", "Quirúrgicos":"", "Otros":""]
 	
 	private var _consultations = [Consultation]()
 	

@@ -53,9 +53,12 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		if networkConnection {
 			parseMedicalRecords {
 				self.collection.reloadData()
+				///*
 				self.dowloadProfilePictures {
 					self.collection.reloadData()
 				}
+				//*/
+				//self.collection.reloadData()
 			}
 		} else {
 			parseMedicalRecordsRLM {
