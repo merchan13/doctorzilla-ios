@@ -41,11 +41,11 @@ class ReachabilityManager: NSObject {
 		
 		switch reachability.currentReachabilityStatus {
 		case .notReachable:
-			print("\nNetwork became unreachable")
+			print("Network became unreachable\n")
 		case .reachableViaWiFi:
-			print("\nNetwork reachable through WiFi")
+			print("Network reachable through WiFi\n")
 		case .reachableViaWWAN:
-			print("\nNetwork reachable through Cellular Data")
+			print("Network reachable through Cellular Data\n")
 		}
 		
 		// Sending message to each of the delegates

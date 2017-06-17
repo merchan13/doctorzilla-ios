@@ -27,7 +27,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 		
-		print("\nPath to Realm file: " + realm.configuration.fileURL!.absoluteString)
+		print("\nPath to Realm file: \(realm.configuration.fileURL!.absoluteString)\n")
     }
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -61,6 +61,8 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 							rUser.password = self.user.password
 							self.realm.add(rUser, update: true)
 							self.rUser = rUser
+						} else {
+							self.rUser = self.realm.object(ofType: RUser.self, forPrimaryKey: 1)!
 						}
 					}
 					
@@ -68,7 +70,6 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 						DispatchQueue.main.async {
 							self.activityIndicatorView.stopAnimating()
 						}
-						print("Cargango Dashboard.\n")
 						self.performSegue(withIdentifier: "DashboardVC", sender: self.user)
 					}
 					
@@ -86,27 +87,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 			if self.rUser.signIn(email: userEmail, password: userPassword) {
 				DispatchQueue.main.async {
 					self.activityIndicatorView.stopAnimating()
-					
-					/*
-					
-						PROBAR CONSULTAS REALM
-					
-					*/
-					
-					// Cómo leer fecha guarada en realm en UTC iso8601
-					let veras = self.realm.object(ofType: RMedicalRecord.self, forPrimaryKey: 5)?.lastUpdate.iso8601
-					print("FECHA DE REALM (con iso8601) \(veras!)\n\n")
-					
-					// Obtener records MAS recientes
-					let masActuales = self.realm.objects(RMedicalRecord.self).filter("lastUpdate > %@", "2017-06-13T02:20:42Z".dateFromISO8601!)
-					print("Actuales: \(masActuales.count)\n")
-					
-					//Obtener el record MAS reciente
-					let records = self.realm.objects(RMedicalRecord.self)
-					let actDate = records.max(ofProperty: "lastUpdate") as Date?
-					let dataString = actDate?.iso8601
-					print(dataString!)
-				
+		
 					self.performSegue(withIdentifier: "DashboardVC", sender: self.rUser)
 				}
 			} else {

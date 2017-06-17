@@ -132,7 +132,7 @@ func dowloadReasons(completed: @escaping DownloadComplete) {
 	}
 }
 
-/// Download Records
+/// Descargar Historia Medica
 //
 func dowloadRecords(rUser: RUser, completed: @escaping DownloadComplete) {
 	let url = "\(URL_BASE)\(URL_MEDICAL_RECORDS)"
@@ -151,6 +151,49 @@ func dowloadRecords(rUser: RUser, completed: @escaping DownloadComplete) {
 				}
 			}
 		}
+		completed()
+	}
+}
+
+/// Actualizar Historia Medica
+//
+func updateRecord(record: RMedicalRecord, completed: @escaping DownloadComplete) {
+	
+	let headers: HTTPHeaders = [
+		"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
+	]
+	
+	var occupation = ""
+	var insurance = ""
+	
+	if let occupationRLM = record.occupation {
+		occupation = "\(occupationRLM.id)"
+	}
+	
+	if let insuranceRLM = record.insurance {
+		insurance = "\(insuranceRLM.id)"
+	}
+	
+	let parameters: Parameters = [
+		"medical_record": [
+			"name": record.name,
+			"last_name": record.lastName,
+			"occupation_id": occupation,
+			"birthday": record.birthday,
+			"gender": record.gender,
+			"phone_number": record.phone,
+			"cellphone_number": record.cellphone,
+			"email": record.email,
+			"address": record.address,
+			"referred_by": record.referredBy,
+			"insurance_id": insurance
+		]
+	]
+	
+	Alamofire.request("\(URL_BASE)\(URL_MEDICAL_RECORDS)\(record.id)", method: .put, parameters: parameters, headers: headers).responseJSON { response in
+		
+		//print(response.response?.statusCode)
+		
 		completed()
 	}
 }

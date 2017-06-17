@@ -15,6 +15,7 @@ class Synchronize {
 	let realm = try! Realm()
 	var lastSync: Date!
 	var lastSyncRLM: Date!
+	var user: RUser!
 	
 	private var latestBackgrounds = [RBackground]()
 	private var latestConsultations = [RConsultation]()
@@ -31,8 +32,11 @@ class Synchronize {
 	private var latestPlansRLM: Results<RPlan>!
 	
 	func synchronizeDatabases(user: RUser, completed: @escaping DownloadComplete) {
+		self.user = user
 		self.lastSync {
 			self.lastSynchRLM {
+				print("FECHA SERVIDOR: \(self.lastSync)")
+				print("FECHA REALM: \(self.lastSyncRLM)\n")
 				if self.lastSync != nil && self.lastSyncRLM != nil && self.lastSync == self.lastSyncRLM {
 					print("Comenzando sincronizacion...\n")
 					self.latestUpdates {
@@ -43,6 +47,9 @@ class Synchronize {
 							//syncOperativeNotes()
 							self.syncPhysicalExams()
 							self.syncPlans()
+							self.saveSync {
+								//
+							}
 						}
 					}
 				} else {
@@ -51,7 +58,7 @@ class Synchronize {
 						dowloadInsurances {
 							dowloadDiagnostics {
 								dowloadReasons {
-									dowloadRecords(rUser: user) {
+									dowloadRecords(rUser: self.user) {
 										downloadConsultations {
 											/*
 											downloadBackgrounds()
@@ -114,11 +121,13 @@ class Synchronize {
 					}
 				}
 				if let consultations = dict["consultations"] as? [Dictionary<String, AnyObject>] {
+					self.latestConsultations.removeAll()
 					for consultation in consultations {
 						self.latestConsultations.append(parseConsultation(consultationDict: consultation))
 					}
 				}
 				if let medicalRecords = dict["medical_records"] as? [Dictionary<String, AnyObject>] {
+					self.latestMedicalRecords.removeAll()
 					for record in medicalRecords {
 						self.latestMedicalRecords.append(parseMedicalRecord(recordDict: record))
 					}
@@ -191,11 +200,11 @@ class Synchronize {
 		if self.latestBackgrounds.count == 0 && self.latestBackgroundsRLM.count == 0 {
 			print("Antecedentes al dia")
 		} else if self.latestBackgrounds.count > 0 && self.latestBackgroundsRLM.count == 0 {
-			// descargar a realm
+		
 		} else if self.latestBackgrounds.count == 0 && self.latestBackgroundsRLM.count > 0 {
-			// actualizar servidor
+		
 		} else if self.latestBackgrounds.count > 0 && self.latestBackgroundsRLM.count > 0 {
-			// actualizar con resolucion de conflictos.
+			
 		}
 	}
 	
@@ -205,15 +214,11 @@ class Synchronize {
 		if self.latestConsultations.count == 0 && self.latestConsultationsRLM.count == 0 {
 			print("Consultas al dia")
 		} else if self.latestConsultations.count > 0 && self.latestConsultationsRLM.count == 0 {
-			// descargar a realm
-			print(2)
+			
 		} else if self.latestConsultations.count == 0 && self.latestConsultationsRLM.count > 0 {
-			// actualizar servidor
-			print("Caso 3 [consultas]")
-			print(self.latestConsultationsRLM.count)
+			
 		} else if self.latestConsultations.count > 0 && self.latestConsultationsRLM.count > 0 {
-			// actualizar con resolucion de conflictos.
-			print(4)
+			
 		}
 	}
 	
@@ -223,9 +228,18 @@ class Synchronize {
 		if self.latestMedicalRecords.count == 0 && self.latestMedicalRecordsRLM.count == 0 {
 			print("Historias Medicas al dia")
 		} else if self.latestMedicalRecords.count > 0 && self.latestMedicalRecordsRLM.count == 0 {
-			// descargar a realm
+			try! self.realm.write {
+				for record in latestMedicalRecords {
+					record.user = self.user
+					self.realm.add(record, update: true)
+				}
+			}
 		} else if self.latestMedicalRecords.count == 0 && self.latestMedicalRecordsRLM.count > 0 {
-			// actualizar servidor
+			for record in latestMedicalRecordsRLM {
+				updateRecord(record: record, completed: { 
+					//
+				})
+			}
 		} else if self.latestMedicalRecords.count > 0 && self.latestMedicalRecordsRLM.count > 0 {
 			// actualizar con resolucion de conflictos.
 		}
@@ -236,11 +250,11 @@ class Synchronize {
 		if self.latestOperativeNotes.count == 0 && self.latestOperativeNotesRLM.count == 0 {
 			print("Historias Medicas al dia")
 		} else if self.latestOperativeNotes.count > 0 && self.latestOperativeNotesRLM.count == 0 {
-			// descargar a realm
+	
 		} else if self.latestOperativeNotes.count == 0 && self.latestOperativeNotesRLM.count > 0 {
-			// actualizar servidor
+	
 		} else if self.latestOperativeNotes.count > 0 && self.latestOperativeNotesRLM.count > 0 {
-			// actualizar con resolucion de conflictos.
+	
 		}
 	}
 	*/
@@ -251,11 +265,11 @@ class Synchronize {
 		if self.latestPhysicalExams.count == 0 && self.latestPhysicalExamsRLM.count == 0 {
 			print("Examenes fisicos al dia")
 		} else if self.latestPhysicalExams.count > 0 && self.latestPhysicalExamsRLM.count == 0 {
-			// descargar a realm
+		
 		} else if self.latestPhysicalExams.count == 0 && self.latestPhysicalExamsRLM.count > 0 {
-			// actualizar servidor
+		
 		} else if self.latestPhysicalExams.count > 0 && self.latestPhysicalExamsRLM.count > 0 {
-			// actualizar con resolucion de conflictos.
+			
 		}
 	}
 	
@@ -265,11 +279,11 @@ class Synchronize {
 		if self.latestPlans.count == 0 && self.latestPlansRLM.count == 0 {
 			print("Planes al dia")
 		} else if self.latestPlans.count > 0 && self.latestPlansRLM.count == 0 {
-			// descargar a realm
+		
 		} else if self.latestPlans.count == 0 && self.latestPlansRLM.count > 0 {
-			// actualizar servidor
+			
 		} else if self.latestPlans.count > 0 && self.latestPlansRLM.count > 0 {
-			// actualizar con resolucion de conflictos.
+			
 		}
 	}
 	
