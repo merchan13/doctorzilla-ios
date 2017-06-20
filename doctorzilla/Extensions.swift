@@ -24,7 +24,7 @@ extension Date {
 }
 
 extension String {
-
+	
 	var dateFromISO8601: Date? {
 		return Formatter.iso8601.date(from: self)
 	}
@@ -32,6 +32,7 @@ extension String {
 }
 
 extension Formatter {
+	
 	static let iso8601: DateFormatter = {
 		let formatter = DateFormatter()
 		formatter.calendar = Calendar(identifier: .iso8601)
@@ -40,5 +41,6 @@ extension Formatter {
 		formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssX"
 		return formatter
 	}()
+	
 }
 

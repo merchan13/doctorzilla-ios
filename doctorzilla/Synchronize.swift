@@ -24,12 +24,21 @@ class Synchronize {
 	private var latestPhysicalExams = [RPhysicalExam]()
 	private var latestPlans = [RPlan]()
 	
+	/*
 	private var latestBackgroundsRLM: Results<RBackground>!
 	private var latestConsultationsRLM: Results<RConsultation>!
 	private var latestMedicalRecordsRLM: Results<RMedicalRecord>!
 	//private var latestOperativeNotesRLM: Results<ROperativeNote>!
 	private var latestPhysicalExamsRLM: Results<RPhysicalExam>!
 	private var latestPlansRLM: Results<RPlan>!
+	*/
+	
+	private var latestBackgroundsRLM = [RBackground]()
+	private var latestConsultationsRLM = [RConsultation]()
+	private var latestMedicalRecordsRLM = [RMedicalRecord]()
+	//private var latestOperativeNotesRLM = [ROperativeNote]()
+	private var latestPhysicalExamsRLM = [RPhysicalExam]()
+	private var latestPlansRLM = [RPlan]()
 	
 	func synchronizeDatabases(user: RUser, completed: @escaping DownloadComplete) {
 		self.user = user
@@ -155,12 +164,12 @@ class Synchronize {
 	/// Carga de los records actualizados despues de la ultima fecha de sincronizacion. [Realm]
 	//
 	func latestUpdatesRLM(completed: @escaping DownloadComplete) {
-		self.latestBackgroundsRLM = self.realm.objects(RBackground.self).filter("lastUpdate > %@", self.lastSync)
-		self.latestConsultationsRLM = self.realm.objects(RConsultation.self).filter("lastUpdate > %@", self.lastSync)
-		self.latestMedicalRecordsRLM = self.realm.objects(RMedicalRecord.self).filter("lastUpdate > %@", self.lastSync)
-		//self.latestOperativeNotesRLM = self.realm.objects(ROperativeNote.self).filter("lastUpdate > %@", self.lastSync)
-		self.latestPhysicalExamsRLM = self.realm.objects(RPhysicalExam.self).filter("lastUpdate > %@", self.lastSync)
-		self.latestPlansRLM = self.realm.objects(RPlan.self).filter("lastUpdate > %@", self.lastSync)
+		self.latestBackgroundsRLM = Array(self.realm.objects(RBackground.self).filter("lastUpdate > %@", self.lastSync))
+		self.latestConsultationsRLM = Array(self.realm.objects(RConsultation.self).filter("lastUpdate > %@", self.lastSync))
+		self.latestMedicalRecordsRLM = Array(self.realm.objects(RMedicalRecord.self).filter("lastUpdate > %@", self.lastSync))
+		//self.latestOperativeNotesRLM = Array(self.realm.objects(ROperativeNote.self).filter("lastUpdate > %@", self.lastSync))
+		self.latestPhysicalExamsRLM = Array(self.realm.objects(RPhysicalExam.self).filter("lastUpdate > %@", self.lastSync))
+		self.latestPlansRLM = Array(self.realm.objects(RPlan.self).filter("lastUpdate > %@", self.lastSync))
 		completed()
 	}
 	
@@ -280,51 +289,37 @@ class Synchronize {
 		if self.latestMedicalRecords.count == 0 && self.latestMedicalRecordsRLM.count == 0 {
 			print("Historias Medicas al dia")
 		} else {
+			print("\n")
 			try! self.realm.write {
 				// Check de las actualizaciones en Realm.
 				for record in self.latestMedicalRecordsRLM {
 					if let serverRecordLastUpdate = latestMedicalRecords.filter({$0.id == record.id}).first {
-						print("Conflicto de Realm con Servidor")
 						if record.lastUpdate > serverRecordLastUpdate.lastUpdate {
-							print("< Realm --> Servidor >")
-							updateRecord(record: record, completed: {
-								self.latestMedicalRecordsRLM.dropFirst()
-							})
-						} else {
-							print("< Servidor --> Realm >")
-							serverRecordLastUpdate.user = self.user
-							self.realm.add(serverRecordLastUpdate, update: true)
+							print("  Conflicto de Realm con Servidor\n    < Realm --> Servidor >")
+							updateRecord(record: record, completed: {})
 						}
 					} else {
-						print("< Realm --> Servidor >")
-						updateRecord(record: record, completed: {
-							//
-						})
+						print("  < Realm --> Servidor >")
+						updateRecord(record: record, completed: {})
 					}
 				}
 				
 				// Check de las actualizaciones en la Web.
 				for record in self.latestMedicalRecords {
 					if let realmRecordLastUpdate = latestMedicalRecordsRLM.filter({$0.id == record.id}).first {
-						print("Conflicto de Servidor  con Realm")
 						if record.lastUpdate > realmRecordLastUpdate.lastUpdate {
-							print("< Servidor --> Realm >")
+							print("  Conflicto de Servidor  con Realm\n    < Servidor --> Realm >")
 							record.user = self.user
 							self.realm.add(record, update: true)
-						} else {
-							print("< Realm --> Servidor >")
-							updateRecord(record: realmRecordLastUpdate, completed: {
-								//
-							})
 						}
 					} else {
-						print("< Servidor --> Realm >")
+						print("  < Servidor --> Realm >")
 						record.user = self.user
 						self.realm.add(record, update: true)
 					}
-					
 				}
 			}
+			print("\n")
 		}
 	}
 	
