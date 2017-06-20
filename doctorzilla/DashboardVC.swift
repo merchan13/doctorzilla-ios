@@ -33,7 +33,7 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
         super.viewDidLoad()
 		
 		if AuthToken.sharedInstance.token != nil {
-			print("[ \(AuthToken.sharedInstance.token) ]")
+			print("[ \(AuthToken.sharedInstance.token!) ]\n")
 		}
 		
 		collection.dataSource = self
