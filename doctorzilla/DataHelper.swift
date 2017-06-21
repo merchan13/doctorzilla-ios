@@ -14,7 +14,7 @@ let realm = try! Realm()
 
 /// Download Occupations
 //
-func dowloadOccupations(completed: @escaping DownloadComplete) {
+func downloadOccupations(completed: @escaping DownloadComplete) {
 	let url = "\(URL_BASE)\(URL_OCCUPATIONS)"
 	
 	let headers: HTTPHeaders = [
@@ -44,7 +44,7 @@ func dowloadOccupations(completed: @escaping DownloadComplete) {
 
 /// Download Insurances
 //
-func dowloadInsurances(completed: @escaping DownloadComplete) {
+func downloadInsurances(completed: @escaping DownloadComplete) {
 	let url = "\(URL_BASE)\(URL_INSURANCES)"
 	
 	let headers: HTTPHeaders = [
@@ -74,7 +74,7 @@ func dowloadInsurances(completed: @escaping DownloadComplete) {
 
 /// Download Diagnostics
 //
-func dowloadDiagnostics(completed: @escaping DownloadComplete) {
+func downloadDiagnostics(completed: @escaping DownloadComplete) {
 	let url = "\(URL_BASE)\(URL_DIAGNOSTICS)"
 	
 	let headers: HTTPHeaders = [
@@ -104,7 +104,7 @@ func dowloadDiagnostics(completed: @escaping DownloadComplete) {
 
 /// Download Reasons
 //
-func dowloadReasons(completed: @escaping DownloadComplete) {
+func downloadReasons(completed: @escaping DownloadComplete) {
 	let url = "\(URL_BASE)\(URL_REASONS)"
 	
 	let headers: HTTPHeaders = [
@@ -134,7 +134,7 @@ func dowloadReasons(completed: @escaping DownloadComplete) {
 
 /// Descargar Historia Medica
 //
-func dowloadRecords(rUser: RUser, completed: @escaping DownloadComplete) {
+func downloadRecords(rUser: RUser, completed: @escaping DownloadComplete) {
 	let url = "\(URL_BASE)\(URL_MEDICAL_RECORDS)"
 	
 	let headers: HTTPHeaders = [
@@ -191,14 +191,12 @@ func updateRecord(record: RMedicalRecord, completed: @escaping DownloadComplete)
 	]
 	
 	Alamofire.request("\(URL_BASE)\(URL_MEDICAL_RECORDS)\(record.id)", method: .put, parameters: parameters, headers: headers).responseJSON { response in
-		
 		//print(response.response?.statusCode)
-		
 		completed()
 	}
 }
 
-/// Download Consultations
+/// Descargar Consultas
 //
 func downloadConsultations(completed: @escaping DownloadComplete) {
 	let consultationURL = "\(URL_BASE)\(URL_CONSULTATIONS)"
@@ -217,13 +215,102 @@ func downloadConsultations(completed: @escaping DownloadComplete) {
 		Alamofire.request(consultationURL, method: .get, parameters: parameters, headers: headers).responseJSON { (response) in
 			if let dict = response.result.value as? [Dictionary<String, AnyObject>] {
 				try! realm.write {
-					
-					//record.consultations.removeAll()
-					
 					for consultationDict in dict {
 						let rConsultation = parseConsultation(consultationDict: consultationDict)
 						realm.add(rConsultation, update: true)
 						record.consultations.append(rConsultation)
+					}
+				}
+			}
+			if record.id == records.last?.id {
+				completed()
+			}
+		}
+	}
+}
+
+/// Descargar Antecedentes
+//
+func downloadBackgrounds(completed: @escaping DownloadComplete) {
+	let backgroundURL = "\(URL_BASE)\(URL_BACKGROUNDS)"
+	
+	let headers: HTTPHeaders = [
+		"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
+	]
+	
+	let consultations = realm.objects(RConsultation.self)
+	
+	for consultation in consultations {
+		let parameters: Parameters = [
+			"consultation": consultation.id
+		]
+		
+		Alamofire.request(backgroundURL, method: .get, parameters: parameters, headers: headers).responseJSON { (response) in
+			if let dict = response.result.value as? [Dictionary<String, AnyObject>] {
+			
+				try! realm.write {
+					for backgroundDict in dict {
+						let rBackground = RBackground()
+						if let bgId = backgroundDict["id"] as? Int {
+							rBackground.id = bgId
+						}
+						if let bgType = backgroundDict["background_type"] as? String {
+							rBackground.backgroundType = bgType
+						}
+						if let bgDescription = backgroundDict["description"] as? String {
+							rBackground.backgroundDescription = bgDescription
+						}
+						if let bgLastUpdate = backgroundDict["updated_at"] as? String {
+							rBackground.lastUpdate = bgLastUpdate.dateFromISO8601!
+						}
+						
+						realm.add(rBackground, update: true)
+						consultation.backgrounds.append(rBackground)
+					}
+				}
+			}
+		}
+	}
+	completed()
+}
+
+/// Descargar Examenes Fisicos
+//
+func downloadPhysicalExams(completed: @escaping DownloadComplete) {
+	let PEURL = "\(URL_BASE)\(URL_PHYSICAL_EXAMS)"
+	
+	let headers: HTTPHeaders = [
+		"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
+	]
+	
+	let consultations = realm.objects(RConsultation.self)
+	
+	for consultation in consultations {
+		let parameters: Parameters = [
+			"consultation": consultation.id
+		]
+		
+		Alamofire.request(PEURL, method: .get, parameters: parameters, headers: headers).responseJSON { (response) in
+			
+			if let dict = response.result.value as? [Dictionary<String, AnyObject>] {
+				try! realm.write {
+					for PEDict in dict {
+						let rPE = RPhysicalExam()
+						if let PEId = PEDict["id"] as? Int {
+							rPE.id = PEId
+						}
+						if let PEType = PEDict["background_type"] as? String {
+							rPE.examType = PEType
+						}
+						if let PEObservation = PEDict["description"] as? String {
+							rPE.observation = PEObservation
+						}
+						if let PELastUpdate = PEDict["updated_at"] as? String {
+							rPE.lastUpdate = PELastUpdate.dateFromISO8601!
+						}
+						
+						realm.add(rPE, update: true)
+						consultation.physicalExams.append(rPE)
 					}
 				}
 			}
@@ -267,6 +354,19 @@ func parseMedicalRecord(recordDict: Dictionary<String, AnyObject>) -> RMedicalRe
 		if let occupation = occupationDict["id"] as? Int {
 			if let occupationRLM = realm.object(ofType: ROccupation.self, forPrimaryKey: occupation) {
 				rMedRecord.occupation = occupationRLM
+			} else {
+				try! realm.write {
+					let rOccupation = ROccupation()
+					if let occupationId = occupationDict["id"] as? Int {
+						rOccupation.id = occupationId
+					}
+					if let occupationName = occupationDict["name"] as? String {
+						rOccupation.name = occupationName
+					}
+					
+					realm.add(rOccupation, update: true)
+					rMedRecord.occupation = rOccupation
+				}
 			}
 		}
 	}
@@ -295,6 +395,19 @@ func parseMedicalRecord(recordDict: Dictionary<String, AnyObject>) -> RMedicalRe
 		if let insurance = insuranceDict["id"] as? Int {
 			if let insuranceRLM = realm.object(ofType: RInsurance.self, forPrimaryKey: insurance) {
 				rMedRecord.insurance = insuranceRLM
+			} else {
+				try! realm.write {
+					let rInsurance = RInsurance()
+					if let insuranceId = insuranceDict["id"] as? Int {
+						rInsurance.id = insuranceId
+					}
+					if let insuranceName = insuranceDict["name"] as? String {
+						rInsurance.name = insuranceName
+					}
+					
+					realm.add(rInsurance, update: true)
+					rMedRecord.insurance = rInsurance
+				}
 			}
 		}
 	}
@@ -325,6 +438,11 @@ func parseMedicalRecord(recordDict: Dictionary<String, AnyObject>) -> RMedicalRe
 			rMedRecord.pressure_s = pressure_s
 		}
 	}
+	
+	if let profilePictureURL = recordDict["profile_picture"] as? String {
+		rMedRecord.profilePicURL = profilePictureURL
+	}
+	
 	return rMedRecord
 }
 
@@ -377,6 +495,19 @@ func parseConsultation(consultationDict: Dictionary<String,AnyObject>) -> RConsu
 		if let diagnostic = diagnosticDict["id"] as? Int {
 			if let diagnosticRLM = realm.object(ofType: RDiagnostic.self, forPrimaryKey: diagnostic) {
 				rConsultation.diagnostic = diagnosticRLM
+			} else {
+				try! realm.write {
+					let rDiagnostic = RDiagnostic()
+					if let diagnosticId = diagnosticDict["id"] as? Int {
+						rDiagnostic.id = diagnosticId
+					}
+					if let diagnosticDescription = diagnosticDict["description"] as? String {
+						rDiagnostic.diagnosticDescription = diagnosticDescription
+					}
+					
+					realm.add(rDiagnostic, update: true)
+					rConsultation.diagnostic = rDiagnostic
+				}
 			}
 		}
 	}
@@ -385,46 +516,23 @@ func parseConsultation(consultationDict: Dictionary<String,AnyObject>) -> RConsu
 		if let reason = reasonDict["id"] as? Int {
 			if let reasonRLM = realm.object(ofType: RReason.self, forPrimaryKey: reason) {
 				rConsultation.reason = reasonRLM
+			} else {
+				try! realm.write {
+					let rReason = RReason()
+					if let reasonId = reasonDict["id"] as? Int {
+						rReason.id = reasonId
+					}
+					if let reasonDescription = reasonDict["description"] as? String {
+						rReason.reasonDescription = reasonDescription
+					}
+					
+					realm.add(rReason, update: true)
+					rConsultation.reason = rReason
+				}
 			}
 		}
 	}
 	return rConsultation
 }
 
-/*
-*
-*
-// BACKGROUNDS
-if let backgrounds = consultationDict["backgrounds"] as? [Dictionary<String, AnyObject>] {
-	rConsultation.backgrounds.removeAll()
-	try! realm.write {
-		for bg in backgrounds {
-			let rBackground = RBackground()
-			rBackground.id = bg["id"] as! Int
-			rBackground.backgroundType = bg["background_type"] as! String
-			rBackground.backgroundDescription = bg["description"] as! String
-			realm.add(rBackground, update: true)
-			
-			rConsultation.backgrounds.append(rBackground)
-		}
-	}
-}
-// PHYSICAL EXAMS
-if let physicalExams = consultationDict["physical_exams"] as? [Dictionary<String, AnyObject>] {
-	rConsultation.physicalExams.removeAll()
-	try! realm.write {
-		for pe in physicalExams {
-			let rPhysicalExam = RPhysicalExam()
-			rPhysicalExam.id = pe["id"] as! Int
-			rPhysicalExam.examType = pe["exam_type"] as! String
-			rPhysicalExam.observation = pe["observation"] as! String
-			realm.add(rPhysicalExam, update: true)
-			
-			rConsultation.physicalExams.append(rPhysicalExam)
-		}
-	}
-}
-*
-*
-*/
 

@@ -27,6 +27,7 @@ class RMedicalRecord: Object {
 	dynamic var pressure_d = ""
 	dynamic var pressure_s = ""
 	dynamic var lastUpdate = Date()
+	dynamic var profilePicURL = ""
 	dynamic var profilePic = NSData()
 	dynamic var user: RUser?
 	dynamic var occupation: ROccupation?

@@ -24,15 +24,6 @@ class Synchronize {
 	private var latestPhysicalExams = [RPhysicalExam]()
 	private var latestPlans = [RPlan]()
 	
-	/*
-	private var latestBackgroundsRLM: Results<RBackground>!
-	private var latestConsultationsRLM: Results<RConsultation>!
-	private var latestMedicalRecordsRLM: Results<RMedicalRecord>!
-	//private var latestOperativeNotesRLM: Results<ROperativeNote>!
-	private var latestPhysicalExamsRLM: Results<RPhysicalExam>!
-	private var latestPlansRLM: Results<RPlan>!
-	*/
-	
 	private var latestBackgroundsRLM = [RBackground]()
 	private var latestConsultationsRLM = [RConsultation]()
 	private var latestMedicalRecordsRLM = [RMedicalRecord]()
@@ -46,38 +37,40 @@ class Synchronize {
 			self.lastSynchRLM {
 				print("FECHA SERVIDOR: \(self.lastSync)")
 				print("FECHA REALM: \(self.lastSyncRLM)\n")
+				
 				if self.lastSync != nil && self.lastSyncRLM != nil && self.lastSync == self.lastSyncRLM {
 					print("Comenzando sincronizacion...\n")
 					self.latestUpdates {
 						self.latestUpdatesRLM {
-							self.syncBackgrounds()
+							self.syncMedicalRecords()
 							self.syncConsultations()
-							self.syncMedicalRecordsBeta()
-							//syncOperativeNotes()
+							self.syncBackgrounds()
 							self.syncPhysicalExams()
 							self.syncPlans()
+							//syncOperativeNotes()
+							
 							self.saveSync {
-								//
+								completed()
 							}
 						}
 					}
 				} else {
 					print("Descarga completa de datos...\n")
-					dowloadOccupations {
-						dowloadInsurances {
-							dowloadDiagnostics {
-								dowloadReasons {
-									dowloadRecords(rUser: self.user) {
+					downloadOccupations {
+						downloadInsurances {
+							downloadDiagnostics {
+								downloadReasons {
+									downloadRecords(rUser: self.user) {
 										downloadConsultations {
+											downloadBackgrounds {}
+											downloadPhysicalExams {}
 											/*
-											downloadBackgrounds()
-											dowloadPhysicalExams()
 											downloadPlans{
-											downloadOperativeNotes()
+												downloadOperativeNotes()
 											}
 											*/
 											self.saveSync {
-												//
+												completed()
 											}
 										}
 									}
@@ -86,7 +79,6 @@ class Synchronize {
 						}
 					}
 				}
-				completed()
 			}
 		}
 	}
@@ -164,12 +156,18 @@ class Synchronize {
 	/// Carga de los records actualizados despues de la ultima fecha de sincronizacion. [Realm]
 	//
 	func latestUpdatesRLM(completed: @escaping DownloadComplete) {
-		self.latestBackgroundsRLM = Array(self.realm.objects(RBackground.self).filter("lastUpdate > %@", self.lastSync))
-		self.latestConsultationsRLM = Array(self.realm.objects(RConsultation.self).filter("lastUpdate > %@", self.lastSync))
 		self.latestMedicalRecordsRLM = Array(self.realm.objects(RMedicalRecord.self).filter("lastUpdate > %@", self.lastSync))
-		//self.latestOperativeNotesRLM = Array(self.realm.objects(ROperativeNote.self).filter("lastUpdate > %@", self.lastSync))
+		
+		self.latestConsultationsRLM = Array(self.realm.objects(RConsultation.self).filter("lastUpdate > %@", self.lastSync))
+		
+		self.latestBackgroundsRLM = Array(self.realm.objects(RBackground.self).filter("lastUpdate > %@", self.lastSync))
+		
 		self.latestPhysicalExamsRLM = Array(self.realm.objects(RPhysicalExam.self).filter("lastUpdate > %@", self.lastSync))
+		
 		self.latestPlansRLM = Array(self.realm.objects(RPlan.self).filter("lastUpdate > %@", self.lastSync))
+		
+		//self.latestOperativeNotesRLM = Array(self.realm.objects(ROperativeNote.self).filter("lastUpdate > %@", self.lastSync))
+		
 		completed()
 	}
 	
@@ -184,7 +182,7 @@ class Synchronize {
 			rSync.date = syncDate
 			rSync.syncDescription = syncDescription
 			self.realm.add(rSync)
-			print("Nueva Sincronizacion guardada en Realm")
+			print("\nNueva Sincronizacion guardada en Realm\n")
 		}
 		
 		let headers: HTTPHeaders = [
@@ -203,97 +201,16 @@ class Synchronize {
 		}
 	}
 	
-	/// Sincronizar Antecedentes
+	/// Sincronizar Historias
 	//
-	func syncBackgrounds() {
-		if self.latestBackgrounds.count == 0 && self.latestBackgroundsRLM.count == 0 {
-			print("Antecedentes al dia")
-		} else if self.latestBackgrounds.count > 0 && self.latestBackgroundsRLM.count == 0 {
-		
-		} else if self.latestBackgrounds.count == 0 && self.latestBackgroundsRLM.count > 0 {
-		
-		} else if self.latestBackgrounds.count > 0 && self.latestBackgroundsRLM.count > 0 {
-			
-		}
-	}
-	
-	/// Sincronizar Consultas
-	//
-	func syncConsultations() {
-		if self.latestConsultations.count == 0 && self.latestConsultationsRLM.count == 0 {
-			print("Consultas al dia")
-		} else  {
-			try! self.realm.write {
-				// Check de las actualizaciones en Realm.
-				for consultation in latestConsultationsRLM {
-					if let serverConsultationLastUpdate = latestConsultations.filter({$0.id == consultation.id}).first {
-						print("Conflicto de Realm con Servidor")
-						if consultation.lastUpdate > serverConsultationLastUpdate.lastUpdate {
-							print("< Realm --> Servidor >")
-							/*
-							updateConsultation(consultation: consultation, completed: {
-								//
-							})
-							*/
-						} else {
-							print("< Servidor --> Realm >")
-							/*
-							serverConsultationLastUpdate.user = self.user
-							self.realm.add(serverConsultationLastUpdate, update: true)
-							*/
-						}
-					} else {
-						print("< Realm --> Servidor >")
-						/*
-						updateConsultation(consultation: consultation, completed: {
-							//
-						})
-						*/
-					}
-				}
-				
-				// Check de las actualizaciones en la Web.
-				for consultation in latestConsultations {
-					if let realmConsultationLastUpdate = latestConsultationsRLM.filter({$0.id == consultation.id}).first {
-						print("Conflicto de Servidor  con Realm")
-						if consultation.lastUpdate > realmConsultationLastUpdate.lastUpdate {
-							print("< Servidor --> Realm >")
-							/*
-							consultation.user = self.user
-							self.realm.add(consultation, update: true)
-							*/
-						} else {
-							print("< Realm --> Servidor >")
-							/*
-							updateConsultation(consultation: realmConsultationLastUpdate, completed: {
-								//
-							})
-							*/
-						}
-					} else {
-						print("< Servidor --> Realm >")
-						/*
-						consultation.user = self.user
-						self.realm.add(consultation, update: true)
-						*/
-					}
-					
-				}
-			}
-		}
-	}
-	
-	/// Sincronizar Historias PRUEBA
-	//
-	func syncMedicalRecordsBeta() {
+	func syncMedicalRecords() {
 		if self.latestMedicalRecords.count == 0 && self.latestMedicalRecordsRLM.count == 0 {
 			print("Historias Medicas al dia")
 		} else {
-			print("\n")
 			try! self.realm.write {
 				// Check de las actualizaciones en Realm.
 				for record in self.latestMedicalRecordsRLM {
-					if let serverRecordLastUpdate = latestMedicalRecords.filter({$0.id == record.id}).first {
+					if let serverRecordLastUpdate = self.latestMedicalRecords.filter({$0.id == record.id}).first {
 						if record.lastUpdate > serverRecordLastUpdate.lastUpdate {
 							print("  Conflicto de Realm con Servidor\n    < Realm --> Servidor >")
 							updateRecord(record: record, completed: {})
@@ -306,7 +223,7 @@ class Synchronize {
 				
 				// Check de las actualizaciones en la Web.
 				for record in self.latestMedicalRecords {
-					if let realmRecordLastUpdate = latestMedicalRecordsRLM.filter({$0.id == record.id}).first {
+					if let realmRecordLastUpdate = self.latestMedicalRecordsRLM.filter({$0.id == record.id}).first {
 						if record.lastUpdate > realmRecordLastUpdate.lastUpdate {
 							print("  Conflicto de Servidor  con Realm\n    < Servidor --> Realm >")
 							record.user = self.user
@@ -319,37 +236,36 @@ class Synchronize {
 					}
 				}
 			}
-			print("\n")
 		}
 	}
 	
-	/*
-	/// Sincronizar Notas Operatorias
+	/// Sincronizar Consultas
 	//
-	func syncOperativeNotes() {
-		if self.latestOperativeNotes.count == 0 && self.latestOperativeNotesRLM.count == 0 {
-			print("Historias Medicas al dia")
-		} else if self.latestOperativeNotes.count > 0 && self.latestOperativeNotesRLM.count == 0 {
-	
-		} else if self.latestOperativeNotes.count == 0 && self.latestOperativeNotesRLM.count > 0 {
-	
-		} else if self.latestOperativeNotes.count > 0 && self.latestOperativeNotesRLM.count > 0 {
-	
+	func syncConsultations() {
+		if self.latestConsultations.count == 0 && self.latestConsultationsRLM.count == 0 {
+			print("Consultas al dia")
+		} else  {
+			
 		}
 	}
-	*/
+	
+	/// Sincronizar Antecedentes
+	//
+	func syncBackgrounds() {
+		if self.latestBackgrounds.count == 0 && self.latestBackgroundsRLM.count == 0 {
+			print("Antecedentes al dia")
+		} else {
+		
+		}
+	}
 	
 	/// Sincronizar Examenes Fisicos
 	//
 	func syncPhysicalExams() {
 		if self.latestPhysicalExams.count == 0 && self.latestPhysicalExamsRLM.count == 0 {
 			print("Examenes fisicos al dia")
-		} else if self.latestPhysicalExams.count > 0 && self.latestPhysicalExamsRLM.count == 0 {
+		} else {
 		
-		} else if self.latestPhysicalExams.count == 0 && self.latestPhysicalExamsRLM.count > 0 {
-		
-		} else if self.latestPhysicalExams.count > 0 && self.latestPhysicalExamsRLM.count > 0 {
-			
 		}
 	}
 	
@@ -358,16 +274,18 @@ class Synchronize {
 	func syncPlans() {
 		if self.latestPlans.count == 0 && self.latestPlansRLM.count == 0 {
 			print("Planes al dia")
-		} else if self.latestPlans.count > 0 && self.latestPlansRLM.count == 0 {
+		} else {
 		
-		} else if self.latestPlans.count == 0 && self.latestPlansRLM.count > 0 {
-			
-		} else if self.latestPlans.count > 0 && self.latestPlansRLM.count > 0 {
-			
 		}
 	}
 	
+	/*
+	/// Sincronizar Notas Operatorias
+	//
+	func syncOperativeNotes() {
 	
+	}
+	*/
 }
 
 

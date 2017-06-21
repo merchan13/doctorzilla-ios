@@ -14,24 +14,10 @@ class MedRecordCell: UICollectionViewCell {
 	@IBOutlet weak var nameLabel: UILabel!
 	@IBOutlet weak var idLabel: UILabel!
 	
-	var medrecord: MedicalRecord!
 	var rMedrecord: RMedicalRecord!
 	
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
-	}
-	
-	func configureCell(_ medrecord: MedicalRecord) {
-		self.medrecord = medrecord
-		
-		nameLabel.text = self.medrecord.lastName.capitalized
-		idLabel.text = self.medrecord.document
-		
-		if self.medrecord.profilePic.length == 0 {
-			thumbImage.image = UIImage(named: "drzilla_imagotipo_color_2")
-		} else {
-			thumbImage.image = UIImage(data: self.medrecord.profilePic as Data)
-		}
 	}
 	
 	func configureCell(_ rMedrecord: RMedicalRecord) {

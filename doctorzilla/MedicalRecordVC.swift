@@ -19,22 +19,17 @@ class MedicalRecordVC: UIViewController {
 	var consultationVC: ConsultationsVC!
 	var noteVC: OperativeNotesVC!
 	
-	var medrecord: MedicalRecord!
 	var rMedrecord: RMedicalRecord!
 	
     override func viewDidLoad() {
         super.viewDidLoad()
-		
-		self.detailVC.medrecord = medrecord
-		self.consultationVC.medrecord = medrecord
-		//self.noteVC.medrecord = medrecord
 		
 		self.detailVC.rMedrecord = rMedrecord
 		self.consultationVC.rMedrecord = rMedrecord
 		//self.noteVC.rMedrecord = rMedrecord
 		
 		self.detailVC.setDetails()
-		self.consultationVC.setDetails()
+		//self.consultationVC.setDetails()
 		//self.noteVC.setDetails()
     }
 	

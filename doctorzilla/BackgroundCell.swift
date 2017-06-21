@@ -20,6 +20,7 @@ class BackgroundCell: UICollectionViewCell {
 		super.init(coder: aDecoder)
 	}
 	
+	// ELIMINAR!
 	func configureCell(_ background: Background) {
 		self.background = background
 		typeLabel.text = self.background.backgroundType
