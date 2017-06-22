@@ -49,11 +49,10 @@ UICollectionViewDelegateFlowLayout {
 		
 		checkNetwork()
 		
-		self.updateUIRLM()
-		
+		self.updateUI()
 	}
 	
-	func updateUIRLM() {
+	func updateUI() {
 		profilePictureImage.image = UIImage(data: self.rMedrecord.profilePic as Data)
 		fullNameLabel.text = "\(self.rMedrecord.name) \(self.rMedrecord.lastName)"
 		documentLabel.text = self.rMedrecord.document

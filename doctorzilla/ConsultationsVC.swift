@@ -14,9 +14,7 @@ class ConsultationsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
 
 	@IBOutlet weak var tableView: UITableView!
 	
-	var medrecord: MedicalRecord!
 	var rMedrecord: RMedicalRecord!
-	var consultations = [Consultation]()
 	let realm = try! Realm()
 	
 	var networkConnection = false
@@ -26,28 +24,15 @@ class ConsultationsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
     }
 	
 	func setDetails() {
-		
-		checkNetwork()
-		
-		if networkConnection {
-			self.medrecord.downloadConsultations {
-				self.tableView.delegate = self
-				self.tableView.dataSource = self
-				
-				self.consultations = self.medrecord.consultations
-				
-				self.tableView.reloadData()
-			}
-		} else {
-			//
-		}
+		self.tableView.delegate = self
+		self.tableView.dataSource = self
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		if let cell = tableView.dequeueReusableCell(withIdentifier: "ConsultationCell", for: indexPath) as? ConsultationCell {
-			let consultation = consultations[indexPath.row]
+			let rConsultation = self.rMedrecord.consultations[indexPath.row]
+			cell.configureCell(rConsultation: rConsultation)
 			
-			cell.updateUI(consultation: consultation)
 			return cell
 		} else {
 			return UITableViewCell()
@@ -55,18 +40,18 @@ class ConsultationsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
 	}
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return consultations.count
+		return self.rMedrecord.consultations.count
 	}
 	
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let consultation = consultations[indexPath.row]
-		performSegue(withIdentifier: "ConsultationDetailVC", sender: consultation)
+		let rConsultation = self.rMedrecord.consultations[indexPath.row]
+		performSegue(withIdentifier: "ConsultationDetailVC", sender: rConsultation)
 	}
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if let vc = segue.destination as? ConsultationDetailVC, segue.identifier == "ConsultationDetailVC" {
-			if let consultation = sender as? Consultation {
-				vc.consultation = consultation
+			if let rConsultation = sender as? RConsultation {
+				vc.rConsultation = rConsultation
 			}
 		}
 	}

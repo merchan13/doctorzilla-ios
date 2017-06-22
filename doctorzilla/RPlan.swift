@@ -13,8 +13,6 @@ class RPlan: Object {
 	dynamic var id = 0
 	dynamic var planDescription = ""
 	dynamic var emergency = false
-	dynamic var updatedAt = ""
-	dynamic var consultation: RConsultation?
 	dynamic var lastUpdate = Date()
 	
 	override static func primaryKey() -> String? {

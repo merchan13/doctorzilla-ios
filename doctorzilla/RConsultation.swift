@@ -31,4 +31,30 @@ class RConsultation: Object {
 	override static func primaryKey() -> String? {
 		return "id"
 	}
+	
+	func IMC() -> Double {
+		if self.weight != 0 && self.height != 0 {
+			let imc = ((Double(self.weight))/(pow(Double(self.height)/100, 2)) * 100).rounded() / 100
+			return imc
+		} else {
+			return 0.0
+		}
+	}
+	
+	func parsedConsultationDate() -> String {
+		var parsedDate = " "
+		
+		let dateFormatterGet = DateFormatter()
+		dateFormatterGet.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+		
+		let dateFormatterResult = DateFormatter()
+		dateFormatterResult.dateFormat = "dd MMM yyyy"
+		
+	
+		if let date: Date = dateFormatterGet.date(from: self.date){
+			parsedDate = dateFormatterResult.string(from: date)
+		}
+		
+		return parsedDate
+	}
 }

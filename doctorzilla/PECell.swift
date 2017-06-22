@@ -13,19 +13,18 @@ class PECell: UICollectionViewCell {
 	@IBOutlet weak var typeLabel: UILabel!
 	@IBOutlet weak var observationTextView: UITextView!
 	
-	var physicalExam: PhysicalExam!
+	var rPhysicalExam: RPhysicalExam!
 	
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 	}
 	
-	func configureCell(_ physicalExam: PhysicalExam) {
+	func configureCell(_ rPhysicalExam: RPhysicalExam) {
 		
-		self.physicalExam = physicalExam
+		self.rPhysicalExam = rPhysicalExam
 		
-		typeLabel.text = self.physicalExam.PEType
-		observationTextView.text = self.physicalExam.observation
-		
+		typeLabel.text = self.rPhysicalExam.examType
+		observationTextView.text = self.rPhysicalExam.observation
 	}
 	
 }

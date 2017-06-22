@@ -24,6 +24,7 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 	var rFilteredRecords = [RMedicalRecord]()
 	var inSearchMode = false
 	let realm = try! Realm()
+	var firstTime = true
 	
 	var networkConnection = false
 	
@@ -46,11 +47,17 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		parseMedicalRecordsRLM {
 			self.collection.reloadData()
 			
-			if self.networkConnection {
-				self.dowloadProfilePictures {
-					self.collection.reloadData()
+			/*
+			if self.networkConnection && self.firstTime {
+				for rec in self.rMedrecords {
+					downloadProfilePicture(rec: rec, completed: { 
+						self.collection.reloadData()
+						self.firstTime = false
+						print("Fotos descargadas")
+					})
 				}
 			}
+			*/
 		}
 	}
 	
@@ -64,26 +71,6 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		}
 		
 		completed()
-	}
-	
-	/// Download MedicalRecord profile pictures
-	//
-	func dowloadProfilePictures(completed: @escaping DownloadComplete) {
-		for rec in self.rMedrecords {
-			Alamofire.request(rec.profilePicURL).responseImage { response in
-				if let image = response.result.value {
-					let size = CGSize(width: 100.0, height: 100.0)
-					let resizedImage = image.af_imageAspectScaled(toFit: size)
-					let circularImage = resizedImage.af_imageRoundedIntoCircle()
-					let imageData:NSData = UIImagePNGRepresentation(circularImage)! as NSData
-					
-					try! self.realm.write {
-						rec.profilePic = imageData
-					}
-				}
-				completed()
-			}
-		}
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

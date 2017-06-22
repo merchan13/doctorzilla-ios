@@ -24,44 +24,31 @@ UICollectionViewDelegateFlowLayout {
 	@IBOutlet weak var diagnosticTextView: UITextView!
 	@IBOutlet weak var planTextView: UITextView!
 	
-	var consultation: Consultation!
-	
-	var backgrounds = [Background]()
-	var physicalExams = [PhysicalExam]()
+	var rConsultation: RConsultation!
 	
     override func viewDidLoad() {
         super.viewDidLoad()
 		
 		backgroundCollection.dataSource = self
-		PECollection.dataSource = self
-		
 		backgroundCollection.delegate = self
+		
+		PECollection.dataSource = self
 		PECollection.delegate = self
 		
-		self.consultation.downloadConsultationDetails {
-			self.updateUI()
-			
-			self.backgrounds = self.consultation.backgrounds
-			self.physicalExams = self.consultation.physicalExams
-			
-			self.backgroundCollection.reloadData()
-			self.PECollection.reloadData()
-		}
+		self.updateUI()
     }
 	
 	func updateUI() {
-		self.reasonLabel.text = self.consultation.reason
-		self.afflictionTextView.text = self.consultation.affliction
-		self.weightLabel.text = "\(self.consultation.weight)"
-		self.heightLabel.text = "\(self.consultation.height)"
-		self.IMCLabel.text = "\(self.consultation.IMC())"
-		self.pressureLabel.text = "\(self.consultation.pressure_s)/\(self.consultation.pressure_d)"
-		// Background Collection
-		// PE Collection
-		self.evolutionTextView.text = self.consultation.evolution
-		self.noteTextView.text = self.consultation.note
-		self.diagnosticTextView.text = self.consultation.diagnostic
-		self.planTextView.text = self.consultation.plan
+		self.reasonLabel.text = self.rConsultation.reason?.reasonDescription
+		self.afflictionTextView.text = self.rConsultation.affliction
+		self.weightLabel.text = "\(self.rConsultation.weight)"
+		self.heightLabel.text = "\(self.rConsultation.height)"
+		self.IMCLabel.text = "\(self.rConsultation.IMC())"
+		self.pressureLabel.text = "\(self.rConsultation.pressure_s)/\(self.rConsultation.pressure_d)"
+		self.evolutionTextView.text = self.rConsultation.evolution
+		self.noteTextView.text = self.rConsultation.note
+		self.diagnosticTextView.text = self.rConsultation.diagnostic?.diagnosticDescription
+		self.planTextView.text = self.rConsultation.plan?.planDescription
 	}
 	
 	@IBAction func backButtonTapped(_ sender: Any) {
@@ -69,21 +56,18 @@ UICollectionViewDelegateFlowLayout {
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-		
 		if collectionView == self.backgroundCollection {
 			if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BackgroundCell", for: indexPath) as? BackgroundCell {
-			
-				let bg: Background!
-				bg = backgrounds[indexPath.row]
+				let bg: RBackground!
+				bg = self.rConsultation.backgrounds[indexPath.row]
 				cell.configureCell(bg)
 			
 				return cell
 			}
 		} else {
 			if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PECell", for: indexPath) as? PECell {
-				
-				let pe: PhysicalExam!
-				pe = physicalExams[indexPath.row]
+				let pe: RPhysicalExam!
+				pe = self.rConsultation.physicalExams[indexPath.row]
 				cell.configureCell(pe)
 				
 				return cell
@@ -91,15 +75,14 @@ UICollectionViewDelegateFlowLayout {
 		}
 		
 		return UICollectionViewCell()
-		
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		if collectionView == self.backgroundCollection {
-			return backgrounds.count
+			return self.rConsultation.backgrounds.count
 		}
 		
-		return physicalExams.count
+		return self.rConsultation.physicalExams.count
 	}
 	
 	func numberOfSections(in collectionView: UICollectionView) -> Int {

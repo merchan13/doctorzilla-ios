@@ -13,18 +13,17 @@ class ConsultationCell: UITableViewCell {
 	@IBOutlet weak var reasonLabel: UILabel!
 	@IBOutlet weak var dateLabel: UILabel!
 	
-	var consultation: Consultation!
+	var rConsultation: RConsultation!
 	
     override func awakeFromNib() {
         super.awakeFromNib()
     }
 	
-	func updateUI(consultation: Consultation) {
-		self.consultation = consultation
+	func configureCell(rConsultation: RConsultation) {
+		self.rConsultation = rConsultation
 		
-		dateLabel.text = self.consultation.parsedConsultationDate()
-		reasonLabel.text = self.consultation.reason
-
+		dateLabel.text = self.rConsultation.parsedConsultationDate()
+		reasonLabel.text = self.rConsultation.reason?.reasonDescription
 	}
 
 }

@@ -13,6 +13,7 @@ import RealmSwift
 class Synchronize {
 	
 	let realm = try! Realm()
+	let dataHelper = DataHelper()
 	var lastSync: Date!
 	var lastSyncRLM: Date!
 	var user: RUser!
@@ -56,19 +57,18 @@ class Synchronize {
 					}
 				} else {
 					print("Descarga completa de datos...\n")
-					downloadOccupations {
-						downloadInsurances {
-							downloadDiagnostics {
-								downloadReasons {
-									downloadRecords(rUser: self.user) {
-										downloadConsultations {
-											downloadBackgrounds {}
-											downloadPhysicalExams {}
-											/*
-											downloadPlans{
-												downloadOperativeNotes()
+					self.dataHelper.downloadOccupations {
+						self.dataHelper.downloadInsurances {
+							self.dataHelper.downloadDiagnostics {
+								self.dataHelper.downloadReasons {
+									self.dataHelper.downloadRecords(rUser: self.user) {
+										self.dataHelper.downloadConsultations {
+											self.dataHelper.downloadBackgrounds { }
+											self.dataHelper.downloadPhysicalExams { }
+											self.dataHelper.downloadPlans{
+												//self.dataHelper.downloadOperativeNotes()
 											}
-											*/
+											
 											self.saveSync {
 												completed()
 											}
@@ -124,13 +124,13 @@ class Synchronize {
 				if let consultations = dict["consultations"] as? [Dictionary<String, AnyObject>] {
 					self.latestConsultations.removeAll()
 					for consultation in consultations {
-						self.latestConsultations.append(parseConsultation(consultationDict: consultation))
+						self.latestConsultations.append(self.dataHelper.parseConsultation(consultationDict: consultation))
 					}
 				}
 				if let medicalRecords = dict["medical_records"] as? [Dictionary<String, AnyObject>] {
 					self.latestMedicalRecords.removeAll()
 					for record in medicalRecords {
-						self.latestMedicalRecords.append(parseMedicalRecord(recordDict: record))
+						self.latestMedicalRecords.append(self.dataHelper.parseMedicalRecord(recordDict: record))
 					}
 				}
 				if let operativeNotes = dict["operative_notes"] as? [Dictionary<String, AnyObject>] {
@@ -213,11 +213,11 @@ class Synchronize {
 					if let serverRecordLastUpdate = self.latestMedicalRecords.filter({$0.id == record.id}).first {
 						if record.lastUpdate > serverRecordLastUpdate.lastUpdate {
 							print("  Conflicto de Realm con Servidor\n    < Realm --> Servidor >")
-							updateRecord(record: record, completed: {})
+							self.dataHelper.updateRecord(record: record, completed: {})
 						}
 					} else {
 						print("  < Realm --> Servidor >")
-						updateRecord(record: record, completed: {})
+						self.dataHelper.updateRecord(record: record, completed: {})
 					}
 				}
 				

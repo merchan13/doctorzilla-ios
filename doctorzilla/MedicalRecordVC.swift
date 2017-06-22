@@ -29,7 +29,7 @@ class MedicalRecordVC: UIViewController {
 		//self.noteVC.rMedrecord = rMedrecord
 		
 		self.detailVC.setDetails()
-		//self.consultationVC.setDetails()
+		self.consultationVC.setDetails()
 		//self.noteVC.setDetails()
     }
 	
