@@ -24,6 +24,8 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 	var rFilteredRecords = [RMedicalRecord]()
 	var inSearchMode = false
 	let realm = try! Realm()
+	let dataHelper = DataHelper()
+	
 	var firstTime = true
 	
 	var networkConnection = false
@@ -47,17 +49,17 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		parseMedicalRecordsRLM {
 			self.collection.reloadData()
 			
-			/*
+			///*
 			if self.networkConnection && self.firstTime {
 				for rec in self.rMedrecords {
-					downloadProfilePicture(rec: rec, completed: { 
+					self.dataHelper.downloadProfilePicture(rec: rec, completed: {
 						self.collection.reloadData()
 						self.firstTime = false
 						print("Fotos descargadas")
 					})
 				}
 			}
-			*/
+			//*/
 		}
 	}
 	

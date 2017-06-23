@@ -24,7 +24,6 @@ class EditRecordVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSour
 	@IBOutlet weak var referredByTextField: UITextField!
 	@IBOutlet weak var insurancePickerView: UIPickerView!
 	
-	var medrecord: MedicalRecord!
 	var rMedrecord: RMedicalRecord!
 	var occupations: Results<ROccupation>!
 	var insurances: Results<RInsurance>!

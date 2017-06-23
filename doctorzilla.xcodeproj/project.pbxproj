@@ -32,6 +32,7 @@
 		FA518F791ED3ED6100EAC1C4 /* MedRecordCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA518F781ED3ED6100EAC1C4 /* MedRecordCell.swift */; };
 		FA518F7B1ED3F19F00EAC1C4 /* MedicalRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA518F7A1ED3F19F00EAC1C4 /* MedicalRecord.swift */; };
 		FA87B6E71ECFFC85003C0DF4 /* DashboardVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA87B6E61ECFFC85003C0DF4 /* DashboardVC.swift */; };
+		FA916EF11EFC84D500BD5EFA /* DataHelperRLM.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA916EF01EFC84D500BD5EFA /* DataHelperRLM.swift */; };
 		FAACA50A1EE5DEAA006C39BB /* Insurance.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAACA5091EE5DEAA006C39BB /* Insurance.swift */; };
 		FAACA50C1EE5DEB5006C39BB /* Occupation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAACA50B1EE5DEB5006C39BB /* Occupation.swift */; };
 		FAACA50E1EE5E1BD006C39BB /* DataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAACA50D1EE5E1BD006C39BB /* DataHelper.swift */; };
@@ -105,6 +106,7 @@
 		FA518F781ED3ED6100EAC1C4 /* MedRecordCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MedRecordCell.swift; sourceTree = "<group>"; };
 		FA518F7A1ED3F19F00EAC1C4 /* MedicalRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MedicalRecord.swift; sourceTree = "<group>"; };
 		FA87B6E61ECFFC85003C0DF4 /* DashboardVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashboardVC.swift; sourceTree = "<group>"; };
+		FA916EF01EFC84D500BD5EFA /* DataHelperRLM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataHelperRLM.swift; sourceTree = "<group>"; };
 		FAACA5091EE5DEAA006C39BB /* Insurance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Insurance.swift; sourceTree = "<group>"; };
 		FAACA50B1EE5DEB5006C39BB /* Occupation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Occupation.swift; sourceTree = "<group>"; };
 		FAACA50D1EE5E1BD006C39BB /* DataHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataHelper.swift; sourceTree = "<group>"; };
@@ -252,6 +254,7 @@
 				FA00E8321ECE694700600EC3 /* AuthToken.swift */,
 				FA00E8361ECE6E3E00600EC3 /* Constants.swift */,
 				FAACA50D1EE5E1BD006C39BB /* DataHelper.swift */,
+				FA916EF01EFC84D500BD5EFA /* DataHelperRLM.swift */,
 				FAACA50F1EE67BAE006C39BB /* Extensions.swift */,
 				FAE3BB941EE8FE76005E3904 /* ReachabilityManager.swift */,
 				FA4D055E1EF21C77005574B1 /* Synchronize.swift */,
@@ -635,6 +638,7 @@
 				FA2D0ACD1EEB99F2009BFBFA /* RInsurance.swift in Sources */,
 				FAF9529E1ED6A37400E3D2EA /* OperativeNotesVC.swift in Sources */,
 				FADF11581EDE20AA00BB54E7 /* ConsultationCell.swift in Sources */,
+				FA916EF11EFC84D500BD5EFA /* DataHelperRLM.swift in Sources */,
 				FA518F791ED3ED6100EAC1C4 /* MedRecordCell.swift in Sources */,
 				FAF9529A1ED6A2F000E3D2EA /* RecordDetailVC.swift in Sources */,
 				FA2D0ACB1EEB99E3009BFBFA /* ROccupation.swift in Sources */,

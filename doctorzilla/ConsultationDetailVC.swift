@@ -11,6 +11,7 @@ import UIKit
 class ConsultationDetailVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource,
 UICollectionViewDelegateFlowLayout {
 
+	@IBOutlet weak var dateLabel: UILabel!
 	@IBOutlet weak var reasonLabel: UILabel!
 	@IBOutlet weak var afflictionTextView: UITextView!
 	@IBOutlet weak var weightLabel: UILabel!
@@ -39,6 +40,7 @@ UICollectionViewDelegateFlowLayout {
     }
 	
 	func updateUI() {
+		self.dateLabel.text = "Consulta [\(self.rConsultation.parsedConsultationDate())]"
 		self.reasonLabel.text = self.rConsultation.reason?.reasonDescription
 		self.afflictionTextView.text = self.rConsultation.affliction
 		self.weightLabel.text = "\(self.rConsultation.weight)"
@@ -49,6 +51,20 @@ UICollectionViewDelegateFlowLayout {
 		self.noteTextView.text = self.rConsultation.note
 		self.diagnosticTextView.text = self.rConsultation.diagnostic?.diagnosticDescription
 		self.planTextView.text = self.rConsultation.plan?.planDescription
+	}
+	
+	@IBAction func editButtonTapped(_ sender: Any) {
+		performSegue(withIdentifier: "EditConsultationVC", sender: self.rConsultation)
+	}
+	
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		if segue.identifier == "EditConsultationVC" {
+			if let editConsultationVC = segue.destination as? EditConsultationVC {
+				if let rConsultation = sender as? RConsultation {
+					editConsultationVC.rConsultation = rConsultation
+				}
+			}
+		}
 	}
 	
 	@IBAction func backButtonTapped(_ sender: Any) {

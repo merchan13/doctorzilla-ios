@@ -23,6 +23,7 @@ class RConsultation: Object {
 	dynamic var reason: RReason?
 	dynamic var plan: RPlan?
 	dynamic var lastUpdate = Date()
+	dynamic var recordId = 0
 	
 	// Has many:
 	let backgrounds = List<RBackground>()

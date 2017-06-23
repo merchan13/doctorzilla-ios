@@ -77,15 +77,14 @@ class DataHelper {
 			Alamofire.request(consultationURL, method: .get, parameters: parameters, headers: headers).responseJSON { (response) in
 				if let dict = response.result.value as? [Dictionary<String, AnyObject>] {
 					
-					//try! self.realm.write {
+					try! self.realm.write {
 						for consultationDict in dict {
 							let rConsultation = self.parseConsultation(consultationDict: consultationDict)
-							try! self.realm.write {
-								self.realm.add(rConsultation, update: true)
-								record.consultations.append(rConsultation)
-							}
+							
+							self.realm.add(rConsultation, update: true)
+							record.consultations.append(rConsultation)
 						}
-					//}
+					}
 				}
 				if record.id == records.last?.id {
 					completed()
@@ -118,6 +117,9 @@ class DataHelper {
 							let rBackground = RBackground()
 							if let bgId = backgroundDict["id"] as? Int {
 								rBackground.id = bgId
+							}
+							if let bgConsultationId = backgroundDict["consultation_id"] as? Int {
+								rBackground.consultationId = bgConsultationId
 							}
 							if let bgType = backgroundDict["background_type"] as? String {
 								rBackground.backgroundType = bgType
@@ -164,6 +166,9 @@ class DataHelper {
 							if let PEId = PEDict["id"] as? Int {
 								rPE.id = PEId
 							}
+							if let PEConsultationId = PEDict["consultation_id"] as? Int {
+								rPE.consultationId = PEConsultationId
+							}
 							if let PEType = PEDict["exam_type"] as? String {
 								rPE.examType = PEType
 							}
@@ -203,6 +208,9 @@ class DataHelper {
 					
 					if let planDict = response.result.value as? Dictionary<String, AnyObject> {
 						try! self.realm.write {
+							if let planConsultationId = planDict["consultation_id"] as? Int {
+								consultation.plan!.consultationId = planConsultationId
+							}
 							if let planDescription = planDict["description"] as? String {
 								consultation.plan!.planDescription = planDescription
 							}
@@ -341,7 +349,7 @@ class DataHelper {
 		}
 	}
 	
-	/// Actualizar Historia Medica
+	/// Actualizar Historia Medica (Servidor)
 	//
 	func updateRecord(record: RMedicalRecord, completed: @escaping DownloadComplete) {
 		
@@ -382,7 +390,7 @@ class DataHelper {
 		}
 	}
 	
-	/// Parse MedicalRecrod Dictionary into Realm Object
+	/// Parse MedicalRecrod Dictionary into Realm Object - [NOTA: al invocar esta funcion, se debe rodear de un bloque de escritura de Realm]
 	//
 	func parseMedicalRecord(recordDict: Dictionary<String, AnyObject>) -> RMedicalRecord {
 		let rMedRecord = RMedicalRecord()
@@ -418,18 +426,16 @@ class DataHelper {
 				if let occupationRLM = realm.object(ofType: ROccupation.self, forPrimaryKey: occupation) {
 					rMedRecord.occupation = occupationRLM
 				} else {
-					try! realm.write {
-						let rOccupation = ROccupation()
-						if let occupationId = occupationDict["id"] as? Int {
-							rOccupation.id = occupationId
-						}
-						if let occupationName = occupationDict["name"] as? String {
-							rOccupation.name = occupationName
-						}
-						
-						realm.add(rOccupation, update: true)
-						rMedRecord.occupation = rOccupation
+					let rOccupation = ROccupation()
+					if let occupationId = occupationDict["id"] as? Int {
+						rOccupation.id = occupationId
 					}
+					if let occupationName = occupationDict["name"] as? String {
+						rOccupation.name = occupationName
+					}
+					
+					realm.add(rOccupation, update: true)
+					rMedRecord.occupation = rOccupation
 				}
 			}
 		}
@@ -459,18 +465,16 @@ class DataHelper {
 				if let insuranceRLM = realm.object(ofType: RInsurance.self, forPrimaryKey: insurance) {
 					rMedRecord.insurance = insuranceRLM
 				} else {
-					try! realm.write {
-						let rInsurance = RInsurance()
-						if let insuranceId = insuranceDict["id"] as? Int {
-							rInsurance.id = insuranceId
-						}
-						if let insuranceName = insuranceDict["name"] as? String {
-							rInsurance.name = insuranceName
-						}
-						
-						realm.add(rInsurance, update: true)
-						rMedRecord.insurance = rInsurance
+					let rInsurance = RInsurance()
+					if let insuranceId = insuranceDict["id"] as? Int {
+						rInsurance.id = insuranceId
 					}
+					if let insuranceName = insuranceDict["name"] as? String {
+						rInsurance.name = insuranceName
+					}
+					
+					realm.add(rInsurance, update: true)
+					rMedRecord.insurance = rInsurance
 				}
 			}
 		}
@@ -505,17 +509,21 @@ class DataHelper {
 		if let profilePictureURL = recordDict["profile_picture"] as? String {
 			rMedRecord.profilePicURL = profilePictureURL
 		}
-		
+	
 		return rMedRecord
 	}
 	
-	/// Parse Consultation Dictionary into Realm Object
+	/// Parse Consultation Dictionary into Realm Object - [NOTA: al invocar esta funcion, se debe rodear de un bloque de escritura de Realm]
 	//
 	func parseConsultation(consultationDict: Dictionary<String,AnyObject>) -> RConsultation {
 		let rConsultation = RConsultation()
 		// ID
 		if let id = consultationDict["id"] as? Int {
 			rConsultation.id = id
+		}
+		// MEDICAL RECORD ID
+		if let recordId = consultationDict["medical_record_id"] as? Int {
+			rConsultation.recordId = recordId
 		}
 		// DATE
 		if let date = consultationDict["created_at"] as? String {
@@ -559,18 +567,16 @@ class DataHelper {
 				if let diagnosticRLM = self.realm.object(ofType: RDiagnostic.self, forPrimaryKey: diagnostic) {
 					rConsultation.diagnostic = diagnosticRLM
 				} else {
-					try! self.realm.write {
-						let rDiagnostic = RDiagnostic()
-						if let diagnosticId = diagnosticDict["id"] as? Int {
-							rDiagnostic.id = diagnosticId
-						}
-						if let diagnosticDescription = diagnosticDict["description"] as? String {
-							rDiagnostic.diagnosticDescription = diagnosticDescription
-						}
-						
-						self.realm.add(rDiagnostic, update: true)
-						rConsultation.diagnostic = rDiagnostic
+					let rDiagnostic = RDiagnostic()
+					if let diagnosticId = diagnosticDict["id"] as? Int {
+						rDiagnostic.id = diagnosticId
 					}
+					if let diagnosticDescription = diagnosticDict["description"] as? String {
+						rDiagnostic.diagnosticDescription = diagnosticDescription
+					}
+					
+					self.realm.add(rDiagnostic, update: true)
+					rConsultation.diagnostic = rDiagnostic
 				}
 			}
 		}
@@ -580,18 +586,16 @@ class DataHelper {
 				if let reasonRLM = self.realm.object(ofType: RReason.self, forPrimaryKey: reason) {
 					rConsultation.reason = reasonRLM
 				} else {
-					try! self.realm.write {
-						let rReason = RReason()
-						if let reasonId = reasonDict["id"] as? Int {
-							rReason.id = reasonId
-						}
-						if let reasonDescription = reasonDict["description"] as? String {
-							rReason.reasonDescription = reasonDescription
-						}
-						
-						self.realm.add(rReason, update: true)
-						rConsultation.reason = rReason
+					let rReason = RReason()
+					if let reasonId = reasonDict["id"] as? Int {
+						rReason.id = reasonId
 					}
+					if let reasonDescription = reasonDict["description"] as? String {
+						rReason.reasonDescription = reasonDescription
+					}
+					
+					self.realm.add(rReason, update: true)
+					rConsultation.reason = rReason
 				}
 			}
 		}
@@ -601,17 +605,13 @@ class DataHelper {
 				if let planRLM = self.realm.object(ofType: RPlan.self, forPrimaryKey: plan) {
 					rConsultation.plan = planRLM
 				} else {
-					try! self.realm.write {
-						let rPlan = RPlan()
-						if let planId = planDict["id"] as? Int {
-							rPlan.id = planId
-						}
-						
-						self.realm.add(rPlan, update: true)
-						rConsultation.plan = rPlan
+					let rPlan = RPlan()
+					if let planId = planDict["id"] as? Int {
+						rPlan.id = planId
 					}
 					
-					
+					self.realm.add(rPlan, update: true)
+					rConsultation.plan = rPlan
 				}
 			}
 		}

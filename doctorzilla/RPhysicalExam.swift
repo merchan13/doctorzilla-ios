@@ -14,6 +14,7 @@ class RPhysicalExam: Object {
 	dynamic var examType = ""
 	dynamic var observation = ""
 	dynamic var lastUpdate = Date()
+	dynamic var consultationId = 0
 	
 	override static func primaryKey() -> String? {
 		return "id"
