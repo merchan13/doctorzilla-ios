@@ -67,8 +67,13 @@ class EditRecordVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSour
 		self.addressTextView.text = self.rMedrecord.address
 		self.referredByTextField.text = self.rMedrecord.referredBy
 		
-		self.occupationPickerView.selectRow(self.occupations.index(where: {$0.name == self.rMedrecord.occupation?.name})!, inComponent: 0, animated: true)
-		self.insurancePickerView.selectRow(self.insurances.index(where: {$0.name == self.rMedrecord.insurance?.name})!, inComponent: 0, animated: true)
+		if let occupation = self.rMedrecord.occupation {
+			self.occupationPickerView.selectRow(self.occupations.index(where: {$0.name == occupation.name})!, inComponent: 0, animated: true)
+		}
+		
+		if let insurance = self.rMedrecord.insurance {
+			self.insurancePickerView.selectRow(self.insurances.index(where: {$0.name == insurance.name})!, inComponent: 0, animated: true)
+		}
 		
 		if self.rMedrecord.gender == "masculine" {
 			self.genderPickerView.selectRow(0, inComponent: 0, animated: true)
@@ -77,7 +82,7 @@ class EditRecordVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSour
 		}
 	}
 	
-	@IBAction func saveChangedButtonTapped(_ sender: UIButton) {
+	@IBAction func saveChangesButtonTapped(_ sender: UIButton) {
 		let refreshAlert = UIAlertController(title: "Alerta", message: "¿Está seguro de que quiere editar la Historia Médica?", preferredStyle: UIAlertControllerStyle.alert)
 		refreshAlert.addAction(UIAlertAction(title: "Si", style: .destructive, handler: { (action: UIAlertAction!) in
 			var updatedGen = ""
@@ -173,7 +178,6 @@ class EditRecordVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSour
 		self.referredByTextField.resignFirstResponder()
 		return true
 	}
-	
 	func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
 		if(text == "\n") {
 			textView.resignFirstResponder()

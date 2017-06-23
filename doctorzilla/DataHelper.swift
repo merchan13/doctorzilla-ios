@@ -390,6 +390,45 @@ class DataHelper {
 		}
 	}
 	
+	/// Actualizar Consulta (Servidor)
+	//
+	func updateConsultation(consultation: RConsultation, completed: @escaping DownloadComplete) {
+		
+		let headers: HTTPHeaders = [
+			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
+		]
+		
+		var reason = ""
+		var diagnostic = ""
+		
+		if let reasonRLM = consultation.reason {
+			reason = "\(reasonRLM.id)"
+		}
+		
+		if let diagnosticRLM = consultation.diagnostic {
+			diagnostic = "\(diagnosticRLM.id)"
+		}
+		
+		let parameters: Parameters = [
+			"consultation": [
+				"affliction": consultation.affliction,
+				"diagnostic_id": diagnostic,
+				"evolution": consultation.evolution,
+				"height": "\(consultation.height)",
+				"note": consultation.note,
+				"pressure_s": consultation.pressure_s,
+				"pressure_d": consultation.pressure_d,
+				"reason_id": reason,
+				"weight": "\(consultation.weight)"
+			]
+		]
+		
+		Alamofire.request("\(URL_BASE)\(URL_CONSULTATIONS)\(consultation.id)", method: .put, parameters: parameters, headers: headers).responseJSON { response in
+			//print(response.response?.statusCode)
+			completed()
+		}
+	}
+	
 	/// Parse MedicalRecrod Dictionary into Realm Object - [NOTA: al invocar esta funcion, se debe rodear de un bloque de escritura de Realm]
 	//
 	func parseMedicalRecord(recordDict: Dictionary<String, AnyObject>) -> RMedicalRecord {

@@ -259,11 +259,11 @@ class Synchronize {
 					if let serverConsultationLastUpdate = self.latestConsultations.filter({$0.id == consultation.id}).first {
 						if consultation.lastUpdate > serverConsultationLastUpdate.lastUpdate {
 							print("    Conflicto de Realm con Servidor\n      < Realm --> Servidor >")
-							//self.dataHelper.updateConsultation(consultation: consultation, completed: {})
+							self.dataHelper.updateConsultation(consultation: consultation, completed: {})
 						}
 					} else {
 						print("    < Realm --> Servidor >")
-						//self.dataHelper.updateConsultation(consultation: consultation, completed: {})
+						self.dataHelper.updateConsultation(consultation: consultation, completed: {})
 					}
 				}
 				

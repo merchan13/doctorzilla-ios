@@ -39,6 +39,10 @@ UICollectionViewDelegateFlowLayout {
 		self.updateUI()
     }
 	
+	override func viewDidAppear(_ animated: Bool) {
+		self.updateUI()
+	}
+	
 	func updateUI() {
 		self.dateLabel.text = "Consulta [\(self.rConsultation.parsedConsultationDate())]"
 		self.reasonLabel.text = self.rConsultation.reason?.reasonDescription

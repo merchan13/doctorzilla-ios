@@ -47,9 +47,6 @@ class DataHelperRLM {
 				self.realm.create(RConsultation.self, value: ["id": consultation.id, "reason":reason], update: true)
 			}
 		} else {
-			
-			print("en consulta nueva")
-			
 			if let record = self.realm.object(ofType: RMedicalRecord.self, forPrimaryKey: consultation.recordId) {
 				self.realm.add(consultation, update: true)
 				record.consultations.append(consultation)
