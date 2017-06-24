@@ -138,6 +138,10 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		}
 	}
 	
+	@IBAction func settingsButtonTapped(_ sender: Any) {
+		performSegue(withIdentifier: "SettingsVC", sender: nil)
+	}
+	
 	@IBAction func logoutButtonTapped(_ sender: Any) {
 		AuthToken.sharedInstance.token = ""
 		//user = User()
@@ -152,7 +156,7 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 					recordVC.rMedrecord = rMedrec
 				}
 			}
-		}
+		} 
 	}
 	
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

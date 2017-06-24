@@ -23,6 +23,12 @@ class ConsultationsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
         super.viewDidLoad()
     }
 	
+	override func viewDidAppear(_ animated: Bool) {
+		if let index = self.tableView.indexPathForSelectedRow{
+			self.tableView.deselectRow(at: index, animated: true)
+		}
+	}
+		
 	func setDetails() {
 		self.tableView.delegate = self
 		self.tableView.dataSource = self

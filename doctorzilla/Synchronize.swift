@@ -139,11 +139,6 @@ class Synchronize {
 						print(background)
 					}
 				}
-				if let operativeNotes = dict["operative_notes"] as? [Dictionary<String, AnyObject>] {
-					for note in operativeNotes {
-						print(note)
-					}
-				}
 				if let physicalExams = dict["physical_exams"] as? [Dictionary<String, AnyObject>] {
 					for exam in physicalExams {
 						print(exam)
@@ -152,6 +147,11 @@ class Synchronize {
 				if let plans = dict["plans"] as? [Dictionary<String, AnyObject>] {
 					for plan in plans {
 						print(plan)
+					}
+				}
+				if let operativeNotes = dict["operative_notes"] as? [Dictionary<String, AnyObject>] {
+					for note in operativeNotes {
+						print(note)
 					}
 				}
 			}
@@ -320,6 +320,23 @@ class Synchronize {
 	
 	}
 	*/
+	
+	func resetDatabase(user: RUser, completed: @escaping DownloadComplete) {
+		let rUser = RUser()
+		rUser.id = user.id
+		rUser.email = user.email
+		rUser.password = user.password
+		
+		try! self.realm.write {
+			self.realm.deleteAll()
+			
+			self.realm.add(rUser, update: true)
+		}
+		
+		self.synchronizeDatabases(user: rUser, completed: {
+			completed()
+		})
+	}
 }
 
 

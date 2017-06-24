@@ -70,7 +70,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 						DispatchQueue.main.async {
 							self.activityIndicatorView.stopAnimating()
 						}
-						self.performSegue(withIdentifier: "DashboardVC", sender: self.user)
+						self.performSegue(withIdentifier: "DashboardVC", sender: self.rUser)
 					}
 					
 				} else {
@@ -94,6 +94,18 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 				DispatchQueue.main.async {
 					self.activityIndicatorView.stopAnimating()
 					self.loginAlert()
+				}
+			}
+		}
+	}
+	
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		if segue.identifier == "DashboardVC" {
+			if let tabBarVC = segue.destination as? UITabBarController {
+				if let dashboardVC = tabBarVC.viewControllers!.first as? DashboardVC {
+					if let rUser = sender as? RUser {
+						dashboardVC.rUser = rUser
+					}
 				}
 			}
 		}
