@@ -16,7 +16,37 @@ class DataHelperRLM {
 	/// Actualizar Historia Medica [Realm]
 	//
 	func updateMedicalRecord(record: RMedicalRecord) {
-		
+		if self.realm.object(ofType: RMedicalRecord.self, forPrimaryKey: record.id) != nil {
+			
+			let newData =	[
+				"id": record.id,
+				"name": record.name,
+				"lastName": record.lastName,
+				"birthday": record.birthday,
+				"email": record.email,
+				"phone": record.phone,
+				"cellphone": record.cellphone,
+				"address": record.address,
+				"gender": record.gender,
+				"referredBy": record.referredBy,
+				"lastUpdate": record.lastUpdate,
+				"profilePicURL": record.profilePicURL
+				] as [String : Any]
+			
+			self.realm.create(RMedicalRecord.self, value: newData, update: true)
+			
+			if let occupation = record.occupation {
+				self.realm.create(RMedicalRecord.self, value: ["id": record.id, "occupation":occupation], update: true)
+			}
+			
+			if let insurance = record.insurance {
+				self.realm.create(RMedicalRecord.self, value: ["id": record.id, "insurance":insurance], update: true)
+			}
+		} else {
+			self.realm.add(record, update: true)
+			let user = self.realm.object(ofType: RUser.self, forPrimaryKey: 1)!
+			record.user = user
+		}
 	}
 	
 	/// /// Actualizar Consulta [Realm]

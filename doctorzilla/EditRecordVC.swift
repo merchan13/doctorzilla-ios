@@ -27,7 +27,6 @@ class EditRecordVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSour
 	var rMedrecord: RMedicalRecord!
 	var occupations: Results<ROccupation>!
 	var insurances: Results<RInsurance>!
-	var genders = ["Masculino","Femenino"]
 	let realm = try! Realm()
 	let dataHelper = DataHelper()
 	
@@ -151,7 +150,7 @@ class EditRecordVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSour
 		} else if pickerView == self.insurancePickerView {
 			return self.insurances.count
 		}
-		return genders.count
+		return GENDERS.count
 	}
 	
 	func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
@@ -160,7 +159,7 @@ class EditRecordVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSour
 		} else if pickerView == self.insurancePickerView {
 			return self.insurances[row].name
 		}
-		return genders[row]
+		return GENDERS[row]
 	}
 	
 	//Cerrar teclado cuando se toca cualquier espacio de la pantalla.
@@ -190,12 +189,9 @@ class EditRecordVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSour
 extension EditRecordVC: NetworkStatusListener {
 	
 	func networkStatusDidChange(status: Reachability.NetworkStatus) {
-		switch status {
-		case .notReachable:
+		if status == .notReachable {
 			networkConnection = false
-		case .reachableViaWiFi:
-			networkConnection = true
-		case .reachableViaWWAN:
+		} else {
 			networkConnection = true
 		}
 	}

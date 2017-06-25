@@ -17,8 +17,6 @@ class ConsultationsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
 	var rMedrecord: RMedicalRecord!
 	let realm = try! Realm()
 	
-	var networkConnection = false
-	
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -59,32 +57,6 @@ class ConsultationsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
 			if let rConsultation = sender as? RConsultation {
 				vc.rConsultation = rConsultation
 			}
-		}
-	}
-	
-}
-
-extension ConsultationsVC: NetworkStatusListener {
-	
-	func networkStatusDidChange(status: Reachability.NetworkStatus) {
-		switch status {
-		case .notReachable:
-			networkConnection = false
-		case .reachableViaWiFi:
-			networkConnection = true
-		case .reachableViaWWAN:
-			networkConnection = true
-		}
-	}
-	
-	func checkNetwork() {
-		switch ReachabilityManager.shared.reachability.currentReachabilityStatus {
-		case .notReachable:
-			networkConnection = false
-		case .reachableViaWiFi:
-			networkConnection = true
-		case .reachableViaWWAN:
-			networkConnection = true
 		}
 	}
 	

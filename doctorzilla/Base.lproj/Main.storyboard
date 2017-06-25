@@ -181,8 +181,8 @@
                                                         <constraint firstAttribute="width" constant="23" id="YfQ-HC-tcc"/>
                                                     </constraints>
                                                 </imageView>
-                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="X33-JA-RQc">
-                                                    <rect key="frame" x="244" y="3" width="37" height="37"/>
+                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="X33-JA-RQc">
+                                                    <rect key="frame" x="261" y="3" width="20" height="36.5"/>
                                                     <color key="color" red="0.12941176469999999" green="0.10980392160000001" blue="0.37254901959999998" alpha="1" colorSpace="calibratedRGB"/>
                                                 </activityIndicatorView>
                                             </subviews>
@@ -217,8 +217,8 @@
                                                         <constraint firstAttribute="height" constant="30" id="sUP-Bw-3zp"/>
                                                     </constraints>
                                                 </imageView>
-                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="aMr-MM-yer">
-                                                    <rect key="frame" x="243" y="4" width="37" height="37"/>
+                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="aMr-MM-yer">
+                                                    <rect key="frame" x="260" y="4" width="20" height="36.5"/>
                                                     <color key="color" red="0.12941176469999999" green="0.10980392160000001" blue="0.37254901959999998" alpha="1" colorSpace="calibratedRGB"/>
                                                 </activityIndicatorView>
                                             </subviews>
@@ -274,11 +274,12 @@
                         <outlet property="profilePictureImageView" destination="smi-c5-jTV" id="yFF-dz-SR9"/>
                         <outlet property="resetActivityIndicator" destination="aMr-MM-yer" id="iki-D3-sAd"/>
                         <outlet property="syncActivityIndicator" destination="X33-JA-RQc" id="2un-hB-uT7"/>
+                        <segue destination="BYZ-38-t0r" kind="presentation" identifier="LoginVC" id="2qI-4w-jYK"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="b6E-TY-45G" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5162" y="-2165"/>
+            <point key="canvasLocation" x="2235" y="-1368"/>
         </scene>
         <!--Historias-->
         <scene sceneID="iBx-v2-ZmL">
@@ -324,6 +325,11 @@
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
+                                <activityIndicatorView key="backgroundView" hidden="YES" opaque="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" id="YxW-sn-aNa">
+                                    <rect key="frame" x="126" y="188" width="37" height="37"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="color" red="0.12941176469999999" green="0.10980392160000001" blue="0.37254901959999998" alpha="1" colorSpace="calibratedRGB"/>
+                                </activityIndicatorView>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="MedRecordCell" id="rlj-Hm-Xqc" customClass="MedRecordCell" customModule="doctorzilla" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="138" height="120"/>
@@ -403,6 +409,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Historias" image="historias" id="rAu-g6-Fa7"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="YxW-sn-aNa" id="7MW-bP-t3q"/>
                         <outlet property="collection" destination="rwm-PE-57l" id="AJi-qk-1TT"/>
                         <outlet property="searchBar" destination="6l9-XZ-u37" id="njO-wj-t73"/>
                         <segue destination="ywv-un-4gB" kind="show" identifier="MedicalRecordVC" id="Sae-SJ-oq5"/>
@@ -477,6 +484,10 @@
                                             <segue destination="oiN-z1-9Ey" kind="embed" identifier="RecordDetailVC" id="Itl-F6-1v7"/>
                                         </connections>
                                     </containerView>
+                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="9Kd-QE-dIa">
+                                        <rect key="frame" x="142" y="208" width="37" height="37"/>
+                                        <color key="color" red="0.12941176469999999" green="0.10980392160000001" blue="0.37254901959999998" alpha="1" colorSpace="calibratedRGB"/>
+                                    </activityIndicatorView>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="aXe-UV-Uee" firstAttribute="trailing" secondItem="0Za-Ca-Wvp" secondAttribute="trailingMargin" id="01Z-b3-fv9"/>
@@ -484,11 +495,13 @@
                                     <constraint firstItem="aXe-UV-Uee" firstAttribute="centerX" secondItem="0Za-Ca-Wvp" secondAttribute="centerX" id="IiJ-hf-KSe"/>
                                     <constraint firstItem="arz-9N-H7q" firstAttribute="top" secondItem="aXe-UV-Uee" secondAttribute="top" id="Mly-6d-zw3"/>
                                     <constraint firstItem="arz-9N-H7q" firstAttribute="top" secondItem="0Za-Ca-Wvp" secondAttribute="top" id="RRU-v2-u5w"/>
+                                    <constraint firstItem="9Kd-QE-dIa" firstAttribute="centerX" secondItem="0Za-Ca-Wvp" secondAttribute="centerX" id="W9M-f6-bCX"/>
                                     <constraint firstItem="aXe-UV-Uee" firstAttribute="leading" secondItem="arz-9N-H7q" secondAttribute="leading" id="aGL-vc-Hiu"/>
                                     <constraint firstItem="arz-9N-H7q" firstAttribute="leading" secondItem="0Za-Ca-Wvp" secondAttribute="leadingMargin" id="cMR-XW-YVc"/>
                                     <constraint firstItem="13h-iz-RBI" firstAttribute="trailing" secondItem="aXe-UV-Uee" secondAttribute="trailing" id="gd9-jt-Yco"/>
                                     <constraint firstItem="13h-iz-RBI" firstAttribute="top" secondItem="arz-9N-H7q" secondAttribute="top" id="gkL-Gq-cMG"/>
                                     <constraint firstItem="arz-9N-H7q" firstAttribute="bottom" secondItem="aXe-UV-Uee" secondAttribute="bottom" id="i2c-iA-nOo"/>
+                                    <constraint firstItem="9Kd-QE-dIa" firstAttribute="centerY" secondItem="0Za-Ca-Wvp" secondAttribute="centerY" id="iw0-Hg-0nW"/>
                                     <constraint firstItem="aXe-UV-Uee" firstAttribute="bottom" secondItem="13h-iz-RBI" secondAttribute="bottom" id="muc-I1-FoA"/>
                                     <constraint firstAttribute="bottom" secondItem="arz-9N-H7q" secondAttribute="bottom" id="p46-Ey-TzC"/>
                                     <constraint firstItem="aXe-UV-Uee" firstAttribute="centerY" secondItem="0Za-Ca-Wvp" secondAttribute="centerY" id="y8X-s6-2xf"/>
@@ -521,6 +534,7 @@
                     </view>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="9Kd-QE-dIa" id="7i1-4J-fyN"/>
                         <outlet property="consultationView" destination="arz-9N-H7q" id="uH2-GQ-IVJ"/>
                         <outlet property="detailView" destination="aXe-UV-Uee" id="q83-cy-HFD"/>
                         <outlet property="operativeNoteView" destination="13h-iz-RBI" id="lcm-sj-FFE"/>
@@ -1671,7 +1685,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8pZ-wc-ljU">
-                                <rect key="frame" x="0.0" y="20" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <items>
                                     <navigationItem id="cuc-WZ-51V">
                                         <barButtonItem key="leftBarButtonItem" image="backbutton" id="qCZ-2z-2gz" userLabel="LogOut Button">
@@ -1687,7 +1701,7 @@
                                 </items>
                             </navigationBar>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hJd-ki-dmV">
-                                <rect key="frame" x="0.0" y="71" width="320" height="35"/>
+                                <rect key="frame" x="0.0" y="51" width="320" height="35"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Editar Antecedentes" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b2E-7z-FYG">
                                         <rect key="frame" x="52" y="3" width="217" height="29"/>
@@ -1704,7 +1718,7 @@
                                 </constraints>
                             </view>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="drzilla_imagotipo_color_1" translatesAutoresizingMaskIntoConstraints="NO" id="aC2-NP-VU2">
-                                <rect key="frame" x="85" y="27" width="150" height="30"/>
+                                <rect key="frame" x="85" y="7" width="150" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="150" id="1uu-9M-qpL"/>
                                     <constraint firstAttribute="height" constant="30" id="lRZ-Gq-CEs"/>
@@ -2675,6 +2689,6 @@
         <image name="selectcontact_btn" width="12" height="21"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="rkS-uu-iwR"/>
+        <segue reference="VVe-mf-Hq1"/>
     </inferredMetricsTieBreakers>
 </document>

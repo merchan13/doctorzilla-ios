@@ -17,16 +17,17 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 	
 	@IBOutlet weak var searchBar: UISearchBar!
 	@IBOutlet weak var collection: UICollectionView!
+	@IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 	
-	var user: User!
-	var rUser: RUser!
 	var rMedrecords = [RMedicalRecord]()
 	var rFilteredRecords = [RMedicalRecord]()
 	var inSearchMode = false
 	let realm = try! Realm()
 	let dataHelper = DataHelper()
+	let sync = Synchronize()
 	
 	var firstTime = true
+	var reloadImages = false
 	
 	var networkConnection = false
 	
@@ -43,14 +44,24 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		searchBar.returnKeyType = UIReturnKeyType.done
     }
 	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		ReachabilityManager.shared.addListener(listener: self)
+	}
+	
+	override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(animated)
+		ReachabilityManager.shared.removeListener(listener: self)
+	}
+	
 	override func viewDidAppear(_ animated: Bool) {
 		checkNetwork()
 		
 		parseMedicalRecordsRLM {
 			self.collection.reloadData()
 			
-			/*
-			if self.networkConnection && self.firstTime {
+			///*
+			if self.networkConnection && self.firstTime || self.networkConnection && self.reloadImages {
 				for rec in self.rMedrecords {
 					self.dataHelper.downloadProfilePicture(rec: rec, completed: {
 						self.collection.reloadData()
@@ -58,8 +69,9 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 						print("Fotos descargadas")
 					})
 				}
+				self.reloadImages = false
 			}
-			*/
+			//*/
 		}
 	}
 	
@@ -139,13 +151,16 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 	}
 	
 	@IBAction func settingsButtonTapped(_ sender: Any) {
+		self.reloadImages = true
 		performSegue(withIdentifier: "SettingsVC", sender: nil)
 	}
 	
 	@IBAction func logoutButtonTapped(_ sender: Any) {
 		AuthToken.sharedInstance.token = ""
-		//user = User()
-		//user.signOut()
+		self.firstTime = true
+		
+		// log out!
+		
 		dismiss(animated: true, completion: nil)
 	}
 	
@@ -163,18 +178,60 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		self.view.endEditing(true)
 	}
 	
+	func recoveredNetworkData() {
+		let syncAlert = UIAlertController(title: "ALERTA", message: "Se ha recupero la conexión a internet, se recomienda que sincronice los datos antes de seguir.", preferredStyle: UIAlertControllerStyle.alert)
+		
+		syncAlert.addAction(UIAlertAction(title: "Sincronizar", style: .destructive, handler: { (action: UIAlertAction!) in
+			
+			DispatchQueue.main.async {
+				self.activityIndicator.startAnimating()
+			}
+			
+			let user = self.realm.object(ofType: RUser.self, forPrimaryKey: 1)!
+			
+			self.sync.synchronizeDatabases(user: user, completed: {
+				
+				self.parseMedicalRecordsRLM {
+					self.collection.reloadData()
+				}
+				
+				DispatchQueue.main.async {
+					self.activityIndicator.stopAnimating()
+				}
+				
+				let successAlert = UIAlertController(title: "Sincronización", message: "Los datos han sido sincronizados con éxito", preferredStyle: UIAlertControllerStyle.alert)
+				
+				successAlert.addAction(UIAlertAction(title: "Cerrar", style: .default, handler: { (action: UIAlertAction!) in
+
+				}))
+				
+				self.present(successAlert, animated: true, completion: nil)
+			})
+		}))
+		
+		syncAlert.addAction(UIAlertAction(title: "Cancelar", style: .cancel, handler: { (action: UIAlertAction!) in
+			print("Sync Canceled")
+		}))
+		
+		self.present(syncAlert, animated: true, completion: nil)
+	}
+	
 }
 
 extension DashboardVC: NetworkStatusListener {
 	
 	func networkStatusDidChange(status: Reachability.NetworkStatus) {
-		switch status {
-		case .notReachable:
-			networkConnection = false
-		case .reachableViaWiFi:
+		if status == .notReachable {
+			let successAlert = UIAlertController(title: "SIN CONEXIÓN", message: "Actualmente no posee conexión a internet.\n\nSe advierte que es posible que trabaje con información desactualizada.", preferredStyle: UIAlertControllerStyle.alert)
+			
+			successAlert.addAction(UIAlertAction(title: "Cerrar", style: .default, handler: { (action: UIAlertAction!) in
+				
+			}))
+			
+			self.present(successAlert, animated: true, completion: nil)
+		} else {
 			networkConnection = true
-		case .reachableViaWWAN:
-			networkConnection = true
+			self.recoveredNetworkData()
 		}
 	}
 	

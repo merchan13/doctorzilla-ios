@@ -233,13 +233,11 @@ class Synchronize {
 					if let realmRecordLastUpdate = self.latestMedicalRecordsRLM.filter({$0.id == record.id}).first {
 						if record.lastUpdate > realmRecordLastUpdate.lastUpdate {
 							print("    Conflicto de Servidor  con Realm\n      < Servidor --> Realm >")
-							record.user = self.user
-							self.realm.add(record, update: true)
+							self.dataHelperRLM.updateMedicalRecord(record: record)
 						}
 					} else {
 						print("    < Servidor --> Realm >")
-						record.user = self.user
-						self.realm.add(record, update: true)
+						self.dataHelperRLM.updateMedicalRecord(record: record)
 					}
 				}
 			}

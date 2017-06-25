@@ -28,7 +28,15 @@ class SettingsVC: UITableViewController {
         super.viewDidLoad()
 		
 		self.rUser = self.realm.object(ofType: RUser.self, forPrimaryKey: 1)
+		
+		self.updateUI()
     }
+	
+	func updateUI() {
+		//self.nameLabel.text = "Dr. \(self.rUser.name) \(self.rUser.lastName)."
+		self.emailLabel.text = self.rUser.email
+		//self.profilePictureImageView.image = self.rUser.profilePicture
+	}
 	
 	@IBAction func backButtonTapped(_ sender: Any) {
 		dismiss(animated: true, completion: nil)
@@ -106,7 +114,7 @@ class SettingsVC: UITableViewController {
 	/// Borrar base de datos del teléfono y descarga toda la información del servidor.
 	//
 	func resetDrZilla() {
-		let syncAlert = UIAlertController(title: "Alerta", message: "¿Está seguro de que quiere eliminar y restaurar los datos?", preferredStyle: UIAlertControllerStyle.alert)
+		let syncAlert = UIAlertController(title: "Alerta", message: "¿Está seguro de que quiere eliminar y restaurar los datos?\n\nLuego de realizar esta acción, deberá iniciar sesión nuevamente.", preferredStyle: UIAlertControllerStyle.alert)
 		
 		syncAlert.addAction(UIAlertAction(title: "Si", style: .destructive, handler: { (action: UIAlertAction!) in
 			
@@ -123,7 +131,7 @@ class SettingsVC: UITableViewController {
 				let successAlert = UIAlertController(title: "Sincronización", message: "Los datos han sido restaurados con éxito", preferredStyle: UIAlertControllerStyle.alert)
 				
 				successAlert.addAction(UIAlertAction(title: "Cerrar", style: .default, handler: { (action: UIAlertAction!) in
-					self.dismiss(animated: true, completion: nil)
+					self.performSegue(withIdentifier: "LoginVC", sender: nil)
 				}))
 				
 				self.present(successAlert, animated: true, completion: nil)
@@ -161,12 +169,9 @@ class SettingsVC: UITableViewController {
 extension SettingsVC: NetworkStatusListener {
 	
 	func networkStatusDidChange(status: Reachability.NetworkStatus) {
-		switch status {
-		case .notReachable:
+		if status == .notReachable {
 			networkConnection = false
-		case .reachableViaWiFi:
-			networkConnection = true
-		case .reachableViaWWAN:
+		} else {
 			networkConnection = true
 		}
 	}

@@ -176,12 +176,9 @@ class EditConsultationVC: UIViewController, UIPickerViewDelegate, UIPickerViewDa
 extension EditConsultationVC: NetworkStatusListener {
 	
 	func networkStatusDidChange(status: Reachability.NetworkStatus) {
-		switch status {
-		case .notReachable:
+		if status == .notReachable {
 			networkConnection = false
-		case .reachableViaWiFi:
-			networkConnection = true
-		case .reachableViaWWAN:
+		} else {
 			networkConnection = true
 		}
 	}

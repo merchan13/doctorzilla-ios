@@ -39,4 +39,6 @@ let URL_LAST_SYNC = "/last_sync/"
 
 let RECORDS_CSV = "Records.csv"
 
+let GENDERS = ["Masculino","Femenino"]
+
 typealias DownloadComplete = () -> ()

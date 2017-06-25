@@ -70,7 +70,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 						DispatchQueue.main.async {
 							self.activityIndicatorView.stopAnimating()
 						}
-						self.performSegue(withIdentifier: "DashboardVC", sender: self.rUser)
+						self.performSegue(withIdentifier: "DashboardVC", sender: nil)
 					}
 					
 				} else {
@@ -94,18 +94,6 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 				DispatchQueue.main.async {
 					self.activityIndicatorView.stopAnimating()
 					self.loginAlert()
-				}
-			}
-		}
-	}
-	
-	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if segue.identifier == "DashboardVC" {
-			if let tabBarVC = segue.destination as? UITabBarController {
-				if let dashboardVC = tabBarVC.viewControllers!.first as? DashboardVC {
-					if let rUser = sender as? RUser {
-						dashboardVC.rUser = rUser
-					}
 				}
 			}
 		}
@@ -136,12 +124,9 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 extension LoginVC: NetworkStatusListener {
 	
 	func networkStatusDidChange(status: Reachability.NetworkStatus) {
-		switch status {
-		case .notReachable:
+		if status == .notReachable {
 			networkConnection = false
-		case .reachableViaWiFi:
-			networkConnection = true
-		case .reachableViaWWAN:
+		} else {
 			networkConnection = true
 		}
 	}

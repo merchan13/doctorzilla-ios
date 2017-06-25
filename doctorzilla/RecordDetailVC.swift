@@ -32,8 +32,7 @@ UICollectionViewDelegateFlowLayout {
 	
 	var rMedrecord: RMedicalRecord!
 	let realm = try! Realm()
-	
-	var networkConnection = false
+	let dataHelper = DataHelper()
 	
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,13 +46,17 @@ UICollectionViewDelegateFlowLayout {
 		backgroundCollection.dataSource = self
 		backgroundCollection.delegate = self
 		
-		checkNetwork()
-		
 		self.updateUI()
 	}
 	
 	func updateUI() {
-		profilePictureImage.image = UIImage(data: self.rMedrecord.profilePic as Data)
+		if self.rMedrecord.profilePic.length == 0 {
+			self.dataHelper.downloadProfilePicture(rec: self.rMedrecord, completed: { 
+				self.profilePictureImage.image = UIImage(data: self.rMedrecord.profilePic as Data)
+			})
+		} else {
+			profilePictureImage.image = UIImage(data: self.rMedrecord.profilePic as Data)
+		}
 		fullNameLabel.text = "\(self.rMedrecord.name) \(self.rMedrecord.lastName)"
 		documentLabel.text = self.rMedrecord.document
 		birthdayLabel.text = "\(self.rMedrecord.parsedBirthdayDate()) (\(self.rMedrecord.age()) años)"
@@ -107,32 +110,6 @@ UICollectionViewDelegateFlowLayout {
 	
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		return CGSize(width: 285, height: 100)
-	}
-	
-}
-
-extension RecordDetailVC: NetworkStatusListener {
-	
-	func networkStatusDidChange(status: Reachability.NetworkStatus) {
-		switch status {
-		case .notReachable:
-			networkConnection = false
-		case .reachableViaWiFi:
-			networkConnection = true
-		case .reachableViaWWAN:
-			networkConnection = true
-		}
-	}
-	
-	func checkNetwork() {
-		switch ReachabilityManager.shared.reachability.currentReachabilityStatus {
-		case .notReachable:
-			networkConnection = false
-		case .reachableViaWiFi:
-			networkConnection = true
-		case .reachableViaWWAN:
-			networkConnection = true
-		}
 	}
 	
 }

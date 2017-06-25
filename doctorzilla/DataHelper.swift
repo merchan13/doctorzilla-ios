@@ -22,7 +22,7 @@ class DataHelper {
 				let size = CGSize(width: 100.0, height: 100.0)
 				let resizedImage = image.af_imageAspectScaled(toFit: size)
 				let circularImage = resizedImage.af_imageRoundedIntoCircle()
-				let imageData:NSData = UIImageJPEGRepresentation(circularImage, 0)! as NSData
+				let imageData:NSData = UIImageJPEGRepresentation(circularImage, 0.30)! as NSData
 				
 				NSLog("Data length: %u KB",(imageData.length/1024));
 				
