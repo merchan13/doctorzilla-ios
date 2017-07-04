@@ -35,38 +35,10 @@ class RMedicalRecord: Object {
 	
 	// Has many:
 	let consultations = List<RConsultation>()
+	let backgrounds = List<RBackground>()
 	
 	override static func primaryKey() -> String? {
 		return "id"
-	}
-	
-	func backgroundsDictionary() -> [String: String] {
-		var backgrounds: [String: String] = ["Familiares":"", "Alergias":"", "Diábetes":"", "Asma":"", "Cardiopatías":"", "Medicamentos":"", "Quirúrgicos":"", "Otros":""]
-		
-		for consultation in self.consultations {
-			for bg in consultation.backgrounds {
-				if let description = backgrounds[bg.backgroundDescription] {
-					backgrounds[bg.backgroundType] = description + "\n" + bg.backgroundDescription
-				} else {
-					backgrounds[bg.backgroundType] = bg.backgroundDescription
-				}
-			}
-		}
-		return backgrounds
-	}
-	
-	func backgroundsArray() -> [RBackground] {
-		var backgrounds = [RBackground]()
-		
-		for (key, value) in self.backgroundsDictionary() {
-			if value != "" {
-				let rBackground = RBackground()
-				rBackground.backgroundType = key
-				rBackground.backgroundDescription = value
-				backgrounds.append(rBackground)
-			}
-		}
-		return backgrounds
 	}
 	
 	func age() -> Int {

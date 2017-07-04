@@ -90,7 +90,7 @@ UICollectionViewDelegateFlowLayout {
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BackgroundCell", for: indexPath) as? BackgroundCell {
 			let bg: RBackground!
-			bg = self.rMedrecord.backgroundsArray()[indexPath.row]
+			bg = self.rMedrecord.backgrounds[indexPath.row]
 			cell.configureCell(bg)
 			
 			return cell
@@ -101,7 +101,7 @@ UICollectionViewDelegateFlowLayout {
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return self.rMedrecord.backgroundsArray().count
+		return self.rMedrecord.backgrounds.count
 	}
 	
 	func numberOfSections(in collectionView: UICollectionView) -> Int {

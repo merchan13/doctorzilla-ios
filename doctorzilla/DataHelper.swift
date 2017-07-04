@@ -102,11 +102,11 @@ class DataHelper {
 			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
 		]
 		
-		let consultations = realm.objects(RConsultation.self)
+		let records = realm.objects(RMedicalRecord.self)
 		
-		for consultation in consultations {
+		for record in records {
 			let parameters: Parameters = [
-				"consultation": consultation.id
+				"record": record.id
 			]
 			
 			Alamofire.request(backgroundURL, method: .get, parameters: parameters, headers: headers).responseJSON { (response) in
@@ -118,8 +118,8 @@ class DataHelper {
 							if let bgId = backgroundDict["id"] as? Int {
 								rBackground.id = bgId
 							}
-							if let bgConsultationId = backgroundDict["consultation_id"] as? Int {
-								rBackground.consultationId = bgConsultationId
+							if let bgRecordId = backgroundDict["medical_record_id"] as? Int {
+								rBackground.recordId = bgRecordId
 							}
 							if let bgType = backgroundDict["background_type"] as? String {
 								rBackground.backgroundType = bgType
@@ -132,7 +132,7 @@ class DataHelper {
 							}
 							
 							self.realm.add(rBackground, update: true)
-							consultation.backgrounds.append(rBackground)
+							record.backgrounds.append(rBackground)
 						}
 					}
 				}

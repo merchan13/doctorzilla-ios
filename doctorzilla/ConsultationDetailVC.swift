@@ -18,7 +18,6 @@ UICollectionViewDelegateFlowLayout {
 	@IBOutlet weak var heightLabel: UILabel!
 	@IBOutlet weak var IMCLabel: UILabel!
 	@IBOutlet weak var pressureLabel: UILabel!
-	@IBOutlet weak var backgroundCollection: UICollectionView!
 	@IBOutlet weak var PECollection: UICollectionView!
 	@IBOutlet weak var evolutionTextView: UITextView!
 	@IBOutlet weak var noteTextView: UITextView!
@@ -29,9 +28,6 @@ UICollectionViewDelegateFlowLayout {
 	
     override func viewDidLoad() {
         super.viewDidLoad()
-		
-		backgroundCollection.dataSource = self
-		backgroundCollection.delegate = self
 		
 		PECollection.dataSource = self
 		PECollection.delegate = self
@@ -76,32 +72,18 @@ UICollectionViewDelegateFlowLayout {
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-		if collectionView == self.backgroundCollection {
-			if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BackgroundCell", for: indexPath) as? BackgroundCell {
-				let bg: RBackground!
-				bg = self.rConsultation.backgrounds[indexPath.row]
-				cell.configureCell(bg)
+		if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PECell", for: indexPath) as? PECell {
+			let pe: RPhysicalExam!
+			pe = self.rConsultation.physicalExams[indexPath.row]
+			cell.configureCell(pe)
 			
-				return cell
-			}
-		} else {
-			if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PECell", for: indexPath) as? PECell {
-				let pe: RPhysicalExam!
-				pe = self.rConsultation.physicalExams[indexPath.row]
-				cell.configureCell(pe)
-				
-				return cell
-			}
+			return cell
 		}
 		
 		return UICollectionViewCell()
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		if collectionView == self.backgroundCollection {
-			return self.rConsultation.backgrounds.count
-		}
-		
 		return self.rConsultation.physicalExams.count
 	}
 	
@@ -110,10 +92,6 @@ UICollectionViewDelegateFlowLayout {
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-		if collectionView == self.backgroundCollection {
-			return CGSize(width: 277, height: 65)
-		}
-		
 		return CGSize(width: 277, height: 90)
 	}
 	

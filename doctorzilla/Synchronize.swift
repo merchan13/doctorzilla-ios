@@ -22,14 +22,12 @@ class Synchronize {
 	private var latestBackgrounds = [RBackground]()
 	private var latestConsultations = [RConsultation]()
 	private var latestMedicalRecords = [RMedicalRecord]()
-	//private var latestOperativeNotes = [ROperativeNote]()
 	private var latestPhysicalExams = [RPhysicalExam]()
 	private var latestPlans = [RPlan]()
 	
 	private var latestBackgroundsRLM = [RBackground]()
 	private var latestConsultationsRLM = [RConsultation]()
 	private var latestMedicalRecordsRLM = [RMedicalRecord]()
-	//private var latestOperativeNotesRLM = [ROperativeNote]()
 	private var latestPhysicalExamsRLM = [RPhysicalExam]()
 	private var latestPlansRLM = [RPlan]()
 	

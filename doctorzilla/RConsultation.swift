@@ -26,7 +26,6 @@ class RConsultation: Object {
 	dynamic var recordId = 0
 	
 	// Has many:
-	let backgrounds = List<RBackground>()
 	let physicalExams = List<RPhysicalExam>()
 		
 	override static func primaryKey() -> String? {
