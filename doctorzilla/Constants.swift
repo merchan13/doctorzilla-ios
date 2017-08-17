@@ -8,7 +8,7 @@
 
 import Foundation
 
-let URL_BASE = "http://doctorzilla-api.herokuapp.com"
+let URL_BASE = "http://doctorzilla-api.herokuapp.com/v1"
 let URL_SIGN_IN = "/sign-in"
 let URL_SIGN_OUT = "/sign-out"
 let URL_USERS = "/users/"

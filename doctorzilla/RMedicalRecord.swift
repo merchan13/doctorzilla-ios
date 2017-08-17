@@ -36,6 +36,8 @@ class RMedicalRecord: Object {
 	// Has many:
 	let consultations = List<RConsultation>()
 	let backgrounds = List<RBackground>()
+	let attachments = List<RAttachment>()
+	let reports = List<RReport>()
 	
 	override static func primaryKey() -> String? {
 		return "id"

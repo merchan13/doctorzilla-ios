@@ -78,6 +78,9 @@ class DataHelper {
 				if let dict = response.result.value as? [Dictionary<String, AnyObject>] {
 					
 					try! self.realm.write {
+						
+						record.consultations.removeAll()
+						
 						for consultationDict in dict {
 							let rConsultation = self.parseConsultation(consultationDict: consultationDict)
 							
@@ -113,6 +116,9 @@ class DataHelper {
 				if let dict = response.result.value as? [Dictionary<String, AnyObject>] {
 					
 					try! self.realm.write {
+						
+						record.backgrounds.removeAll()
+						
 						for backgroundDict in dict {
 							let rBackground = RBackground()
 							if let bgId = backgroundDict["id"] as? Int {
@@ -161,6 +167,9 @@ class DataHelper {
 				
 				if let dict = response.result.value as? [Dictionary<String, AnyObject>] {
 					try! self.realm.write {
+						
+						consultation.physicalExams.removeAll()
+						
 						for PEDict in dict {
 							let rPE = RPhysicalExam()
 							if let PEId = PEDict["id"] as? Int {
@@ -216,10 +225,6 @@ class DataHelper {
 							}
 							if let planEmergency = planDict["emergency"] as? Bool {
 								consultation.plan!.emergency = planEmergency
-							}
-							
-							if let planLastUpdate = planDict["updated_at"] as? String {
-								consultation.plan!.lastUpdate = planLastUpdate.dateFromISO8601!
 							}
 						}
 					}
@@ -424,6 +429,46 @@ class DataHelper {
 		]
 		
 		Alamofire.request("\(URL_BASE)\(URL_CONSULTATIONS)\(consultation.id)", method: .put, parameters: parameters, headers: headers).responseJSON { response in
+			//print(response.response?.statusCode)
+			completed()
+		}
+	}
+	
+	/// Actualizar Antecedente (Servidor)
+	//
+	func updateBackground(background: RBackground, completed: @escaping DownloadComplete) {
+		
+		let headers: HTTPHeaders = [
+			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
+		]
+		
+		let parameters: Parameters = [
+			"background": [
+				"description": background.backgroundDescription
+			]
+		]
+		
+		Alamofire.request("\(URL_BASE)\(URL_BACKGROUNDS)\(background.id)", method: .put, parameters: parameters, headers: headers).responseJSON { response in
+			//print(response.response?.statusCode)
+			completed()
+		}
+	}
+	
+	/// Actualizar Examen fisico (Servidor)
+	//
+	func updatePhysicalExam(physicalExam: RPhysicalExam, completed: @escaping DownloadComplete) {
+		
+		let headers: HTTPHeaders = [
+			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
+		]
+		
+		let parameters: Parameters = [
+			"physical_exam": [
+				"observation": physicalExam.observation
+			]
+		]
+		
+		Alamofire.request("\(URL_BASE)\(URL_PHYSICAL_EXAMS)\(physicalExam.id)", method: .put, parameters: parameters, headers: headers).responseJSON { response in
 			//print(response.response?.statusCode)
 			completed()
 		}

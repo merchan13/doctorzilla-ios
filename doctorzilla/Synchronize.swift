@@ -19,17 +19,15 @@ class Synchronize {
 	var lastSyncRLM: Date!
 	var user: RUser!
 	
-	private var latestBackgrounds = [RBackground]()
 	private var latestConsultations = [RConsultation]()
 	private var latestMedicalRecords = [RMedicalRecord]()
-	private var latestPhysicalExams = [RPhysicalExam]()
-	private var latestPlans = [RPlan]()
 	
 	private var latestBackgroundsRLM = [RBackground]()
 	private var latestConsultationsRLM = [RConsultation]()
 	private var latestMedicalRecordsRLM = [RMedicalRecord]()
 	private var latestPhysicalExamsRLM = [RPhysicalExam]()
-	private var latestPlansRLM = [RPlan]()
+	
+	private var newData = false
 	
 	func synchronizeDatabases(user: RUser, completed: @escaping DownloadComplete) {
 		self.user = user
@@ -46,12 +44,15 @@ class Synchronize {
 							self.syncConsultations()
 							self.syncBackgrounds()
 							self.syncPhysicalExams()
-							self.syncPlans()
-							//syncOperativeNotes()
 							
-							self.saveSync {
+							if self.newData {
+								self.saveSync {
+									completed()
+								}
+							} else {
 								completed()
 							}
+							
 						}
 					}
 				} else {
@@ -61,15 +62,24 @@ class Synchronize {
 							self.dataHelper.downloadDiagnostics {
 								self.dataHelper.downloadReasons {
 									self.dataHelper.downloadRecords(rUser: self.user) {
-										self.dataHelper.downloadConsultations {
-											self.dataHelper.downloadBackgrounds { }
-											self.dataHelper.downloadPhysicalExams { }
-											self.dataHelper.downloadPlans{
-												//self.dataHelper.downloadOperativeNotes()
-											}
-											
-											self.saveSync {
-												completed()
+										self.dataHelper.downloadReports {
+											self.dataHelper.downloadAttachments {
+												self.dataHelper.downloadConsultations {
+													
+													self.dataHelper.downloadBackgrounds { }
+													
+													self.dataHelper.downloadPhysicalExams { }
+													
+													self.dataHelper.downloadProcedures {
+														self.dataHelper.downloadPlans{
+															self.dataHelper.downloadOperativeNotes()
+														}
+													}
+													
+													self.saveSync {
+														completed()
+													}
+												}
 											}
 										}
 									}
@@ -132,26 +142,6 @@ class Synchronize {
 						}
 					}
 				}
-				if let backgrounds = dict["backgrounds"] as? [Dictionary<String, AnyObject>] {
-					for background in backgrounds {
-						print(background)
-					}
-				}
-				if let physicalExams = dict["physical_exams"] as? [Dictionary<String, AnyObject>] {
-					for exam in physicalExams {
-						print(exam)
-					}
-				}
-				if let plans = dict["plans"] as? [Dictionary<String, AnyObject>] {
-					for plan in plans {
-						print(plan)
-					}
-				}
-				if let operativeNotes = dict["operative_notes"] as? [Dictionary<String, AnyObject>] {
-					for note in operativeNotes {
-						print(note)
-					}
-				}
 			}
 			completed()
 		}
@@ -167,10 +157,6 @@ class Synchronize {
 		self.latestBackgroundsRLM = Array(self.realm.objects(RBackground.self).filter("lastUpdate > %@", self.lastSync))
 		
 		self.latestPhysicalExamsRLM = Array(self.realm.objects(RPhysicalExam.self).filter("lastUpdate > %@", self.lastSync))
-		
-		self.latestPlansRLM = Array(self.realm.objects(RPlan.self).filter("lastUpdate > %@", self.lastSync))
-		
-		//self.latestOperativeNotesRLM = Array(self.realm.objects(ROperativeNote.self).filter("lastUpdate > %@", self.lastSync))
 		
 		completed()
 	}
@@ -212,6 +198,9 @@ class Synchronize {
 			print("Historias Medicas al dia")
 		} else {
 			print("Historias")
+			
+			self.newData = true
+			
 			try! self.realm.write {
 				// Check de las actualizaciones en Realm.
 				for record in self.latestMedicalRecordsRLM {
@@ -249,6 +238,9 @@ class Synchronize {
 			print("Consultas al dia")
 		} else  {
 			print("Consultas")
+			
+			self.newData = true
+			
 			try! self.realm.write {
 				// Check de las actualizaciones en Realm.
 				for consultation in self.latestConsultationsRLM {
@@ -282,40 +274,42 @@ class Synchronize {
 	/// Sincronizar Antecedentes
 	//
 	func syncBackgrounds() {
-		if self.latestBackgrounds.count == 0 && self.latestBackgroundsRLM.count == 0 {
+		if self.latestBackgroundsRLM.count == 0 {
 			print("Antecedentes al dia")
 		} else {
-		
+			print("Antecedentes")
+			
+			self.newData = true
+			
+			try! self.realm.write {
+				// Check de las actualizaciones en Realm.
+				for background in self.latestBackgroundsRLM {
+					print("    < Realm --> Servidor >")
+					self.dataHelper.updateBackground(background: background, completed: {})
+				}
+			}
 		}
 	}
 	
 	/// Sincronizar Examenes Fisicos
 	//
 	func syncPhysicalExams() {
-		if self.latestPhysicalExams.count == 0 && self.latestPhysicalExamsRLM.count == 0 {
+		if self.latestPhysicalExamsRLM.count == 0 {
 			print("Examenes fisicos al dia")
 		} else {
-		
+			print("Examenes fisicos")
+			
+			self.newData = true
+			
+			try! self.realm.write {
+				// Check de las actualizaciones en Realm.
+				for physicalExam in self.latestPhysicalExamsRLM {
+					print("    < Realm --> Servidor >")
+					self.dataHelper.updatePhysicalExam(physicalExam: physicalExam, completed: {})
+				}
+			}
 		}
 	}
-	
-	/// Sincronizar Planes
-	//
-	func syncPlans() {
-		if self.latestPlans.count == 0 && self.latestPlansRLM.count == 0 {
-			print("Planes al dia")
-		} else {
-		
-		}
-	}
-	
-	/*
-	/// Sincronizar Notas Operatorias
-	//
-	func syncOperativeNotes() {
-	
-	}
-	*/
 	
 	func resetDatabase(user: RUser, completed: @escaping DownloadComplete) {
 		let rUser = RUser()
