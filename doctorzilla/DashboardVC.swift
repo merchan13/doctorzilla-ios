@@ -60,7 +60,7 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		parseMedicalRecordsRLM {
 			self.collection.reloadData()
 			
-			///*
+			/*
 			if self.networkConnection && self.firstTime || self.networkConnection && self.reloadImages {
 				for rec in self.rMedrecords {
 					self.dataHelper.downloadProfilePicture(rec: rec, completed: {
@@ -71,7 +71,7 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 				}
 				self.reloadImages = false
 			}
-			//*/
+			*/
 		}
 	}
 	

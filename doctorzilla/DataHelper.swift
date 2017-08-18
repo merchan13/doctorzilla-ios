@@ -34,206 +34,6 @@ class DataHelper {
 		}
 	}
 	
-	/// Descargar Historia Medicas
-	//
-	func downloadRecords(rUser: RUser, completed: @escaping DownloadComplete) {
-		let url = "\(URL_BASE)\(URL_MEDICAL_RECORDS)"
-		
-		let headers: HTTPHeaders = [
-			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
-		]
-		
-		Alamofire.request(url, method: .get, headers: headers).responseJSON { response in
-			if let dict = response.result.value as? [Dictionary<String, AnyObject>]{
-				try! self.realm.write {
-					for recordDict in dict {
-						let rMedRecord = self.parseMedicalRecord(recordDict: recordDict)
-						
-						rMedRecord.user = rUser
-						self.realm.add(rMedRecord, update: true)
-					}
-				}
-			}
-			completed()
-		}
-	}
-	
-	/// Descargar Consultas
-	//
-	func downloadConsultations(completed: @escaping DownloadComplete) {
-		let consultationURL = "\(URL_BASE)\(URL_CONSULTATIONS)"
-		
-		let headers: HTTPHeaders = [
-			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
-		]
-		
-		let records = realm.objects(RMedicalRecord.self).sorted(byKeyPath: "id")
-		
-		for record in records {
-			let parameters: Parameters = [
-				"record": record.id
-			]
-			
-			Alamofire.request(consultationURL, method: .get, parameters: parameters, headers: headers).responseJSON { (response) in
-				if let dict = response.result.value as? [Dictionary<String, AnyObject>] {
-					
-					try! self.realm.write {
-						
-						record.consultations.removeAll()
-						
-						for consultationDict in dict {
-							let rConsultation = self.parseConsultation(consultationDict: consultationDict)
-							
-							self.realm.add(rConsultation, update: true)
-							record.consultations.append(rConsultation)
-						}
-					}
-				}
-				if record.id == records.last?.id {
-					completed()
-				}
-			}
-		}
-	}
-	
-	/// Descargar Antecedentes
-	//
-	func downloadBackgrounds(completed: @escaping DownloadComplete) {
-		let backgroundURL = "\(URL_BASE)\(URL_BACKGROUNDS)"
-		
-		let headers: HTTPHeaders = [
-			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
-		]
-		
-		let records = realm.objects(RMedicalRecord.self)
-		
-		for record in records {
-			let parameters: Parameters = [
-				"record": record.id
-			]
-			
-			Alamofire.request(backgroundURL, method: .get, parameters: parameters, headers: headers).responseJSON { (response) in
-				if let dict = response.result.value as? [Dictionary<String, AnyObject>] {
-					
-					try! self.realm.write {
-						
-						record.backgrounds.removeAll()
-						
-						for backgroundDict in dict {
-							let rBackground = RBackground()
-							if let bgId = backgroundDict["id"] as? Int {
-								rBackground.id = bgId
-							}
-							if let bgRecordId = backgroundDict["medical_record_id"] as? Int {
-								rBackground.recordId = bgRecordId
-							}
-							if let bgType = backgroundDict["background_type"] as? String {
-								rBackground.backgroundType = bgType
-							}
-							if let bgDescription = backgroundDict["description"] as? String {
-								rBackground.backgroundDescription = bgDescription
-							}
-							if let bgLastUpdate = backgroundDict["updated_at"] as? String {
-								rBackground.lastUpdate = bgLastUpdate.dateFromISO8601!
-							}
-							
-							self.realm.add(rBackground, update: true)
-							record.backgrounds.append(rBackground)
-						}
-					}
-				}
-			}
-		}
-		completed()
-	}
-	
-	/// Descargar Examenes Fisicos
-	//
-	func downloadPhysicalExams(completed: @escaping DownloadComplete) {
-		let PEURL = "\(URL_BASE)\(URL_PHYSICAL_EXAMS)"
-		
-		let headers: HTTPHeaders = [
-			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
-		]
-		
-		let consultations = realm.objects(RConsultation.self)
-		
-		for consultation in consultations {
-			let parameters: Parameters = [
-				"consultation": consultation.id
-			]
-			
-			Alamofire.request(PEURL, method: .get, parameters: parameters, headers: headers).responseJSON { (response) in
-				
-				if let dict = response.result.value as? [Dictionary<String, AnyObject>] {
-					try! self.realm.write {
-						
-						consultation.physicalExams.removeAll()
-						
-						for PEDict in dict {
-							let rPE = RPhysicalExam()
-							if let PEId = PEDict["id"] as? Int {
-								rPE.id = PEId
-							}
-							if let PEConsultationId = PEDict["consultation_id"] as? Int {
-								rPE.consultationId = PEConsultationId
-							}
-							if let PEType = PEDict["exam_type"] as? String {
-								rPE.examType = PEType
-							}
-							if let PEObservation = PEDict["observation"] as? String {
-								rPE.observation = PEObservation
-							}
-							if let PELastUpdate = PEDict["updated_at"] as? String {
-								rPE.lastUpdate = PELastUpdate.dateFromISO8601!
-							}
-							
-							self.realm.add(rPE, update: true)
-							consultation.physicalExams.append(rPE)
-						}
-					}
-				}
-			}
-		}
-		completed()
-	}
-	
-	/// Descargar Planes
-	//
-	func downloadPlans(completed: @escaping DownloadComplete) {
-		
-		let headers: HTTPHeaders = [
-			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
-		]
-		
-		let consultations = realm.objects(RConsultation.self)
-		
-		for consultation in consultations {
-			
-			if let id = consultation.plan?.id {
-				let planURL = "\(URL_BASE)\(URL_PLANS)\(id)"
-				
-				Alamofire.request(planURL, method: .get, headers: headers).responseJSON { (response) in
-					
-					if let planDict = response.result.value as? Dictionary<String, AnyObject> {
-						try! self.realm.write {
-							if let planConsultationId = planDict["consultation_id"] as? Int {
-								consultation.plan!.consultationId = planConsultationId
-							}
-							if let planDescription = planDict["description"] as? String {
-								consultation.plan!.planDescription = planDescription
-							}
-							if let planEmergency = planDict["emergency"] as? Bool {
-								consultation.plan!.emergency = planEmergency
-							}
-						}
-					}
-				}
-			}
-		}
-		completed()
-	}
-	
 	/// Descargar Profesiones
 	//
 	func downloadOccupations(completed: @escaping DownloadComplete) {
@@ -353,6 +153,404 @@ class DataHelper {
 			completed()
 		}
 	}
+	
+	/// Descargar Historia Medicas
+	//
+	func downloadRecords(rUser: RUser, completed: @escaping DownloadComplete) {
+		let url = "\(URL_BASE)\(URL_MEDICAL_RECORDS)"
+		
+		let headers: HTTPHeaders = [
+			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
+		]
+		
+		Alamofire.request(url, method: .get, headers: headers).responseJSON { response in
+			if let dict = response.result.value as? [Dictionary<String, AnyObject>]{
+				try! self.realm.write {
+					for recordDict in dict {
+						let rMedRecord = self.parseMedicalRecord(recordDict: recordDict)
+						
+						rMedRecord.user = rUser
+						self.realm.add(rMedRecord, update: true)
+					}
+				}
+			}
+			completed()
+		}
+	}
+	
+	/// Descargar Informes
+	//
+	func downloadReports(completed: @escaping DownloadComplete) {
+		let reportURL = "\(URL_BASE)\(URL_REPORTS)"
+		
+		let headers: HTTPHeaders = [
+			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
+		]
+		
+		let records = realm.objects(RMedicalRecord.self)
+		
+		for record in records {
+			let parameters: Parameters = [
+				"record": record.id
+			]
+			
+			Alamofire.request(reportURL, method: .get, parameters: parameters, headers: headers).responseJSON { (response) in
+				if let dict = response.result.value as? [Dictionary<String, AnyObject>] {
+					
+					try! self.realm.write {
+						
+						record.reports.removeAll()
+						
+						for reportDict in dict {
+							let rReport = RReport()
+							if let reportId = reportDict["id"] as? Int {
+								rReport.id = reportId
+							}
+							if let reportRecordId = reportDict["medical_record_id"] as? Int {
+								rReport.recordId = reportRecordId
+							}
+							if let reportType = reportDict["report_type"] as? String {
+								rReport.reportType = reportType
+							}
+							if let reportDescription = reportDict["description"] as? String {
+								rReport.reportDescription = reportDescription
+							}
+							
+							self.realm.add(rReport, update: true)
+							record.reports.append(rReport)
+						}
+					}
+				}
+			}
+		}
+		completed()
+	}
+	
+	/// Descargar Anexos
+	//
+	func downloadAttachments(completed: @escaping DownloadComplete) {
+		let attachmentURL = "\(URL_BASE)\(URL_ATTACHMENTS)"
+		
+		let headers: HTTPHeaders = [
+			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
+		]
+		
+		let records = realm.objects(RMedicalRecord.self)
+		
+		for record in records {
+			let parameters: Parameters = [
+				"record": record.id
+			]
+			
+			Alamofire.request(attachmentURL, method: .get, parameters: parameters, headers: headers).responseJSON { (response) in
+				if let dict = response.result.value as? [Dictionary<String, AnyObject>] {
+					
+					try! self.realm.write {
+						
+						record.attachments.removeAll()
+						
+						for attachDict in dict {
+							let rAttachment = RAttachment()
+							if let reportId = attachDict["id"] as? Int {
+								rAttachment.id = reportId
+							}
+							if let attachmentRecordId = attachDict["medical_record_id"] as? Int {
+								rAttachment.recordId = attachmentRecordId
+							}
+							if let attachmentURL = attachDict["url"] as? String {
+								rAttachment.attachmentURL = attachmentURL
+							}
+							if let attachmentDescription = attachDict["description"] as? String {
+								rAttachment.attachmentDescription = attachmentDescription
+							}
+							
+							self.realm.add(rAttachment, update: true)
+							record.attachments.append(rAttachment)
+						}
+					}
+				}
+			}
+		}
+		completed()
+	}
+	
+	/// Descargar Antecedentes
+	//
+	func downloadBackgrounds(completed: @escaping DownloadComplete) {
+		let backgroundURL = "\(URL_BASE)\(URL_BACKGROUNDS)"
+		
+		let headers: HTTPHeaders = [
+			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
+		]
+		
+		let records = realm.objects(RMedicalRecord.self)
+		
+		for record in records {
+			let parameters: Parameters = [
+				"record": record.id
+			]
+			
+			Alamofire.request(backgroundURL, method: .get, parameters: parameters, headers: headers).responseJSON { (response) in
+				if let dict = response.result.value as? [Dictionary<String, AnyObject>] {
+					
+					try! self.realm.write {
+						
+						record.backgrounds.removeAll()
+						
+						for backgroundDict in dict {
+							let rBackground = RBackground()
+							if let bgId = backgroundDict["id"] as? Int {
+								rBackground.id = bgId
+							}
+							if let bgRecordId = backgroundDict["medical_record_id"] as? Int {
+								rBackground.recordId = bgRecordId
+							}
+							if let bgType = backgroundDict["background_type"] as? String {
+								rBackground.backgroundType = bgType
+							}
+							if let bgDescription = backgroundDict["description"] as? String {
+								rBackground.backgroundDescription = bgDescription
+							}
+							if let bgLastUpdate = backgroundDict["updated_at"] as? String {
+								rBackground.lastUpdate = bgLastUpdate.dateFromISO8601!
+							}
+							
+							self.realm.add(rBackground, update: true)
+							record.backgrounds.append(rBackground)
+						}
+					}
+				}
+			}
+		}
+		completed()
+	}
+	
+	
+	/// Descargar Consultas
+	//
+	func downloadConsultations(completed: @escaping DownloadComplete) {
+		let consultationURL = "\(URL_BASE)\(URL_CONSULTATIONS)"
+		
+		let headers: HTTPHeaders = [
+			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
+		]
+		
+		let records = realm.objects(RMedicalRecord.self).sorted(byKeyPath: "id")
+		
+		for record in records {
+			let parameters: Parameters = [
+				"record": record.id
+			]
+			
+			Alamofire.request(consultationURL, method: .get, parameters: parameters, headers: headers).responseJSON { (response) in
+				if let dict = response.result.value as? [Dictionary<String, AnyObject>] {
+					
+					try! self.realm.write {
+						
+						record.consultations.removeAll()
+						
+						for consultationDict in dict {
+							let rConsultation = self.parseConsultation(consultationDict: consultationDict)
+							
+							self.realm.add(rConsultation, update: true)
+							record.consultations.append(rConsultation)
+						}
+					}
+				}
+				if record.id == records.last?.id {
+					completed()
+				}
+			}
+		}
+	}
+	
+	/// Descargar Examenes Fisicos
+	//
+	func downloadPhysicalExams(completed: @escaping DownloadComplete) {
+		let PEURL = "\(URL_BASE)\(URL_PHYSICAL_EXAMS)"
+		
+		let headers: HTTPHeaders = [
+			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
+		]
+		
+		let consultations = realm.objects(RConsultation.self)
+		
+		for consultation in consultations {
+			let parameters: Parameters = [
+				"consultation": consultation.id
+			]
+			
+			Alamofire.request(PEURL, method: .get, parameters: parameters, headers: headers).responseJSON { (response) in
+				
+				if let dict = response.result.value as? [Dictionary<String, AnyObject>] {
+					try! self.realm.write {
+						
+						consultation.physicalExams.removeAll()
+						
+						for PEDict in dict {
+							let rPE = RPhysicalExam()
+							if let PEId = PEDict["id"] as? Int {
+								rPE.id = PEId
+							}
+							if let PEConsultationId = PEDict["consultation_id"] as? Int {
+								rPE.consultationId = PEConsultationId
+							}
+							if let PEType = PEDict["exam_type"] as? String {
+								rPE.examType = PEType
+							}
+							if let PEObservation = PEDict["observation"] as? String {
+								rPE.observation = PEObservation
+							}
+							if let PELastUpdate = PEDict["updated_at"] as? String {
+								rPE.lastUpdate = PELastUpdate.dateFromISO8601!
+							}
+							
+							self.realm.add(rPE, update: true)
+							consultation.physicalExams.append(rPE)
+						}
+					}
+				}
+			}
+		}
+		completed()
+	}
+	
+	/// Descargar Planes
+	//
+	func downloadPlans(completed: @escaping DownloadComplete) {
+		
+		let headers: HTTPHeaders = [
+			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
+		]
+		
+		let consultations = realm.objects(RConsultation.self)
+		
+		for consultation in consultations {
+			
+			if let id = consultation.plan?.id {
+				let planURL = "\(URL_BASE)\(URL_PLANS)\(id)"
+				
+				Alamofire.request(planURL, method: .get, headers: headers).responseJSON { (response) in
+					
+					if let planDict = response.result.value as? Dictionary<String, AnyObject> {
+						try! self.realm.write {
+							if let planConsultationId = planDict["consultation_id"] as? Int {
+								consultation.plan!.consultationId = planConsultationId
+							}
+							if let planDescription = planDict["description"] as? String {
+								consultation.plan!.planDescription = planDescription
+							}
+							if let planEmergency = planDict["emergency"] as? Bool {
+								consultation.plan!.emergency = planEmergency
+							}
+							// NOTA OPERATORIA
+							if let opNoteDict = planDict["operative_note"] as? Dictionary<String, AnyObject> {
+								if let opNoteId = opNoteDict["id"] as? Int {
+									if let opNoteRLM = self.realm.object(ofType: ROperativeNote.self, forPrimaryKey: opNoteId) {
+										consultation.plan!.operativeNote = opNoteRLM
+									} else {
+										let rOpNote = ROperativeNote()
+										
+										rOpNote.id = opNoteId
+										
+										self.realm.add(rOpNote, update: true)
+										consultation.plan!.operativeNote = rOpNote
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		completed()
+	}
+	
+	/// Descargar Procedimientos (existentes en los planes)
+	//
+	func downloadProcedures(completed: @escaping DownloadComplete) {
+		let procedureURL = "\(URL_BASE)\(URL_PLAN_PROCEDURES)"
+		
+		let headers: HTTPHeaders = [
+			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
+		]
+		
+		let plans = realm.objects(RPlan.self)
+		
+		for plan in plans {
+			let parameters: Parameters = [
+				"plan_id": plan.id
+			]
+			
+			Alamofire.request(procedureURL, method: .get, parameters: parameters, headers: headers).responseJSON { (response) in
+				
+				if let dict = response.result.value as? [Dictionary<String, AnyObject>] {
+					try! self.realm.write {
+						
+						plan.procedures.removeAll()
+						
+						for procedureDict in dict {
+							let rProcedure = RProcedure()
+							if let procedureId = procedureDict["id"] as? Int {
+								rProcedure.id = procedureId
+							}
+							if let procedureName = procedureDict["name"] as? String {
+								rProcedure.name = procedureName
+							}
+							if let procedureDescription = procedureDict["description"] as? String {
+								rProcedure.procedureDescription = procedureDescription
+							}
+							
+							self.realm.add(rProcedure, update: true)
+							plan.procedures.append(rProcedure)
+						}
+					}
+				}
+			}
+		}
+		completed()
+	}
+	
+	/// Descargar Notas Operatorias
+	//
+	func downloadOperativeNotes(completed: @escaping DownloadComplete) {
+		
+		let headers: HTTPHeaders = [
+			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
+		]
+		
+		let plans = realm.objects(RPlan.self)
+		
+		for plan in plans {
+			
+			if let id = plan.operativeNote?.id {
+				let opNoteURL = "\(URL_BASE)\(URL_OPERATIVE_NOTES)\(id)"
+				
+				Alamofire.request(opNoteURL, method: .get, headers: headers).responseJSON { (response) in
+					
+					if let opNoteDict = response.result.value as? Dictionary<String, AnyObject> {
+						try! self.realm.write {
+							if let opNotePlanId = opNoteDict["plan_id"] as? Int {
+								plan.operativeNote!.planId = opNotePlanId
+							}
+							if let opNoteDescription = opNoteDict["description"] as? String {
+								plan.operativeNote!.opNoteDescription = opNoteDescription
+							}
+							if let opNoteFind = opNoteDict["find"] as? String {
+								plan.operativeNote!.find = opNoteFind
+							}
+							if let opNoteDiagnostic = opNoteDict["diagnostic"] as? String {
+								plan.operativeNote!.diagnostic = opNoteDiagnostic
+							}
+						}
+					}
+				}
+			}
+		}
+		completed()
+	}
+	
+	
 	
 	/// Actualizar Historia Medica (Servidor)
 	//

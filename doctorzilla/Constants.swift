@@ -27,6 +27,7 @@ let URL_PLANS = "/plans/"
 let URL_PRESCRIPTIONS = "/prescriptions/"
 let URL_PROCEDURES = "/procedures/"
 let URL_REASONS = "/reasons/"
+let URL_REPORTS = "/reports/"
 
 let URL_PLAN_PROCEDURES = "/plans/:plan_id/procedures/"
 let URL_PROCEDURE_PLANS = "/procedures/:procedure_id/plans/"

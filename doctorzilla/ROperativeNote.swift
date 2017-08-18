@@ -11,8 +11,9 @@ import RealmSwift
 
 class ROperativeNote: Object {
 	dynamic var id = 0
-	dynamic var noteDescription = ""
+	dynamic var opNoteDescription = ""
 	dynamic var find = ""
+	dynamic var diagnostic = ""
 	dynamic var planId = 0
 	
 	override static func primaryKey() -> String? {

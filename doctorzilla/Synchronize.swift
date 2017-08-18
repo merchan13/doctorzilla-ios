@@ -64,20 +64,20 @@ class Synchronize {
 									self.dataHelper.downloadRecords(rUser: self.user) {
 										self.dataHelper.downloadReports {
 											self.dataHelper.downloadAttachments {
-												self.dataHelper.downloadConsultations {
-													
-													self.dataHelper.downloadBackgrounds { }
-													
-													self.dataHelper.downloadPhysicalExams { }
-													
-													self.dataHelper.downloadProcedures {
-														self.dataHelper.downloadPlans{
-															self.dataHelper.downloadOperativeNotes()
+												self.dataHelper.downloadBackgrounds {
+													self.dataHelper.downloadConsultations {
+														
+														self.dataHelper.downloadPhysicalExams {}
+														
+														self.dataHelper.downloadPlans {
+															self.dataHelper.downloadProcedures {
+																self.dataHelper.downloadOperativeNotes {}
+															}
 														}
-													}
-													
-													self.saveSync {
-														completed()
+														
+														self.saveSync {
+															completed()
+														}
 													}
 												}
 											}
