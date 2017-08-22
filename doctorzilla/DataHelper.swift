@@ -251,8 +251,8 @@ class DataHelper {
 						
 						for attachDict in dict {
 							let rAttachment = RAttachment()
-							if let reportId = attachDict["id"] as? Int {
-								rAttachment.id = reportId
+							if let attachmentId = attachDict["id"] as? Int {
+								rAttachment.id = attachmentId
 							}
 							if let attachmentRecordId = attachDict["medical_record_id"] as? Int {
 								rAttachment.recordId = attachmentRecordId
@@ -415,7 +415,7 @@ class DataHelper {
 		completed()
 	}
 	
-	/// Descargar Planes
+	/// Descargar Planes + Notas operatorias asociadas
 	//
 	func downloadPlans(completed: @escaping DownloadComplete) {
 		
@@ -445,18 +445,24 @@ class DataHelper {
 							}
 							// NOTA OPERATORIA
 							if let opNoteDict = planDict["operative_note"] as? Dictionary<String, AnyObject> {
+								
+								let rOpNote = ROperativeNote()
+								
 								if let opNoteId = opNoteDict["id"] as? Int {
-									if let opNoteRLM = self.realm.object(ofType: ROperativeNote.self, forPrimaryKey: opNoteId) {
-										consultation.plan!.operativeNote = opNoteRLM
-									} else {
-										let rOpNote = ROperativeNote()
-										
-										rOpNote.id = opNoteId
-										
-										self.realm.add(rOpNote, update: true)
-										consultation.plan!.operativeNote = rOpNote
-									}
+									rOpNote.id = opNoteId
 								}
+								if let opNoteDescription = opNoteDict["description"] as? String {
+									rOpNote.opNoteDescription = opNoteDescription
+								}
+								if let opNoteFind = opNoteDict["find"] as? String {
+									rOpNote.find = opNoteFind
+								}
+								if let opNoteDiagnostic = opNoteDict["diagnostic"] as? String {
+									rOpNote.diagnostic = opNoteDiagnostic
+								}
+							
+								self.realm.add(rOpNote, update: true)
+								consultation.plan!.operativeNote = rOpNote
 							}
 						}
 					}
@@ -478,11 +484,10 @@ class DataHelper {
 		let plans = realm.objects(RPlan.self)
 		
 		for plan in plans {
-			let parameters: Parameters = [
-				"plan_id": plan.id
-			]
 			
-			Alamofire.request(procedureURL, method: .get, parameters: parameters, headers: headers).responseJSON { (response) in
+			let uniqueProcedureURL = (procedureURL as String).replacingOccurrences(of: ":plan_id", with: "\(plan.id)")
+			
+			Alamofire.request(uniqueProcedureURL, method: .get, headers: headers).responseJSON { (response) in
 				
 				if let dict = response.result.value as? [Dictionary<String, AnyObject>] {
 					try! self.realm.write {
@@ -511,7 +516,7 @@ class DataHelper {
 		completed()
 	}
 	
-	/// Descargar Notas Operatorias
+	/// Descargar Notas Operatorias (arreglar o verificar si se puede eliminar)
 	//
 	func downloadOperativeNotes(completed: @escaping DownloadComplete) {
 		
@@ -680,62 +685,95 @@ class DataHelper {
 		if let recordId = recordDict["id"] as? Int {
 			rMedRecord.id = recordId
 		}
+		// ADDRESS
+		if let address = recordDict["address"] as? String {
+			rMedRecord.address = address
+		}
+		// ATACHMENTS
+		if let attachmentsDict = recordDict["attachments"] as? [Dictionary<String, AnyObject>] {
+			
+			rMedRecord.attachments.removeAll()
+			
+			for attachDict in attachmentsDict {
+				if let attachmentId = attachDict["id"] as? Int {
+					if let attachmentRLM = realm.object(ofType: RAttachment.self, forPrimaryKey: attachmentId) {
+						rMedRecord.attachments.append(attachmentRLM)
+					} else {
+						let rAttachment = RAttachment()
+						
+						rAttachment.id = attachmentId
+						
+						if let attachmentRecordId = attachDict["medical_record_id"] as? Int {
+							rAttachment.recordId = attachmentRecordId
+						}
+						if let attachmentURL = attachDict["url"] as? String {
+							rAttachment.attachmentURL = attachmentURL
+						}
+						if let attachmentDescription = attachDict["description"] as? String {
+							rAttachment.attachmentDescription = attachmentDescription
+						}
+						
+						realm.add(rAttachment, update: true)
+						rMedRecord.attachments.append(rAttachment)
+					}
+				}
+			}
+		}
+		// BACKGROUNDS
+		if let bgsDict = recordDict["backgrounds_new"] as? [Dictionary<String, AnyObject>] {
+			
+			//rMedRecord.backgrounds.removeAll()
+			self.realm.delete(rMedRecord.backgrounds)
+			
+			for bgDict in bgsDict {
+				if let bgId = bgDict["id"] as? Int {
+					if let bgRLM = realm.object(ofType: RBackground.self, forPrimaryKey: bgId) {
+						rMedRecord.backgrounds.append(bgRLM)
+					} else {
+						let rBg = RBackground()
+						
+						rBg.id = bgId
+						
+						if let bgRecordId = bgDict["medical_record_id"] as? Int {
+							rBg.recordId = bgRecordId
+						}
+						if let bgType = bgDict["background_type"] as? String {
+							rBg.backgroundType = bgType
+						}
+						if let bgDescription = bgDict["description"] as? String {
+							rBg.backgroundDescription = bgDescription
+						}
+						if let bgLastUpdate = bgDict["updated_at"] as? String {
+							rBg.lastUpdate = bgLastUpdate.dateFromISO8601!
+						}
+						
+						realm.add(rBg, update: true)
+						rMedRecord.backgrounds.append(rBg)
+					}
+				}
+			}
+		}
+		// BIRTHDAY
+		if let birthday = recordDict["birthday"] as? String {
+			rMedRecord.birthday = birthday
+		}
+		// CELLPHONE
+		if let cellphone = recordDict["cellphone_number"] as? String {
+			rMedRecord.cellphone = cellphone
+		}
 		// DOCUMENT
 		if let documentType = recordDict["document_type"] as? String {
 			if let document = recordDict["document"] as? String {
 				rMedRecord.document = "\(documentType)-\(document)"
 			}
 		}
-		// NAME
-		if let name = recordDict["name"] as? String {
-			rMedRecord.name = name
-		}
-		// LAST NAME
-		if let lastName = recordDict["last_name"] as? String {
-			rMedRecord.lastName = lastName
-		}
-		// BIRTHDAY
-		if let birthday = recordDict["birthday"] as? String {
-			rMedRecord.birthday = birthday
-		}
-		// FIRST CONSULTATION
-		if let firstConsultation = recordDict["first_consultation_date"] as? String {
-			rMedRecord.firstConsultation = firstConsultation
-		}
-		// OCCUPATION
-		if let occupationDict = recordDict["occupation"] as? Dictionary<String, AnyObject> {
-			if let occupation = occupationDict["id"] as? Int {
-				if let occupationRLM = realm.object(ofType: ROccupation.self, forPrimaryKey: occupation) {
-					rMedRecord.occupation = occupationRLM
-				} else {
-					let rOccupation = ROccupation()
-					if let occupationId = occupationDict["id"] as? Int {
-						rOccupation.id = occupationId
-					}
-					if let occupationName = occupationDict["name"] as? String {
-						rOccupation.name = occupationName
-					}
-					
-					realm.add(rOccupation, update: true)
-					rMedRecord.occupation = rOccupation
-				}
-			}
-		}
 		// EMAIL
 		if let email = recordDict["email"] as? String {
 			rMedRecord.email = email
 		}
-		// PHONE
-		if let phone = recordDict["phone_number"] as? String {
-			rMedRecord.phone = phone
-		}
-		// CELLPHONE
-		if let cellphone = recordDict["cellphone_number"] as? String {
-			rMedRecord.cellphone = cellphone
-		}
-		// ADDRESS
-		if let address = recordDict["address"] as? String {
-			rMedRecord.address = address
+		// FIRST CONSULTATION
+		if let firstConsultation = recordDict["first_consultation_date"] as? String {
+			rMedRecord.firstConsultation = firstConsultation
 		}
 		// GENDER
 		if let gender = recordDict["gender"] as? String {
@@ -760,13 +798,36 @@ class DataHelper {
 				}
 			}
 		}
-		// REFERRED BY
-		if let referredBy = recordDict["referred_by"] as? String {
-			rMedRecord.referredBy = referredBy
+		// LAST NAME
+		if let lastName = recordDict["last_name"] as? String {
+			rMedRecord.lastName = lastName
 		}
-		// LAST UPDATE DATE
-		if let lastUpdate = recordDict["updated_at"] as? String {
-			rMedRecord.lastUpdate = lastUpdate.dateFromISO8601!
+		// NAME
+		if let name = recordDict["name"] as? String {
+			rMedRecord.name = name
+		}
+		// OCCUPATION
+		if let occupationDict = recordDict["occupation"] as? Dictionary<String, AnyObject> {
+			if let occupation = occupationDict["id"] as? Int {
+				if let occupationRLM = realm.object(ofType: ROccupation.self, forPrimaryKey: occupation) {
+					rMedRecord.occupation = occupationRLM
+				} else {
+					let rOccupation = ROccupation()
+					if let occupationId = occupationDict["id"] as? Int {
+						rOccupation.id = occupationId
+					}
+					if let occupationName = occupationDict["name"] as? String {
+						rOccupation.name = occupationName
+					}
+					
+					realm.add(rOccupation, update: true)
+					rMedRecord.occupation = rOccupation
+				}
+			}
+		}
+		// PHONE
+		if let phone = recordDict["phone_number"] as? String {
+			rMedRecord.phone = phone
 		}
 		// PHYSIC DATA
 		if let physicData = recordDict["physic_data"] as? Dictionary<String, AnyObject> {
@@ -787,9 +848,47 @@ class DataHelper {
 				rMedRecord.pressure_s = pressure_s
 			}
 		}
-		
+		// PROFILE PICTURE URL
 		if let profilePictureURL = recordDict["profile_picture"] as? String {
 			rMedRecord.profilePicURL = profilePictureURL
+		}
+		// REFERRED BY
+		if let referredBy = recordDict["referred_by"] as? String {
+			rMedRecord.referredBy = referredBy
+		}
+		// REPORTS
+		if let reportsDict = recordDict["reports"] as? [Dictionary<String, AnyObject>] {
+			
+			rMedRecord.reports.removeAll()
+			
+			for reportDict in reportsDict {
+				if let reportId = reportDict["id"] as? Int {
+					if let reportRLM = realm.object(ofType: RReport.self, forPrimaryKey: reportId) {
+						rMedRecord.reports.append(reportRLM)
+					} else {
+						let rReport = RReport()
+						
+						rReport.id = reportId
+						
+						if let reportRecordId = reportDict["medical_record_id"] as? Int {
+							rReport.recordId = reportRecordId
+						}
+						if let reportType = reportDict["report_type"] as? String {
+							rReport.reportType = reportType
+						}
+						if let reportDescription = reportDict["description"] as? String {
+							rReport.reportDescription = reportDescription
+						}
+						
+						realm.add(rReport, update: true)
+						rMedRecord.reports.append(rReport)
+					}
+				}
+			}
+		}
+		// UPDATED AT
+		if let lastUpdate = recordDict["updated_at"] as? String {
+			rMedRecord.lastUpdate = lastUpdate.dateFromISO8601!
 		}
 	
 		return rMedRecord

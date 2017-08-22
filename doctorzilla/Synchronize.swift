@@ -38,8 +38,8 @@ class Synchronize {
 				
 				if self.lastSync != nil && self.lastSyncRLM != nil && self.lastSync == self.lastSyncRLM {
 					print("Comenzando sincronizacion...\n")
-					self.latestUpdates {
-						self.latestUpdatesRLM {
+					self.latestUpdatesRLM {
+						self.latestUpdates {
 							self.syncMedicalRecords()
 							self.syncConsultations()
 							self.syncBackgrounds()
@@ -70,9 +70,7 @@ class Synchronize {
 														self.dataHelper.downloadPhysicalExams {}
 														
 														self.dataHelper.downloadPlans {
-															self.dataHelper.downloadProcedures {
-																self.dataHelper.downloadOperativeNotes {}
-															}
+															self.dataHelper.downloadProcedures {}
 														}
 														
 														self.saveSync {

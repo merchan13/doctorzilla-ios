@@ -42,6 +42,10 @@ class DataHelperRLM {
 			if let insurance = record.insurance {
 				self.realm.create(RMedicalRecord.self, value: ["id": record.id, "insurance":insurance], update: true)
 			}
+			self.realm.create(RMedicalRecord.self, value: ["id": record.id, "reports":record.reports], update: true)
+			self.realm.create(RMedicalRecord.self, value: ["id": record.id, "attachments":record.attachments], update: true)
+			self.realm.create(RMedicalRecord.self, value: ["id": record.id, "backgrounds":record.backgrounds], update: true)
+			
 		} else {
 			self.realm.add(record, update: true)
 			let user = self.realm.object(ofType: RUser.self, forPrimaryKey: 1)!
@@ -76,6 +80,7 @@ class DataHelperRLM {
 			if let reason = consultation.reason {
 				self.realm.create(RConsultation.self, value: ["id": consultation.id, "reason":reason], update: true)
 			}
+			self.realm.create(RConsultation.self, value: ["id": consultation.id, "physicalExams":consultation.physicalExams], update: true)
 		} else {
 			if let record = self.realm.object(ofType: RMedicalRecord.self, forPrimaryKey: consultation.recordId) {
 				self.realm.add(consultation, update: true)
@@ -83,23 +88,4 @@ class DataHelperRLM {
 			}
 		}
 	}
-	
-	/// Actualizar Antecedente [Realm]
-	//
-	func updateBackground(background: RBackground) {
-		//
-	}
-	
-	/// Actualizar Examen Fisico [Realm]
-	//
-	func updatePhysicalExam(physicalExam: RPhysicalExam) {
-		//
-	}
-	
-	/// Actualizar Plan [Realm]
-	//
-	func updatePlan(plan: RPlan) {
-		//
-	}
-	
 }
