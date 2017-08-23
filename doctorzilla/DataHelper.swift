@@ -706,8 +706,10 @@ class DataHelper {
 						if let attachmentRecordId = attachDict["medical_record_id"] as? Int {
 							rAttachment.recordId = attachmentRecordId
 						}
-						if let attachmentURL = attachDict["url"] as? String {
-							rAttachment.attachmentURL = attachmentURL
+						if let attachmentInfo = attachDict["url"] as? Dictionary<String, AnyObject> {
+							if let attachmentURL = attachmentInfo["url"] as? String {
+								rAttachment.attachmentURL = attachmentURL
+							}
 						}
 						if let attachmentDescription = attachDict["description"] as? String {
 							rAttachment.attachmentDescription = attachmentDescription
@@ -722,8 +724,7 @@ class DataHelper {
 		// BACKGROUNDS
 		if let bgsDict = recordDict["backgrounds_new"] as? [Dictionary<String, AnyObject>] {
 			
-			//rMedRecord.backgrounds.removeAll()
-			self.realm.delete(rMedRecord.backgrounds)
+			rMedRecord.backgrounds.removeAll()
 			
 			for bgDict in bgsDict {
 				if let bgId = bgDict["id"] as? Int {
