@@ -34,6 +34,7 @@ class DataHelper {
 		}
 	}
 	
+	
 	/// Descargar Profesiones
 	//
 	func downloadOccupations(completed: @escaping DownloadComplete) {
@@ -63,6 +64,7 @@ class DataHelper {
 			completed()
 		}
 	}
+	
 	
 	/// Descargar Seguros
 	//
@@ -94,6 +96,7 @@ class DataHelper {
 		}
 	}
 	
+	
 	/// Descargar Diagnosticos
 	//
 	func downloadDiagnostics(completed: @escaping DownloadComplete) {
@@ -123,6 +126,7 @@ class DataHelper {
 			completed()
 		}
 	}
+	
 	
 	/// Descargar Motivos de Consulta
 	//
@@ -154,6 +158,7 @@ class DataHelper {
 		}
 	}
 	
+	
 	/// Descargar Historia Medicas
 	//
 	func downloadRecords(rUser: RUser, completed: @escaping DownloadComplete) {
@@ -177,6 +182,7 @@ class DataHelper {
 			completed()
 		}
 	}
+	
 	
 	/// Descargar Informes
 	//
@@ -226,6 +232,7 @@ class DataHelper {
 		completed()
 	}
 	
+	
 	/// Descargar Anexos
 	//
 	func downloadAttachments(completed: @escaping DownloadComplete) {
@@ -273,6 +280,7 @@ class DataHelper {
 		}
 		completed()
 	}
+	
 	
 	/// Descargar Antecedentes
 	//
@@ -364,6 +372,7 @@ class DataHelper {
 		}
 	}
 	
+	
 	/// Descargar Examenes Fisicos
 	//
 	func downloadPhysicalExams(completed: @escaping DownloadComplete) {
@@ -414,6 +423,7 @@ class DataHelper {
 		}
 		completed()
 	}
+	
 	
 	/// Descargar Planes + Notas operatorias asociadas
 	//
@@ -472,6 +482,7 @@ class DataHelper {
 		completed()
 	}
 	
+	
 	/// Descargar Procedimientos (existentes en los planes)
 	//
 	func downloadProcedures(completed: @escaping DownloadComplete) {
@@ -516,6 +527,7 @@ class DataHelper {
 		completed()
 	}
 	
+	
 	/// Descargar Notas Operatorias (arreglar o verificar si se puede eliminar)
 	//
 	func downloadOperativeNotes(completed: @escaping DownloadComplete) {
@@ -554,7 +566,6 @@ class DataHelper {
 		}
 		completed()
 	}
-	
 	
 	
 	/// Actualizar Historia Medica (Servidor)
@@ -598,6 +609,7 @@ class DataHelper {
 		}
 	}
 	
+	
 	/// Actualizar Consulta (Servidor)
 	//
 	func updateConsultation(consultation: RConsultation, completed: @escaping DownloadComplete) {
@@ -637,6 +649,7 @@ class DataHelper {
 		}
 	}
 	
+	
 	/// Actualizar Antecedente (Servidor)
 	//
 	func updateBackground(background: RBackground, completed: @escaping DownloadComplete) {
@@ -657,6 +670,7 @@ class DataHelper {
 		}
 	}
 	
+	
 	/// Actualizar Examen fisico (Servidor)
 	//
 	func updatePhysicalExam(physicalExam: RPhysicalExam, completed: @escaping DownloadComplete) {
@@ -676,6 +690,7 @@ class DataHelper {
 			completed()
 		}
 	}
+	
 	
 	/// Parse MedicalRecrod Dictionary into Realm Object - [NOTA: al invocar esta funcion, se debe rodear de un bloque de escritura de Realm]
 	//
@@ -895,6 +910,7 @@ class DataHelper {
 		return rMedRecord
 	}
 	
+	
 	/// Parse Consultation Dictionary into Realm Object - [NOTA: al invocar esta funcion, se debe rodear de un bloque de escritura de Realm]
 	//
 	func parseConsultation(consultationDict: Dictionary<String,AnyObject>) -> RConsultation {
@@ -903,45 +919,13 @@ class DataHelper {
 		if let id = consultationDict["id"] as? Int {
 			rConsultation.id = id
 		}
-		// MEDICAL RECORD ID
-		if let recordId = consultationDict["medical_record_id"] as? Int {
-			rConsultation.recordId = recordId
-		}
-		// DATE
-		if let date = consultationDict["created_at"] as? String {
-			rConsultation.date = date
-		}
 		// AFFLICTION
 		if let affliction = consultationDict["affliction"] as? String {
 			rConsultation.affliction = affliction
 		}
-		// EVOLUTION
-		if let evolution = consultationDict["evolution"] as? String {
-			rConsultation.evolution = evolution
-		}
-		// HEIGHT
-		if let height = consultationDict["height"] as? Int {
-			rConsultation.height = height
-		}
-		// WEIGHT
-		if let weight = consultationDict["weight"] as? Int {
-			rConsultation.weight = weight
-		}
-		// PRESSURE_S
-		if let pressure_s = consultationDict["pressure_s"] as? String {
-			rConsultation.pressure_s = pressure_s
-		}
-		// PRESSURE_D
-		if let pressure_d = consultationDict["pressure_d"] as? String {
-			rConsultation.pressure_d = pressure_d
-		}
-		// NOTE
-		if let note = consultationDict["note"] as? String {
-			rConsultation.note = note
-		}
-		// LAST UPDATE DATE
-		if let lastUpdate = consultationDict["updated_at"] as? String {
-			rConsultation.lastUpdate = lastUpdate.dateFromISO8601!
+		// DATE
+		if let date = consultationDict["created_at"] as? String {
+			rConsultation.date = date
 		}
 		// DIAGNOSTIC
 		if let diagnosticDict = consultationDict["diagnostic"] as?  Dictionary<String, AnyObject> {
@@ -962,6 +946,117 @@ class DataHelper {
 				}
 			}
 		}
+		// EVOLUTION
+		if let evolution = consultationDict["evolution"] as? String {
+			rConsultation.evolution = evolution
+		}
+		// HEIGHT
+		if let height = consultationDict["height"] as? Int {
+			rConsultation.height = height
+		}
+		// MEDICAL RECORD ID
+		if let recordId = consultationDict["medical_record_id"] as? Int {
+			rConsultation.recordId = recordId
+		}
+		// NOTE
+		if let note = consultationDict["note"] as? String {
+			rConsultation.note = note
+		}
+		// PHYSICAL EXAMS
+		if let physical_exams = consultationDict["physical_exams"] as? [Dictionary<String, AnyObject>]{
+			for PEDict in physical_exams {
+				let rPE = RPhysicalExam()
+				if let PEId = PEDict["id"] as? Int {
+					rPE.id = PEId
+				}
+				if let PEConsultationId = PEDict["consultation_id"] as? Int {
+					rPE.consultationId = PEConsultationId
+				}
+				if let PEType = PEDict["exam_type"] as? String {
+					rPE.examType = PEType
+				}
+				if let PEObservation = PEDict["observation"] as? String {
+					rPE.observation = PEObservation
+				}
+				if let PELastUpdate = PEDict["updated_at"] as? String {
+					rPE.lastUpdate = PELastUpdate.dateFromISO8601!
+				}
+				
+				self.realm.add(rPE, update: true)
+				rConsultation.physicalExams.append(rPE)
+			}
+		}
+		// PLAN
+		if let planDict = consultationDict["plan"] as? Dictionary<String, AnyObject> {
+			
+			if let planId = planDict["id"] as? Int {
+				let rPlan = RPlan()
+				
+				rPlan.id = planId
+				
+				if let planConsultationId = planDict["consultation_id"] as? Int {
+					rPlan.consultationId = planConsultationId
+				}
+				if let planDescription = planDict["description"] as? String {
+					rPlan.planDescription = planDescription
+				}
+				if let planEmergency = planDict["emergency"] as? Bool {
+					rPlan.emergency = planEmergency
+				}
+				// NOTA OPERATORIA
+				if let opNoteDict = planDict["operative_note"] as? Dictionary<String, AnyObject> {
+					
+					let rOpNote = ROperativeNote()
+					
+					if let opNoteId = opNoteDict["id"] as? Int {
+						rOpNote.id = opNoteId
+					}
+					if let opNoteDescription = opNoteDict["description"] as? String {
+						rOpNote.opNoteDescription = opNoteDescription
+					}
+					if let opNoteFind = opNoteDict["find"] as? String {
+						rOpNote.find = opNoteFind
+					}
+					if let opNoteDiagnostic = opNoteDict["diagnostic"] as? String {
+						rOpNote.diagnostic = opNoteDiagnostic
+					}
+					
+					self.realm.add(rOpNote, update: true)
+					rPlan.operativeNote = rOpNote
+				}
+				// PROCEDIMIENTOS ASOCIADOS AL PLAN
+				if let procedures = planDict["procedures"] as? [Dictionary<String, AnyObject>] {
+					for procedureDict in procedures {
+						
+						let rProcedure = RProcedure()
+						
+						if let procedureId = procedureDict["id"] as? Int {
+							rProcedure.id = procedureId
+						}
+						if let procedureName = procedureDict["name"] as? String {
+							rProcedure.name = procedureName
+						}
+						if let procedureDescription = procedureDict["description"] as? String {
+							rProcedure.procedureDescription = procedureDescription
+						}
+						
+						self.realm.add(rProcedure, update: true)
+						rPlan.procedures.append(rProcedure)
+					}
+				}
+				
+				self.realm.add(rPlan, update: true)
+				rConsultation.plan = rPlan
+			}
+		}
+		// PRESSURE_S
+		if let pressure_s = consultationDict["pressure_s"] as? String {
+			rConsultation.pressure_s = pressure_s
+		}
+		// PRESSURE_D
+		if let pressure_d = consultationDict["pressure_d"] as? String {
+			rConsultation.pressure_d = pressure_d
+		}
 		// REASON
 		if let reasonDict = consultationDict["reason"] as? Dictionary<String, AnyObject> {
 			if let reason = reasonDict["id"] as? Int {
@@ -981,23 +1076,15 @@ class DataHelper {
 				}
 			}
 		}
-		// PLAN
-		if let planDict = consultationDict["plan"] as? Dictionary<String, AnyObject> {
-			if let plan = planDict["id"] as? Int {
-				if let planRLM = self.realm.object(ofType: RPlan.self, forPrimaryKey: plan) {
-					rConsultation.plan = planRLM
-				} else {
-					let rPlan = RPlan()
-					if let planId = planDict["id"] as? Int {
-						rPlan.id = planId
-					}
-					
-					self.realm.add(rPlan, update: true)
-					rConsultation.plan = rPlan
-				}
-			}
+		// UPDATED AT
+		if let lastUpdate = consultationDict["updated_at"] as? String {
+			rConsultation.lastUpdate = lastUpdate.dateFromISO8601!
 		}
-	
+		// WEIGHT
+		if let weight = consultationDict["weight"] as? Int {
+			rConsultation.weight = weight
+		}
+		
 		return rConsultation
 	}
 }

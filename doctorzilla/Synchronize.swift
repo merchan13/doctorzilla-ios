@@ -66,13 +66,6 @@ class Synchronize {
 											self.dataHelper.downloadAttachments {
 												self.dataHelper.downloadBackgrounds {
 													self.dataHelper.downloadConsultations {
-														
-														self.dataHelper.downloadPhysicalExams {}
-														
-														self.dataHelper.downloadPlans {
-															self.dataHelper.downloadProcedures {}
-														}
-														
 														self.saveSync {
 															completed()
 														}
@@ -89,6 +82,7 @@ class Synchronize {
 			}
 		}
 	}
+	
 	
 	/// Fecha de ultima sincronizacion en Servidor
 	//
@@ -107,12 +101,14 @@ class Synchronize {
 		}
 	}
 	
+	
 	/// Fecha de ultima sincronizacion en Realm
 	//
 	func lastSynchRLM(completed: @escaping DownloadComplete) {
 		self.lastSyncRLM = self.realm.objects(RSync.self).last?.date.iso8601.dateFromISO8601
 		completed()
 	}
+	
 	
 	/// Carga de los records actualizados despues de la ultima fecha de sincronizacion. [Servidor]
 	//
@@ -145,6 +141,7 @@ class Synchronize {
 		}
 	}
 	
+	
 	/// Carga de los records actualizados despues de la ultima fecha de sincronizacion. [Realm]
 	//
 	func latestUpdatesRLM(completed: @escaping DownloadComplete) {
@@ -158,6 +155,7 @@ class Synchronize {
 		
 		completed()
 	}
+	
 	
 	/// Guardar nueva fecha de sincronizacion. [Servidor y Realm]
 	//
@@ -229,6 +227,7 @@ class Synchronize {
 		}
 	}
 	
+	
 	/// Sincronizar Consultas
 	//
 	func syncConsultations() {
@@ -269,6 +268,7 @@ class Synchronize {
 		}
 	}
 	
+	
 	/// Sincronizar Antecedentes
 	//
 	func syncBackgrounds() {
@@ -288,6 +288,7 @@ class Synchronize {
 			}
 		}
 	}
+	
 	
 	/// Sincronizar Examenes Fisicos
 	//
@@ -309,6 +310,9 @@ class Synchronize {
 		}
 	}
 	
+	
+	/// Borrar la BD y descargar toda la informacion.
+	//
 	func resetDatabase(user: RUser, completed: @escaping DownloadComplete) {
 		let rUser = RUser()
 		rUser.id = user.id
