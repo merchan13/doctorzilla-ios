@@ -56,6 +56,7 @@ class EditRecordVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSour
 		loadValues()
     }
 	
+	
 	func loadValues() {
 		self.nameTextField.text = self.rMedrecord.name
 		self.lastNameTextField.text = self.rMedrecord.lastName
@@ -80,6 +81,7 @@ class EditRecordVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSour
 			self.genderPickerView.selectRow(1, inComponent: 0, animated: true)
 		}
 	}
+	
 	
 	@IBAction func saveChangesButtonTapped(_ sender: UIButton) {
 		let refreshAlert = UIAlertController(title: "Alerta", message: "¿Está seguro de que quiere editar la Historia Médica?", preferredStyle: UIAlertControllerStyle.alert)
@@ -136,13 +138,32 @@ class EditRecordVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSour
 		present(refreshAlert, animated: true, completion: nil)
 	}
 	
+	
+	@IBAction func backgroundsButtonTapped(_ sender: UIButton) {
+		performSegue(withIdentifier: "EditBackgroundsVC", sender: self.rMedrecord)
+	}
+	
+	
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		if segue.identifier == "EditBackgroundsVC" {
+			if let editBackgroundsVC = segue.destination as? EditBackgroundsVC {
+				if let rMedrec = sender as? RMedicalRecord {
+					editBackgroundsVC.rRecord = rMedrec
+				}
+			}
+		}
+	}
+	
+	
 	@IBAction func backButtonTapped(_ sender: UIBarButtonItem) {
 		dismiss(animated: true, completion: nil)
 	}
 	
+	
 	func numberOfComponents(in pickerView: UIPickerView) -> Int {
 		return 1
 	}
+	
 	
 	func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
 		if pickerView == self.occupationPickerView {
@@ -153,6 +174,7 @@ class EditRecordVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSour
 		return GENDERS.count
 	}
 	
+	
 	func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		if pickerView == self.occupationPickerView {
 			return self.occupations[row].name
@@ -162,10 +184,12 @@ class EditRecordVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSour
 		return GENDERS[row]
 	}
 	
+	
 	//Cerrar teclado cuando se toca cualquier espacio de la pantalla.
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 		self.view.endEditing(true)
 	}
+	
 	
 	//Cerrar teclado cuando se presiona "return"
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -177,6 +201,8 @@ class EditRecordVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSour
 		self.referredByTextField.resignFirstResponder()
 		return true
 	}
+	
+	
 	func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
 		if(text == "\n") {
 			textView.resignFirstResponder()

@@ -74,12 +74,6 @@ class EditConsultationVC: UIViewController, UIPickerViewDelegate, UIPickerViewDa
 	@IBAction func backgroundButtonTapped(_ sender: Any) {
 	}
 	
-	@IBAction func physicalExamsButtonTapped(_ sender: Any) {
-	}
-	
-	@IBAction func planButtonTapped(_ sender: Any) {
-	}
-	
 	@IBAction func saveChangesButtonTapped(_ sender: Any) {
 		let refreshAlert = UIAlertController(title: "Alerta", message: "¿Está seguro de que quiere editar la Consulta Médica?", preferredStyle: UIAlertControllerStyle.alert)
 		refreshAlert.addAction(UIAlertAction(title: "Si", style: .destructive, handler: { (action: UIAlertAction!) in
@@ -162,6 +156,7 @@ class EditConsultationVC: UIViewController, UIPickerViewDelegate, UIPickerViewDa
 		self.pressure_dTextField.resignFirstResponder()
 		return true
 	}
+	
 	func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
 		if(text == "\n") {
 			self.afflictionTextView.resignFirstResponder()
