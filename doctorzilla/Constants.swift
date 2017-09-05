@@ -34,6 +34,8 @@ let URL_PROCEDURE_PLANS = "/procedures/:procedure_id/plans/"
 let URL_PRESCRIPTION_MEDICINES = "/prescriptions/:prescription_id/medicines/"
 let URL_MEDICINE_PRESCRIPTIONS = "/medicines/:medicine_id/prescriptions/"
 
+let URL_RECORD_BACKGROUND_UPDATE = "/medical_records/:medical_record_id/backgrounds/"
+
 let URL_SYNCS = "/syncs/"
 let URL_LATEST_UPDATES = "/latest_updates/"
 let URL_LAST_SYNC = "/last_sync/"

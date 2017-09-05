@@ -94,6 +94,8 @@ class EditBackgroundsVC: UIViewController, UITextViewDelegate {
 			
 			try! self.realm.write {
 				
+				self.rRecord.lastUpdate = Date().iso8601.dateFromISO8601!
+				
 				if self.recordBgs.contains(where: { $0.backgroundType == "Familiares" }) {
 					let bg = self.recordBgs.first(where: { $0.backgroundType == "Familiares" })!
 					
@@ -104,7 +106,14 @@ class EditBackgroundsVC: UIViewController, UITextViewDelegate {
 					}
 				} else {
 					if family != "" {
-						// crear nuevo antecedente..
+						let rBg = RBackground()
+						rBg.id = -1
+						rBg.recordId = self.rRecord.id
+						rBg.backgroundType = "Familiares"
+						rBg.backgroundDescription = family
+						self.realm.add(rBg, update: true)
+						self.rRecord.backgrounds.append(rBg)
+						self.recordBgs.append(rBg)
 					}
 				}
 				
@@ -118,7 +127,14 @@ class EditBackgroundsVC: UIViewController, UITextViewDelegate {
 					}
 				} else {
 					if allergy != "" {
-						// crear nuevo antecedente..
+						let rBg = RBackground()
+						rBg.id = -2
+						rBg.recordId = self.rRecord.id
+						rBg.backgroundType = "Alergias"
+						rBg.backgroundDescription = allergy
+						self.realm.add(rBg, update: true)
+						self.rRecord.backgrounds.append(rBg)
+						self.recordBgs.append(rBg)
 					}
 				}
 				
@@ -132,7 +148,14 @@ class EditBackgroundsVC: UIViewController, UITextViewDelegate {
 					}
 				} else {
 					if diabetes != "" {
-						// crear nuevo antecedente..
+						let rBg = RBackground()
+						rBg.id = -3
+						rBg.recordId = self.rRecord.id
+						rBg.backgroundType = "Diábetes"
+						rBg.backgroundDescription = diabetes
+						self.realm.add(rBg, update: true)
+						self.rRecord.backgrounds.append(rBg)
+						self.recordBgs.append(rBg)
 					}
 				}
 				
@@ -146,7 +169,14 @@ class EditBackgroundsVC: UIViewController, UITextViewDelegate {
 					}
 				} else {
 					if asthma != "" {
-						// crear nuevo antecedente..
+						let rBg = RBackground()
+						rBg.id = -4
+						rBg.recordId = self.rRecord.id
+						rBg.backgroundType = "Asma"
+						rBg.backgroundDescription = asthma
+						self.realm.add(rBg, update: true)
+						self.rRecord.backgrounds.append(rBg)
+						self.recordBgs.append(rBg)
 					}
 				}
 				
@@ -160,7 +190,14 @@ class EditBackgroundsVC: UIViewController, UITextViewDelegate {
 					}
 				} else {
 					if heart != "" {
-						// crear nuevo antecedente..
+						let rBg = RBackground()
+						rBg.id = -5
+						rBg.recordId = self.rRecord.id
+						rBg.backgroundType = "Cardiopatías"
+						rBg.backgroundDescription = heart
+						self.realm.add(rBg, update: true)
+						self.rRecord.backgrounds.append(rBg)
+						self.recordBgs.append(rBg)
 					}
 				}
 				
@@ -174,7 +211,14 @@ class EditBackgroundsVC: UIViewController, UITextViewDelegate {
 					}
 				} else {
 					if medicine != "" {
-						// crear nuevo antecedente..
+						let rBg = RBackground()
+						rBg.id = -6
+						rBg.recordId = self.rRecord.id
+						rBg.backgroundType = "Medicamentos"
+						rBg.backgroundDescription = medicine
+						self.realm.add(rBg, update: true)
+						self.rRecord.backgrounds.append(rBg)
+						self.recordBgs.append(rBg)
 					}
 				}
 				
@@ -188,7 +232,14 @@ class EditBackgroundsVC: UIViewController, UITextViewDelegate {
 					}
 				} else {
 					if surgical != "" {
-						// crear nuevo antecedente..
+						let rBg = RBackground()
+						rBg.id = -7
+						rBg.recordId = self.rRecord.id
+						rBg.backgroundType = "Quirúrgicos"
+						rBg.backgroundDescription = surgical
+						self.realm.add(rBg, update: true)
+						self.rRecord.backgrounds.append(rBg)
+						self.recordBgs.append(rBg)
 					}
 				}
 				
@@ -202,18 +253,35 @@ class EditBackgroundsVC: UIViewController, UITextViewDelegate {
 					}
 				} else {
 					if other != "" {
-						// crear nuevo antecedente..
+						let rBg = RBackground()
+						rBg.id = -8
+						rBg.recordId = self.rRecord.id
+						rBg.backgroundType = "Otros"
+						rBg.backgroundDescription = other
+						self.realm.add(rBg, update: true)
+						self.rRecord.backgrounds.append(rBg)
+						self.recordBgs.append(rBg)
 					}
 				}
 				
 				self.checkNetwork()
 				
 				if self.networkConnection {
-					//self.dataHelper.updateBackground(background: self., completed: {
-						self.dismiss(animated: true, completion: nil)
-					//})
+					
+					self.dataHelper.updateBackgrounds(record: self.rRecord, recordBgs: self.recordBgs, completed: {
+						
+						self.dataHelper.fixNewBackgrounds(record: self.rRecord, recordBgs: self.recordBgs, completed: {
+							
+							self.dismiss(animated: true, completion: nil)
+							
+						})
+						
+					})
+					
 				} else {
+					
 					self.dismiss(animated: true, completion: nil)
+					
 				}
 			}
 		}))

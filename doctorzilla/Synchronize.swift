@@ -149,10 +149,6 @@ class Synchronize {
 		
 		self.latestConsultationsRLM = Array(self.realm.objects(RConsultation.self).filter("lastUpdate > %@", self.lastSync))
 		
-		self.latestBackgroundsRLM = Array(self.realm.objects(RBackground.self).filter("lastUpdate > %@", self.lastSync))
-		
-		self.latestPhysicalExamsRLM = Array(self.realm.objects(RPhysicalExam.self).filter("lastUpdate > %@", self.lastSync))
-		
 		completed()
 	}
 	
@@ -203,11 +199,23 @@ class Synchronize {
 					if let serverRecordLastUpdate = self.latestMedicalRecords.filter({$0.id == record.id}).first {
 						if record.lastUpdate > serverRecordLastUpdate.lastUpdate {
 							print("    Conflicto de Realm con Servidor\n      < Realm --> Servidor >")
-							self.dataHelper.updateRecord(record: record, completed: {})
+							self.dataHelper.updateRecord(record: record, completed: {
+								self.dataHelper.updateBackgrounds(record: record, recordBgs: record.backgrounds, completed: { 
+									self.dataHelper.fixNewBackgrounds(record: record, recordBgs: record.backgrounds, completed: { 
+										// Do nothing..
+									})
+								})
+							})
 						}
 					} else {
 						print("    < Realm --> Servidor >")
-						self.dataHelper.updateRecord(record: record, completed: {})
+						self.dataHelper.updateRecord(record: record, completed: {
+							self.dataHelper.updateBackgrounds(record: record, recordBgs: record.backgrounds, completed: {
+								self.dataHelper.fixNewBackgrounds(record: record, recordBgs: record.backgrounds, completed: {
+									// Do nothing..
+								})
+							})
+						})
 					}
 				}
 				
@@ -267,49 +275,6 @@ class Synchronize {
 			}
 		}
 	}
-	
-	
-	/// Sincronizar Antecedentes
-	//
-	func syncBackgrounds() {
-		if self.latestBackgroundsRLM.count == 0 {
-			print("Antecedentes al dia")
-		} else {
-			print("Antecedentes")
-			
-			self.newData = true
-			
-			try! self.realm.write {
-				// Check de las actualizaciones en Realm.
-				for background in self.latestBackgroundsRLM {
-					print("    < Realm --> Servidor >")
-					self.dataHelper.updateBackground(background: background, completed: {})
-				}
-			}
-		}
-	}
-	
-	
-	/// Sincronizar Examenes Fisicos
-	//
-	func syncPhysicalExams() {
-		if self.latestPhysicalExamsRLM.count == 0 {
-			print("Examenes fisicos al dia")
-		} else {
-			print("Examenes fisicos")
-			
-			self.newData = true
-			
-			try! self.realm.write {
-				// Check de las actualizaciones en Realm.
-				for physicalExam in self.latestPhysicalExamsRLM {
-					print("    < Realm --> Servidor >")
-					self.dataHelper.updatePhysicalExam(physicalExam: physicalExam, completed: {})
-				}
-			}
-		}
-	}
-	
 	
 	/// Borrar la BD y descargar toda la informacion.
 	//

@@ -652,20 +652,134 @@ class DataHelper {
 	
 	/// Actualizar Antecedente (Servidor)
 	//
-	func updateBackground(background: RBackground, completed: @escaping DownloadComplete) {
+	func updateBackgrounds(record: RMedicalRecord, recordBgs: List<RBackground>, completed: @escaping DownloadComplete) {
+		let backgroundsURL = "\(URL_BASE)\(URL_RECORD_BACKGROUND_UPDATE)"
 		
 		let headers: HTTPHeaders = [
 			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
 		]
 		
+		var family = ""
+		var allergy = ""
+		var diabetes = ""
+		var asthma = ""
+		var heart = ""
+		var medicine = ""
+		var surgical = ""
+		var other = ""
+		
+		if recordBgs.contains(where: { $0.backgroundType == "Familiares" }) {
+			let bg = recordBgs.first(where: { $0.backgroundType == "Familiares" })!
+			
+			family = bg.backgroundDescription
+		}
+
+		if recordBgs.contains(where: { $0.backgroundType == "Alergias" }) {
+			let bg = recordBgs.first(where: { $0.backgroundType == "Alergias" })!
+			
+			allergy = bg.backgroundDescription
+		}
+
+		if recordBgs.contains(where: { $0.backgroundType == "Diábetes" }) {
+			let bg = recordBgs.first(where: { $0.backgroundType == "Diábetes" })!
+			
+			diabetes = bg.backgroundDescription
+		}
+		
+		if recordBgs.contains(where: { $0.backgroundType == "Asma" }) {
+			let bg = recordBgs.first(where: { $0.backgroundType == "Asma" })!
+			
+			asthma = bg.backgroundDescription
+		}
+		
+		if recordBgs.contains(where: { $0.backgroundType == "Cardiopatías" }) {
+			let bg = recordBgs.first(where: { $0.backgroundType == "Cardiopatías" })!
+			
+			heart = bg.backgroundDescription
+		}
+		
+		if recordBgs.contains(where: { $0.backgroundType == "Medicamentos" }) {
+			let bg = recordBgs.first(where: { $0.backgroundType == "Medicamentos" })!
+			
+			medicine = bg.backgroundDescription
+		}
+		
+		if recordBgs.contains(where: { $0.backgroundType == "Quirúrgicos" }) {
+			let bg = recordBgs.first(where: { $0.backgroundType == "Quirúrgicos" })!
+			
+			surgical = bg.backgroundDescription
+		}
+		
+		if recordBgs.contains(where: { $0.backgroundType == "Otros" }) {
+			let bg = recordBgs.first(where: { $0.backgroundType == "Otros" })!
+			
+			other = bg.backgroundDescription
+		}
+
 		let parameters: Parameters = [
-			"background": [
-				"description": background.backgroundDescription
-			]
+			"bg_family": family,
+			"bg_allergy": allergy,
+			"bg_diabetes": diabetes,
+			"bg_asthma": asthma,
+			"bg_heart": heart,
+			"bg_medicine": medicine,
+			"bg_surgical": surgical,
+			"bg_other": other
 		]
 		
-		Alamofire.request("\(URL_BASE)\(URL_BACKGROUNDS)\(background.id)", method: .put, parameters: parameters, headers: headers).responseJSON { response in
-			//print(response.response?.statusCode)
+		let updateURL = (backgroundsURL as String).replacingOccurrences(of: ":medical_record_id", with: "\(record.id)")
+		
+		Alamofire.request(updateURL, method: .put, parameters: parameters, headers: headers).responseJSON { response in
+			completed()
+		}
+	}
+	
+	
+	/// Arreglar id's de los antecedentes que se hayan creado en Realm
+	//
+	func fixNewBackgrounds(record: RMedicalRecord, recordBgs: List<RBackground>, completed: @escaping DownloadComplete) {
+		let url = "\(URL_BASE)\(URL_MEDICAL_RECORDS)\(record.id)"
+		
+		let headers: HTTPHeaders = [
+			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
+		]
+		
+		Alamofire.request(url, method: .get, headers: headers).responseJSON { response in
+			if let recordDict = response.result.value as? Dictionary<String, AnyObject> {
+				try! self.realm.write {
+			
+					if let bgsDict = recordDict["backgrounds"] as? [Dictionary<String, AnyObject>] {
+					
+						for bgDict in bgsDict {
+							
+							if let bgId = bgDict["id"] as? Int {
+							
+								if self.realm.object(ofType: RBackground.self, forPrimaryKey: bgId) == nil {
+									
+									if let bgType = bgDict["background_type"] as? String {
+										
+										if let bg = recordBgs.first(where: { $0.backgroundType == "\(bgType)" }) {
+											
+											self.realm.delete(bg)
+											
+											let newBg = RBackground()
+											
+											newBg.id = bgId
+											newBg.recordId = record.id
+											newBg.backgroundType = bgType
+											newBg.backgroundDescription = (bgDict["description"] as? String)!
+											
+											self.realm.add(newBg, update: true)
+											
+											record.backgrounds.append(newBg)
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 			completed()
 		}
 	}
@@ -738,6 +852,12 @@ class DataHelper {
 		}
 		// BACKGROUNDS
 		if let bgsDict = recordDict["backgrounds_new"] as? [Dictionary<String, AnyObject>] {
+			
+			for oldBg in rMedRecord.backgrounds {
+				if let toDelete = realm.object(ofType: RBackground.self, forPrimaryKey: oldBg.id) {
+					self.realm.delete(toDelete)
+				}
+			}
 			
 			rMedRecord.backgrounds.removeAll()
 			
