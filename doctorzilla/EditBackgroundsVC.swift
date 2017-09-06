@@ -26,6 +26,7 @@ class EditBackgroundsVC: UIViewController, UITextViewDelegate {
 	let realm = try! Realm()
 	let dataHelper = DataHelper()
 	let dataHelperRLM = DataHelperRLM()
+	let synchronizer = Synchronize()
 	
 	var networkConnection = false
 	
@@ -272,10 +273,10 @@ class EditBackgroundsVC: UIViewController, UITextViewDelegate {
 						
 						self.dataHelper.fixNewBackgrounds(record: self.rRecord, recordBgs: self.recordBgs, completed: {
 							
-							self.dismiss(animated: true, completion: nil)
-							
+							self.synchronizer.saveSync(syncDesc: "Sincronización de actualización de Antecedentes en app móvil") {
+								self.dismiss(animated: true, completion: nil)
+							}
 						})
-						
 					})
 					
 				} else {

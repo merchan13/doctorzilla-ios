@@ -38,9 +38,11 @@ UICollectionViewDelegateFlowLayout {
         super.viewDidLoad()
     }
 	
+	
 	override func viewDidAppear(_ animated: Bool) {
 		setDetails()
 	}
+	
 	
 	func setDetails() {
 		backgroundCollection.dataSource = self
@@ -48,6 +50,7 @@ UICollectionViewDelegateFlowLayout {
 		
 		self.updateUI()
 	}
+	
 	
 	func updateUI() {
 		if self.rMedrecord.profilePic.length == 0 {
@@ -73,9 +76,11 @@ UICollectionViewDelegateFlowLayout {
 		pressureLabel.text = "\(self.rMedrecord.pressure_s)/\(self.rMedrecord.pressure_d)"
 	}
 	
+	
 	@IBAction func editButtonTapped(_ sender: Any) {
 		performSegue(withIdentifier: "EditRecordVC", sender: self.rMedrecord)
 	}
+	
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.identifier == "EditRecordVC" {
@@ -86,6 +91,7 @@ UICollectionViewDelegateFlowLayout {
 			}
 		}
 	}
+	
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BackgroundCell", for: indexPath) as? BackgroundCell {
@@ -100,13 +106,16 @@ UICollectionViewDelegateFlowLayout {
 		
 	}
 	
+	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return self.rMedrecord.backgrounds.count
 	}
 	
+	
 	func numberOfSections(in collectionView: UICollectionView) -> Int {
 		return 1
 	}
+	
 	
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		return CGSize(width: 285, height: 100)

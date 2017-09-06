@@ -103,7 +103,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2235" y="142.6056338028169"/>
+            <point key="canvasLocation" x="2263" y="-244"/>
         </scene>
         <!--SettingsVC-->
         <scene sceneID="swU-cr-WcP">
@@ -279,7 +279,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="b6E-TY-45G" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2235" y="-1368"/>
+            <point key="canvasLocation" x="3409" y="-1157"/>
         </scene>
         <!--Historias-->
         <scene sceneID="iBx-v2-ZmL">
@@ -418,7 +418,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MFb-K6-3oC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4341" y="-244"/>
+            <point key="canvasLocation" x="4239" y="-244"/>
         </scene>
         <!--Medical RecordVC-->
         <scene sceneID="5xR-JM-MWV">
@@ -444,9 +444,6 @@
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" image="menubtn" id="98c-ri-o8Q">
                                             <color key="tintColor" red="0.12941176469999999" green="0.10980392160000001" blue="0.37254901959999998" alpha="1" colorSpace="calibratedRGB"/>
-                                            <connections>
-                                                <segue destination="SZL-BT-IyO" kind="presentation" id="VVe-mf-Hq1"/>
-                                            </connections>
                                         </barButtonItem>
                                     </navigationItem>
                                 </items>
@@ -625,7 +622,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rfj-LN-bEe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2235" y="979"/>
+            <point key="canvasLocation" x="2261" y="569"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="3Sa-Nb-eKA">
@@ -644,7 +641,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oVT-6D-IJC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3311.25" y="142.6056338028169"/>
+            <point key="canvasLocation" x="3309" y="-244"/>
         </scene>
         <!--Record DetailVC-->
         <scene sceneID="ytv-Us-ILV">
@@ -1097,7 +1094,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6Hv-Cd-WOi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6578" y="-2165"/>
+            <point key="canvasLocation" x="6426" y="-1486"/>
         </scene>
         <!--Edit RecordVC-->
         <scene sceneID="Ieo-dp-mYb">
@@ -1123,9 +1120,6 @@
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" image="menubtn" id="0YZ-av-wvv">
                                             <color key="tintColor" red="0.12941176469999999" green="0.10980392160000001" blue="0.37254901959999998" alpha="1" colorSpace="calibratedRGB"/>
-                                            <connections>
-                                                <segue destination="SZL-BT-IyO" kind="presentation" id="8Iv-vJ-a16"/>
-                                            </connections>
                                         </barButtonItem>
                                     </navigationItem>
                                 </items>
@@ -1463,7 +1457,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JNL-Dw-BM5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7856" y="-2165"/>
+            <point key="canvasLocation" x="7463" y="-1804"/>
         </scene>
         <!--Edit BackgroundsVC-->
         <scene sceneID="8dk-tH-sds">
@@ -1762,11 +1756,12 @@
                         <outlet property="medicineTextView" destination="2fc-uW-iWe" id="G91-M3-vKm"/>
                         <outlet property="otherTextView" destination="9vr-PA-WCO" id="Z25-7b-8Wb"/>
                         <outlet property="surgicalTextView" destination="Nym-XG-XKt" id="xbr-Vb-7EF"/>
+                        <segue destination="SZL-BT-IyO" kind="presentation" identifier="SettingsVC" id="4pj-gN-JdA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Uq0-O7-kF3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="8805" y="-2297.5352112676055"/>
+            <point key="canvasLocation" x="8319" y="-1936"/>
         </scene>
         <!--ConsultationsVC-->
         <scene sceneID="aET-Ni-RkW">
@@ -1870,7 +1865,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xEf-1j-nao" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6578" y="-193"/>
+            <point key="canvasLocation" x="6426" y="-194"/>
         </scene>
         <!--Consultation DetailVC-->
         <scene sceneID="6HE-di-gr0">
@@ -1896,9 +1891,6 @@
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" image="menubtn" id="v2x-8U-MiO">
                                             <color key="tintColor" red="0.12941176469999999" green="0.10980392160000001" blue="0.37254901959999998" alpha="1" colorSpace="calibratedRGB"/>
-                                            <connections>
-                                                <segue destination="SZL-BT-IyO" kind="presentation" id="42s-M8-50V"/>
-                                            </connections>
                                         </barButtonItem>
                                     </navigationItem>
                                 </items>
@@ -2266,7 +2258,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iU0-F5-QbE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7852.5" y="-194.36619718309859"/>
+            <point key="canvasLocation" x="7463" y="-195"/>
         </scene>
         <!--Edit ConsultationVC-->
         <scene sceneID="BI6-NQ-Bac">
@@ -2292,9 +2284,6 @@
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" image="menubtn" id="71D-3n-gKR">
                                             <color key="tintColor" red="0.12941176469999999" green="0.10980392160000001" blue="0.37254901959999998" alpha="1" colorSpace="calibratedRGB"/>
-                                            <connections>
-                                                <segue destination="SZL-BT-IyO" kind="presentation" id="rkS-uu-iwR"/>
-                                            </connections>
                                         </barButtonItem>
                                     </navigationItem>
                                 </items>
@@ -2565,7 +2554,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="b0W-30-CPp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="9068" y="-168"/>
+            <point key="canvasLocation" x="8321" y="-169"/>
         </scene>
         <!--Operative NotesVC-->
         <scene sceneID="3Du-aJ-swU">
@@ -2619,7 +2608,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YES-ye-GvL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6579" y="727"/>
+            <point key="canvasLocation" x="5366" y="683"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="apH-bb-LjZ">
@@ -2639,7 +2628,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j94-vf-YQ1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4341" y="-1367"/>
+            <point key="canvasLocation" x="4341" y="-1156"/>
         </scene>
     </scenes>
     <resources>
@@ -2655,6 +2644,6 @@
         <image name="selectcontact_btn" width="12" height="21"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="8Iv-vJ-a16"/>
+        <segue reference="nDR-rl-gCS"/>
     </inferredMetricsTieBreakers>
 </document>

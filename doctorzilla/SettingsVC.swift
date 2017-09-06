@@ -38,14 +38,17 @@ class SettingsVC: UITableViewController {
 		//self.profilePictureImageView.image = self.rUser.profilePicture
 	}
 	
+	
 	@IBAction func backButtonTapped(_ sender: Any) {
 		dismiss(animated: true, completion: nil)
 	}
+	
 	
 	override func viewWillAppear(_ animated: Bool) {
 		self.deselectRow()
 	}
 
+	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if indexPath.section == 0 {
 			
@@ -75,6 +78,7 @@ class SettingsVC: UITableViewController {
 			}
 		}
 	}
+	
 	
 	/// Sincronizar bases de datos.
 	//
@@ -111,6 +115,7 @@ class SettingsVC: UITableViewController {
 		self.present(syncAlert, animated: true, completion: nil)
 	}
 	
+	
 	/// Borrar base de datos del teléfono y descarga toda la información del servidor.
 	//
 	func resetDrZilla() {
@@ -146,6 +151,7 @@ class SettingsVC: UITableViewController {
 		self.present(syncAlert, animated: true, completion: nil)
 	}
 	
+	
 	/// Alerta al no poseer conexión a internet.
 	//
 	func offlineAlert() {
@@ -157,6 +163,7 @@ class SettingsVC: UITableViewController {
 		
 		self.present(offlineAlert, animated: true, completion: nil)
 	}
+	
 	
 	func deselectRow() {
 		if let index = self.tableView.indexPathForSelectedRow{

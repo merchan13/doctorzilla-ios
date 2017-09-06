@@ -38,15 +38,18 @@ class MedicalRecordVC: UIViewController {
 		//self.noteVC.setDetails()
     }
 	
+	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		ReachabilityManager.shared.addListener(listener: self)
 	}
 	
+	
 	override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
 		ReachabilityManager.shared.removeListener(listener: self)
 	}
+	
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if let vc = segue.destination as? RecordDetailVC, segue.identifier == "RecordDetailVC" {
@@ -60,9 +63,11 @@ class MedicalRecordVC: UIViewController {
 		}
 	}
 	
+	
 	@IBAction func backButtonTapped(_ sender: Any) {
 		dismiss(animated: true, completion: nil)
 	}
+	
 	
 	@IBAction func segmentSelected(_ sender: UISegmentedControl) {
 	
@@ -87,6 +92,7 @@ class MedicalRecordVC: UIViewController {
 		}
 		
 	}
+	
 	
 	func recoveredNetworkData() {
 		let syncAlert = UIAlertController(title: "ALERTA", message: "Se ha recupero la conexión a internet, se recomienda que sincronice los datos antes de seguir.", preferredStyle: UIAlertControllerStyle.alert)

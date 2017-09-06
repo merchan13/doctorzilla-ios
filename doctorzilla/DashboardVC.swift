@@ -31,6 +31,7 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 	
 	var networkConnection = false
 	
+	
     override func viewDidLoad() {
         super.viewDidLoad()
 		
@@ -44,15 +45,18 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		searchBar.returnKeyType = UIReturnKeyType.done
     }
 	
+	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		ReachabilityManager.shared.addListener(listener: self)
 	}
 	
+	
 	override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
 		ReachabilityManager.shared.removeListener(listener: self)
 	}
+	
 	
 	override func viewDidAppear(_ animated: Bool) {
 		checkNetwork()
@@ -75,6 +79,7 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		}
 	}
 	
+	
 	/// Get MedicalRecords data from Realm DB
 	//
 	func parseMedicalRecordsRLM(completed: @escaping DownloadComplete) {
@@ -84,8 +89,11 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 			self.rMedrecords.append(rec)
 		}
 		
+		self.rMedrecords.sort(by: { $0.lastUpdate > $1.lastUpdate })
+		
 		completed()
 	}
+	
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MedRecordCell", for: indexPath) as? MedRecordCell {
@@ -105,6 +113,7 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		}
 	}
 	
+	
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		var rMedrec: RMedicalRecord
 		
@@ -117,6 +126,7 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		performSegue(withIdentifier: "MedicalRecordVC", sender: rMedrec)
 	}
 	
+	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		if inSearchMode {
 			return rFilteredRecords.count
@@ -125,17 +135,21 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		}
 	}
 	
+	
 	func numberOfSections(in collectionView: UICollectionView) -> Int {
 		return 1
 	}
+	
 	
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		return CGSize(width: 138, height: 120)
 	}
 	
+	
 	func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
 		view.endEditing(true)
 	}
+	
 	
 	func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
 		if searchBar.text == nil || searchBar.text == "" {
@@ -145,15 +159,22 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		} else {
 			inSearchMode = true
 			let criteria = searchBar.text!
-			rFilteredRecords = rMedrecords.filter({$0.lastName.range(of: criteria) != nil || $0.document.range(of: criteria) != nil})
+			rFilteredRecords = rMedrecords.filter(
+				{
+					$0.lastName.lowercased().range(of: criteria.lowercased()) != nil ||
+					$0.document.lowercased().range(of: criteria.lowercased()) != nil ||
+					$0.name.lowercased().range(of: criteria.lowercased()) != nil
+				})
 			collection.reloadData()
 		}
 	}
+	
 	
 	@IBAction func settingsButtonTapped(_ sender: Any) {
 		self.reloadImages = true
 		performSegue(withIdentifier: "SettingsVC", sender: nil)
 	}
+	
 	
 	@IBAction func logoutButtonTapped(_ sender: Any) {
 		AuthToken.sharedInstance.token = ""
@@ -163,6 +184,7 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		
 		dismiss(animated: true, completion: nil)
 	}
+	
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.identifier == "MedicalRecordVC" {
@@ -174,9 +196,11 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 		} 
 	}
 	
+	
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 		self.view.endEditing(true)
 	}
+	
 	
 	func recoveredNetworkData() {
 		let syncAlert = UIAlertController(title: "ALERTA", message: "Se ha recupero la conexión a internet, se recomienda que sincronice los datos antes de seguir.", preferredStyle: UIAlertControllerStyle.alert)

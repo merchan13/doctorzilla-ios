@@ -28,6 +28,7 @@ class EditConsultationVC: UIViewController, UIPickerViewDelegate, UIPickerViewDa
 	let realm = try! Realm()
 	let dataHelper = DataHelper()
 	let dataHelperRLM = DataHelperRLM()
+	let synchronizer = Synchronize()
 	
 	var networkConnection = false
 	
@@ -103,8 +104,13 @@ class EditConsultationVC: UIViewController, UIPickerViewDelegate, UIPickerViewDa
 				self.checkNetwork()
 				
 				if self.networkConnection {
+					
 					self.dataHelper.updateConsultation(consultation: self.rConsultation, completed: {
-						self.dismiss(animated: true, completion: nil)
+						
+						self.synchronizer.saveSync(syncDesc: "Sincronización de actualización de Consulta Médica en app móvil") {
+							self.dismiss(animated: true, completion: nil)
+						}
+						
 					})
 				} else {
 					self.dismiss(animated: true, completion: nil)

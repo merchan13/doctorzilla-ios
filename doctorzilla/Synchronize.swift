@@ -42,11 +42,9 @@ class Synchronize {
 						self.latestUpdates {
 							self.syncMedicalRecords()
 							self.syncConsultations()
-							self.syncBackgrounds()
-							self.syncPhysicalExams()
 							
 							if self.newData {
-								self.saveSync {
+								self.saveSync(syncDesc: "Sincronizacion de datos entre app móvil y app web") {
 									completed()
 								}
 							} else {
@@ -66,7 +64,7 @@ class Synchronize {
 											self.dataHelper.downloadAttachments {
 												self.dataHelper.downloadBackgrounds {
 													self.dataHelper.downloadConsultations {
-														self.saveSync {
+														self.saveSync(syncDesc: "Sincronizacion de todos los datos") {
 															completed()
 														}
 													}
@@ -155,9 +153,9 @@ class Synchronize {
 	
 	/// Guardar nueva fecha de sincronizacion. [Servidor y Realm]
 	//
-	func saveSync(completed: @escaping DownloadComplete) {
+	func saveSync(syncDesc: String, completed: @escaping DownloadComplete) {
 		let syncDate = Date().iso8601.dateFromISO8601!
-		var syncDescription = "Sincronizacion"
+		let syncDescription = syncDesc
 		
 		try! self.realm.write {
 			let rSync = RSync()
@@ -275,6 +273,7 @@ class Synchronize {
 			}
 		}
 	}
+	
 	
 	/// Borrar la BD y descargar toda la informacion.
 	//

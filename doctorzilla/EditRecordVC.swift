@@ -29,6 +29,7 @@ class EditRecordVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSour
 	var insurances: Results<RInsurance>!
 	let realm = try! Realm()
 	let dataHelper = DataHelper()
+	let synchronizer = Synchronize()
 	
 	var networkConnection = false
 	
@@ -122,10 +123,17 @@ class EditRecordVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSour
 				self.checkNetwork()
 				
 				if self.networkConnection {
+					
 					self.dataHelper.updateRecord(record: self.rMedrecord, completed: {
-						self.dismiss(animated: true, completion: nil)
+						
+						self.synchronizer.saveSync(syncDesc: "Sincronización de actualización de Historia Médica en app móvil") {
+							
+							self.dismiss(animated: true, completion: nil)
+						}
+						
 					})
 				} else {
+					
 					self.dismiss(animated: true, completion: nil)
 				}
 			}
