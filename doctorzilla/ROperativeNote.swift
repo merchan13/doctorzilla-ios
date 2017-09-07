@@ -14,9 +14,27 @@ class ROperativeNote: Object {
 	dynamic var opNoteDescription = ""
 	dynamic var find = ""
 	dynamic var diagnostic = ""
+	dynamic var date = ""
 	dynamic var planId = 0
 	
 	override static func primaryKey() -> String? {
 		return "id"
+	}
+	
+	func parsedCreationDate() -> String {
+		var parsedDate = " "
+		
+		let dateFormatterGet = DateFormatter()
+		dateFormatterGet.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+		
+		let dateFormatterResult = DateFormatter()
+		dateFormatterResult.dateFormat = "dd MMM yyyy"
+		
+		
+		if let date: Date = dateFormatterGet.date(from: self.date){
+			parsedDate = dateFormatterResult.string(from: date)
+		}
+		
+		return parsedDate
 	}
 }

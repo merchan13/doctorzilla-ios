@@ -31,11 +31,11 @@ class MedicalRecordVC: UIViewController {
 		
 		self.detailVC.rMedrecord = rMedrecord
 		self.consultationVC.rMedrecord = rMedrecord
-		//self.noteVC.rMedrecord = rMedrecord
+		self.noteVC.rMedrecord = rMedrecord
 		
 		self.detailVC.setDetails()
 		self.consultationVC.setDetails()
-		//self.noteVC.setDetails()
+		self.noteVC.setDetails()
     }
 	
 	

@@ -559,6 +559,9 @@ class DataHelper {
 							if let opNoteDiagnostic = opNoteDict["diagnostic"] as? String {
 								plan.operativeNote!.diagnostic = opNoteDiagnostic
 							}
+							if let opNoteCreatedDate = opNoteDict["created_at"] as? String {
+								plan.operativeNote!.date = opNoteCreatedDate
+							}
 						}
 					}
 				}
@@ -1126,23 +1129,29 @@ class DataHelper {
 				// NOTA OPERATORIA
 				if let opNoteDict = planDict["operative_note"] as? Dictionary<String, AnyObject> {
 					
-					let rOpNote = ROperativeNote()
-					
 					if let opNoteId = opNoteDict["id"] as? Int {
+						let rOpNote = ROperativeNote()
+						
 						rOpNote.id = opNoteId
+						
+						if let opNoteDescription = opNoteDict["description"] as? String {
+							rOpNote.opNoteDescription = opNoteDescription
+						}
+						if let opNoteFind = opNoteDict["find"] as? String {
+							rOpNote.find = opNoteFind
+						}
+						if let opNoteDiagnostic = opNoteDict["diagnostic"] as? String {
+							rOpNote.diagnostic = opNoteDiagnostic
+						}
+						if let opNoteCreatedDate = opNoteDict["created_at"] as? String {
+							rOpNote.date = opNoteCreatedDate
+						}
+						
+						rOpNote.planId = rPlan.id
+						
+						self.realm.add(rOpNote, update: true)
+						rPlan.operativeNote = rOpNote
 					}
-					if let opNoteDescription = opNoteDict["description"] as? String {
-						rOpNote.opNoteDescription = opNoteDescription
-					}
-					if let opNoteFind = opNoteDict["find"] as? String {
-						rOpNote.find = opNoteFind
-					}
-					if let opNoteDiagnostic = opNoteDict["diagnostic"] as? String {
-						rOpNote.diagnostic = opNoteDiagnostic
-					}
-					
-					self.realm.add(rOpNote, update: true)
-					rPlan.operativeNote = rOpNote
 				}
 				// PROCEDIMIENTOS ASOCIADOS AL PLAN
 				if let procedures = planDict["procedures"] as? [Dictionary<String, AnyObject>] {
