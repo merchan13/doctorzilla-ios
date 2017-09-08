@@ -25,6 +25,7 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 	let realm = try! Realm()
 	let dataHelper = DataHelper()
 	let sync = Synchronize()
+	let user = User()
 	
 	var firstTime = true
 	var reloadImages = false
@@ -177,12 +178,17 @@ class DashboardVC: UIViewController, UICollectionViewDelegate, UICollectionViewD
 	
 	
 	@IBAction func logoutButtonTapped(_ sender: Any) {
-		AuthToken.sharedInstance.token = ""
+		
 		self.firstTime = true
 		
-		// log out!
+		self.user.signOut() {
+			
+			AuthToken.sharedInstance.token = ""
+			
+			self.dismiss(animated: true, completion: nil)
+		}
 		
-		dismiss(animated: true, completion: nil)
+		
 	}
 	
 	
