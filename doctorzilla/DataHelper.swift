@@ -345,30 +345,35 @@ class DataHelper {
 		
 		let records = realm.objects(RMedicalRecord.self).sorted(byKeyPath: "id")
 		
-		for record in records {
-			let parameters: Parameters = [
-				"record": record.id
-			]
-			
-			Alamofire.request(consultationURL, method: .get, parameters: parameters, headers: headers).responseJSON { (response) in
-				if let dict = response.result.value as? [Dictionary<String, AnyObject>] {
-					
-					try! self.realm.write {
+		if records.count > 0 {
+			for record in records {
+				let parameters: Parameters = [
+					"record": record.id
+				]
+				
+				Alamofire.request(consultationURL, method: .get, parameters: parameters, headers: headers).responseJSON { (response) in
+					if let dict = response.result.value as? [Dictionary<String, AnyObject>] {
 						
-						record.consultations.removeAll()
-						
-						for consultationDict in dict {
-							let rConsultation = self.parseConsultation(consultationDict: consultationDict)
+						try! self.realm.write {
 							
-							self.realm.add(rConsultation, update: true)
-							record.consultations.append(rConsultation)
+							record.consultations.removeAll()
+							
+							for consultationDict in dict {
+								let rConsultation = self.parseConsultation(consultationDict: consultationDict)
+								
+								self.realm.add(rConsultation, update: true)
+								record.consultations.append(rConsultation)
+							}
 						}
 					}
-				}
-				if record.id == records.last?.id {
-					completed()
+					if record.id == records.last?.id {
+						completed()
+					}
 				}
 			}
+		}
+		else {
+			completed()
 		}
 	}
 	
