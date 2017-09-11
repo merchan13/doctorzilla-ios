@@ -58,14 +58,14 @@ class ConsultationsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
 	
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		//return self.rMedrecord.consultations.count
 		return self.sortedConsultations.count
 	}
 	
 	
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		//let rConsultation = self.rMedrecord.consultations[indexPath.row]
+		
 		let rConsultation = self.sortedConsultations[indexPath.row]
+		
 		performSegue(withIdentifier: "ConsultationDetailVC", sender: rConsultation)
 	}
 	

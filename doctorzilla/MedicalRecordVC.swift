@@ -33,7 +33,7 @@ class MedicalRecordVC: UIViewController {
 		self.consultationVC.rMedrecord = rMedrecord
 		self.noteVC.rMedrecord = rMedrecord
 		
-		self.detailVC.setDetails()
+		self.detailVC.setDetails {}
 		self.consultationVC.setDetails()
 		self.noteVC.setDetails()
     }
@@ -107,9 +107,12 @@ class MedicalRecordVC: UIViewController {
 			
 			self.sync.synchronizeDatabases(user: user, completed: {
 				
-				self.detailVC.setDetails()
+				self.detailVC.setDetails {
+					self.detailVC.backgroundCollection.reloadData()
+					self.detailVC.attachmentsTableView.reloadData()
+				}
 				self.consultationVC.setDetails()
-				//self.noteVC.setDetails()
+				self.noteVC.setDetails()
 				
 				DispatchQueue.main.async {
 					self.activityIndicator.stopAnimating()

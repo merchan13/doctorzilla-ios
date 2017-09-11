@@ -264,9 +264,6 @@ class DataHelper {
 							if let attachmentRecordId = attachDict["medical_record_id"] as? Int {
 								rAttachment.recordId = attachmentRecordId
 							}
-							if let attachmentURL = attachDict["url"] as? String {
-								rAttachment.attachmentURL = attachmentURL
-							}
 							if let attachmentDescription = attachDict["description"] as? String {
 								rAttachment.attachmentDescription = attachmentDescription
 							}
@@ -843,11 +840,6 @@ class DataHelper {
 						if let attachmentRecordId = attachDict["medical_record_id"] as? Int {
 							rAttachment.recordId = attachmentRecordId
 						}
-						if let attachmentInfo = attachDict["url"] as? Dictionary<String, AnyObject> {
-							if let attachmentURL = attachmentInfo["url"] as? String {
-								rAttachment.attachmentURL = attachmentURL
-							}
-						}
 						if let attachmentDescription = attachDict["description"] as? String {
 							rAttachment.attachmentDescription = attachmentDescription
 						}
@@ -1221,5 +1213,34 @@ class DataHelper {
 		
 		return rConsultation
 	}
+
+	
+	/// Descargar URL de Anexo
+	//
+	func downloadAttachmentURL(id: Int, completed: @escaping (_ result: String) -> () ) {
+		
+		let attachmentURL = "\(URL_BASE)\(URL_ATTACHMENTS)\(id)"
+		
+		let headers: HTTPHeaders = [
+			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
+		]
+		
+		Alamofire.request(attachmentURL, method: .get, headers: headers).responseJSON { (response) in
+			
+			var AWSURL = ""
+			
+			if let attachmentDict = response.result.value as? Dictionary<String, AnyObject> {
+				
+				if let url = attachmentDict["url"] as? String {
+					
+					AWSURL = url
+				}
+			}
+			
+			completed(AWSURL)
+		}
+	}
+	
+	
 }
 
