@@ -24,7 +24,6 @@ class EditConsultationVC: UIViewController, UIPickerViewDelegate, UIPickerViewDa
 	
 	var rConsultation: RConsultation!
 	var reasons: Results<RReason>!
-	var diagnostics: Results<RDiagnostic>!
 	let realm = try! Realm()
 	let dataHelper = DataHelper()
 	let dataHelperRLM = DataHelperRLM()
@@ -44,7 +43,6 @@ class EditConsultationVC: UIViewController, UIPickerViewDelegate, UIPickerViewDa
 		self.notesTextView.delegate = self
 		
 		self.reasons = self.realm.objects(RReason.self)
-		self.diagnostics = self.realm.objects(RDiagnostic.self)
 		
 		self.reasonPickerView.delegate = self
 		self.reasonPickerView.dataSource = self
@@ -66,10 +64,6 @@ class EditConsultationVC: UIViewController, UIPickerViewDelegate, UIPickerViewDa
 		if let reason = self.rConsultation.reason {
 			self.reasonPickerView.selectRow(self.reasons.index(where: {$0.reasonDescription == reason.reasonDescription})!, inComponent: 0, animated: true)
 		}
-		
-		if let diagnostic = self.rConsultation.diagnostic {
-			self.diagnosticPickerView.selectRow(self.diagnostics.index(where: {$0.diagnosticDescription == diagnostic.diagnosticDescription})!, inComponent: 0, animated: true)
-		}
 	}
 	
 	@IBAction func backgroundButtonTapped(_ sender: Any) {
@@ -87,7 +81,6 @@ class EditConsultationVC: UIViewController, UIPickerViewDelegate, UIPickerViewDa
 			let evolution = self.evolutionTextView.text!
 			let notes = self.notesTextView.text!
 			let reason = self.reasons[self.reasonPickerView.selectedRow(inComponent: 0)].id
-			let diagnostic = self.diagnostics[self.diagnosticPickerView.selectedRow(inComponent: 0)].id
 			
 			try! self.realm.write {
 				self.rConsultation.affliction = affliction
@@ -98,7 +91,6 @@ class EditConsultationVC: UIViewController, UIPickerViewDelegate, UIPickerViewDa
 				self.rConsultation.evolution = evolution
 				self.rConsultation.note = notes
 				self.rConsultation.reason = self.realm.object(ofType: RReason.self, forPrimaryKey: reason)
-				self.rConsultation.diagnostic = self.realm.object(ofType: RDiagnostic.self, forPrimaryKey: diagnostic)
 				self.rConsultation.lastUpdate = Date().iso8601.dateFromISO8601!
 				
 				self.checkNetwork()
@@ -137,7 +129,7 @@ class EditConsultationVC: UIViewController, UIPickerViewDelegate, UIPickerViewDa
 		if pickerView == self.reasonPickerView {
 			return self.reasons.count
 		} else {
-			return self.diagnostics.count
+			return 0
 		}
 	}
 	
@@ -145,7 +137,7 @@ class EditConsultationVC: UIViewController, UIPickerViewDelegate, UIPickerViewDa
 		if pickerView == self.reasonPickerView {
 			return self.reasons[row].reasonDescription
 		} else {
-			return self.diagnostics[row].diagnosticDescription
+			return "N/A"
 		}
 	}
 	

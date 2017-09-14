@@ -426,110 +426,6 @@ class DataHelper {
 		completed()
 	}
 	
-	
-	/// Descargar Planes + Notas operatorias asociadas
-	//
-	func downloadPlans(completed: @escaping DownloadComplete) {
-		
-		let headers: HTTPHeaders = [
-			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
-		]
-		
-		let consultations = realm.objects(RConsultation.self)
-		
-		for consultation in consultations {
-			
-			if let id = consultation.plan?.id {
-				let planURL = "\(URL_BASE)\(URL_PLANS)\(id)"
-				
-				Alamofire.request(planURL, method: .get, headers: headers).responseJSON { (response) in
-					
-					if let planDict = response.result.value as? Dictionary<String, AnyObject> {
-						try! self.realm.write {
-							if let planConsultationId = planDict["consultation_id"] as? Int {
-								consultation.plan!.consultationId = planConsultationId
-							}
-							if let planDescription = planDict["description"] as? String {
-								consultation.plan!.planDescription = planDescription
-							}
-							if let planEmergency = planDict["emergency"] as? Bool {
-								consultation.plan!.emergency = planEmergency
-							}
-							// NOTA OPERATORIA
-							if let opNoteDict = planDict["operative_note"] as? Dictionary<String, AnyObject> {
-								
-								let rOpNote = ROperativeNote()
-								
-								if let opNoteId = opNoteDict["id"] as? Int {
-									rOpNote.id = opNoteId
-								}
-								if let opNoteDescription = opNoteDict["description"] as? String {
-									rOpNote.opNoteDescription = opNoteDescription
-								}
-								if let opNoteFind = opNoteDict["find"] as? String {
-									rOpNote.find = opNoteFind
-								}
-								if let opNoteDiagnostic = opNoteDict["diagnostic"] as? String {
-									rOpNote.diagnostic = opNoteDiagnostic
-								}
-							
-								self.realm.add(rOpNote, update: true)
-								consultation.plan!.operativeNote = rOpNote
-							}
-						}
-					}
-				}
-			}
-		}
-		completed()
-	}
-	
-	
-	/// Descargar Procedimientos (existentes en los planes)
-	//
-	func downloadProcedures(completed: @escaping DownloadComplete) {
-		let procedureURL = "\(URL_BASE)\(URL_PLAN_PROCEDURES)"
-		
-		let headers: HTTPHeaders = [
-			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
-		]
-		
-		let plans = realm.objects(RPlan.self)
-		
-		for plan in plans {
-			
-			let uniqueProcedureURL = (procedureURL as String).replacingOccurrences(of: ":plan_id", with: "\(plan.id)")
-			
-			Alamofire.request(uniqueProcedureURL, method: .get, headers: headers).responseJSON { (response) in
-				
-				if let dict = response.result.value as? [Dictionary<String, AnyObject>] {
-					try! self.realm.write {
-						
-						plan.procedures.removeAll()
-						
-						for procedureDict in dict {
-							let rProcedure = RProcedure()
-							if let procedureId = procedureDict["id"] as? Int {
-								rProcedure.id = procedureId
-							}
-							if let procedureName = procedureDict["name"] as? String {
-								rProcedure.name = procedureName
-							}
-							if let procedureDescription = procedureDict["description"] as? String {
-								rProcedure.procedureDescription = procedureDescription
-							}
-							
-							self.realm.add(rProcedure, update: true)
-							plan.procedures.append(rProcedure)
-						}
-					}
-				}
-			}
-		}
-		completed()
-	}
-	
-	
 	/// Descargar Notas Operatorias (arreglar o verificar si se puede eliminar)
 	//
 	func downloadOperativeNotes(completed: @escaping DownloadComplete) {
@@ -624,20 +520,14 @@ class DataHelper {
 		]
 		
 		var reason = ""
-		var diagnostic = ""
 		
 		if let reasonRLM = consultation.reason {
 			reason = "\(reasonRLM.id)"
 		}
 		
-		if let diagnosticRLM = consultation.diagnostic {
-			diagnostic = "\(diagnosticRLM.id)"
-		}
-		
 		let parameters: Parameters = [
 			"consultation": [
 				"affliction": consultation.affliction,
-				"diagnostic_id": diagnostic,
 				"evolution": consultation.evolution,
 				"height": "\(consultation.height)",
 				"note": consultation.note,
@@ -1047,23 +937,24 @@ class DataHelper {
 		if let date = consultationDict["created_at"] as? String {
 			rConsultation.date = date
 		}
-		// DIAGNOSTIC
-		if let diagnosticDict = consultationDict["diagnostic"] as?  Dictionary<String, AnyObject> {
-			if let diagnostic = diagnosticDict["id"] as? Int {
-				if let diagnosticRLM = self.realm.object(ofType: RDiagnostic.self, forPrimaryKey: diagnostic) {
-					rConsultation.diagnostic = diagnosticRLM
-				} else {
-					let rDiagnostic = RDiagnostic()
-					if let diagnosticId = diagnosticDict["id"] as? Int {
-						rDiagnostic.id = diagnosticId
-					}
-					if let diagnosticDescription = diagnosticDict["description"] as? String {
-						rDiagnostic.diagnosticDescription = diagnosticDescription
-					}
-					
-					self.realm.add(rDiagnostic, update: true)
-					rConsultation.diagnostic = rDiagnostic
+		// DIAGNOSTICS
+		if let diagnostics = consultationDict["diagnostics"] as? [Dictionary<String, AnyObject>]{
+			rConsultation.diagnostics.removeAll()
+			
+			for diagnosticDict in diagnostics {
+				let rDiagnostic = RDiagnostic()
+				if let diagnosticId = diagnosticDict["id"] as? Int {
+					rDiagnostic.id = diagnosticId
 				}
+				if let diagnosticDescription = diagnosticDict["description"] as? String {
+					rDiagnostic.diagnosticDescription = diagnosticDescription
+				}
+				if let diagnosticLastUpdate = diagnosticDict["updated_at"] as? String {
+					rDiagnostic.lastUpdate = diagnosticLastUpdate.dateFromISO8601!
+				}
+				
+				self.realm.add(rDiagnostic, update: true)
+				rConsultation.diagnostics.append(rDiagnostic)
 			}
 		}
 		// EVOLUTION

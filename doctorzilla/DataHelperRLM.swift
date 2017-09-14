@@ -74,10 +74,6 @@ class DataHelperRLM {
 			
 			self.realm.create(RConsultation.self, value: newData, update: true)
 			
-			if let diagnostic = consultation.diagnostic {
-				self.realm.create(RConsultation.self, value: ["id": consultation.id, "diagnostic":diagnostic], update: true)
-			}
-			
 			if let reason = consultation.reason {
 				self.realm.create(RConsultation.self, value: ["id": consultation.id, "reason":reason], update: true)
 			}

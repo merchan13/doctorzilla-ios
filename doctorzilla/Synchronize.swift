@@ -57,16 +57,14 @@ class Synchronize {
 					print("Descarga completa de datos...\n")
 					self.dataHelper.downloadOccupations {
 						self.dataHelper.downloadInsurances {
-							self.dataHelper.downloadDiagnostics {
-								self.dataHelper.downloadReasons {
-									self.dataHelper.downloadRecords(rUser: self.user) {
-										self.dataHelper.downloadReports {
-											self.dataHelper.downloadAttachments {
-												self.dataHelper.downloadBackgrounds {
-													self.dataHelper.downloadConsultations {
-														self.saveSync(syncDesc: "Sincronizacion de todos los datos") {
-															completed()
-														}
+							self.dataHelper.downloadReasons {
+								self.dataHelper.downloadRecords(rUser: self.user) {
+									self.dataHelper.downloadReports {
+										self.dataHelper.downloadAttachments {
+											self.dataHelper.downloadBackgrounds {
+												self.dataHelper.downloadConsultations {
+													self.saveSync(syncDesc: "Sincronizacion de todos los datos") {
+														completed()
 													}
 												}
 											}

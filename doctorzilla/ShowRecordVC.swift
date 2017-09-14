@@ -1,8 +1,8 @@
 //
-//  RecordDetailVC.swift
+//  ShowRecordVC.swift
 //  doctorzilla
 //
-//  Created by Javier Merchán on 5/25/17.
+//  Created by Javier Merchán on 9/14/17.
 //  Copyright © 2017 Merchan. All rights reserved.
 //
 
@@ -11,28 +11,8 @@ import RealmSwift
 import ReachabilitySwift
 import SafariServices
 
-class RecordDetailVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource,
-UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource {
+class ShowRecordVC: UITableViewController {
 
-	@IBOutlet weak var profilePictureImage: UIImageView!
-	@IBOutlet weak var fullNameLabel: UILabel!
-	@IBOutlet weak var documentLabel: UILabel!
-	@IBOutlet weak var birthdayLabel: UILabel!
-	@IBOutlet weak var firstConsultationLabel: UILabel!
-	@IBOutlet weak var occupationLabel: UILabel!
-	@IBOutlet weak var emailLabel: UILabel!
-	@IBOutlet weak var phoneLabel: UILabel!
-	@IBOutlet weak var cellphoneLabel: UILabel!
-	@IBOutlet weak var insuranceLabel: UILabel!
-	@IBOutlet weak var addressLabel: UILabel!
-	@IBOutlet weak var referredByLabel: UILabel!
-	@IBOutlet weak var weightLabel: UILabel!
-	@IBOutlet weak var heigthLabel: UILabel!
-	@IBOutlet weak var IMCLabel: UILabel!
-	@IBOutlet weak var pressureLabel: UILabel!
-	@IBOutlet weak var backgroundCollection: UICollectionView!
-	@IBOutlet weak var attachmentsTableView: UITableView!
-	
 	var rMedrecord: RMedicalRecord!
 	let realm = try! Realm()
 	let dataHelper = DataHelper()
@@ -40,9 +20,9 @@ UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource {
 	
 	var networkConnection = false
 	
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
+	override func viewDidLoad() {
+		super.viewDidLoad()
+	}
 	
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -65,15 +45,16 @@ UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource {
 		
 		self.setDetails {
 			
-			if let index = self.attachmentsTableView.indexPathForSelectedRow{
+			//if let index = self.attachmentsTableView.indexPathForSelectedRow{
 				
-				self.attachmentsTableView.deselectRow(at: index, animated: true)
-			}
+			//	self.attachmentsTableView.deselectRow(at: index, animated: true)
+			//}
 		}
 	}
 	
 	
 	func setDetails(completed: @escaping DownloadComplete) {
+		/*
 		backgroundCollection.dataSource = self
 		backgroundCollection.delegate = self
 		
@@ -81,12 +62,14 @@ UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource {
 		self.attachmentsTableView.dataSource = self
 		
 		self.updateUI()
+		*/
 	}
 	
 	
 	func updateUI() {
+		/*
 		if self.rMedrecord.profilePic.length == 0 {
-			self.dataHelper.downloadProfilePicture(rec: self.rMedrecord, completed: { 
+			self.dataHelper.downloadProfilePicture(rec: self.rMedrecord, completed: {
 				self.profilePictureImage.image = UIImage(data: self.rMedrecord.profilePic as Data)
 			})
 		} else {
@@ -107,6 +90,7 @@ UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource {
 		heigthLabel.text = "\(self.rMedrecord.height) m."
 		IMCLabel.text = "\(self.rMedrecord.IMC())"
 		pressureLabel.text = "\(self.rMedrecord.pressure_s)/\(self.rMedrecord.pressure_d)"
+		*/
 	}
 	
 	
@@ -126,86 +110,28 @@ UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource {
 	}
 	
 	
-	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-		if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BackgroundCell", for: indexPath) as? BackgroundCell {
-			let bg: RBackground!
-			bg = self.rMedrecord.backgrounds[indexPath.row]
-			cell.configureCell(bg)
-			
-			return cell
-		} else {
-			return UICollectionViewCell()
-		}
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		
-	}
-	
-	
-	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return self.rMedrecord.backgrounds.count
-	}
-	
-	
-	func numberOfSections(in collectionView: UICollectionView) -> Int {
-		return 1
-	}
-	
-	
-	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-		return CGSize(width: 285, height: 100)
-	}
-	
-
-	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		
-		if let cell = tableView.dequeueReusableCell(withIdentifier: "AttachmentCell", for: indexPath) as? AttachmentCell {
+		if indexPath.section == 0 {
 			
-			let rAttachment = self.rMedrecord.attachments[indexPath.row]
-			
-			cell.configureCell(rAttachment: rAttachment)
-			
-			return cell
-		} else {
-			
-			return UITableViewCell()
-		}
-	}
-	
-	
-	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		
-		return self.rMedrecord.attachments.count
-	}
-	
-	
-	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		
-		checkNetwork()
-		
-		if self.networkConnection {
-			
-			let rAttachment = self.rMedrecord.attachments[indexPath.row]
-			
-			self.dataHelper.downloadAttachmentURL(id: rAttachment.id) { (result: String) in
+			if indexPath.row == 0 {
 				
-				let svc = SFSafariViewController(url: URL(string: result)!)
-				
-				self.present(svc, animated: true, completion: nil)
 			}
 		}
-		else {
+		else if indexPath.section == 1 {
 			
-			let cantShowAttachmentAlert = UIAlertController(title: "SIN CONEXIÓN", message: "Los anexos sólo pueden ser vistos con conexión a internet.", preferredStyle: UIAlertControllerStyle.alert)
-			
-			cantShowAttachmentAlert.addAction(UIAlertAction(title: "Cerrar", style: .default, handler: { (action: UIAlertAction!) in
+			if indexPath.row == 0 {
 				
-			}))
-			
-			self.present(cantShowAttachmentAlert, animated: true, completion: nil)
+				
+			} else if indexPath.row == 1 {
+				
+			}
 		}
 	}
-	
+
 	
 	func recoveredNetworkData() {
+		/*
 		let syncAlert = UIAlertController(title: "ALERTA", message: "Se ha recupero la conexión a internet, se recomienda que sincronice los datos antes de seguir.", preferredStyle: UIAlertControllerStyle.alert)
 		
 		syncAlert.addAction(UIAlertAction(title: "Sincronizar", style: .destructive, handler: { (action: UIAlertAction!) in
@@ -242,11 +168,12 @@ UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource {
 		}))
 		
 		self.present(syncAlert, animated: true, completion: nil)
+		*/
 	}
 	
 }
 
-extension RecordDetailVC: NetworkStatusListener {
+extension ShowRecordVC: NetworkStatusListener {
 	
 	func networkStatusDidChange(status: Reachability.NetworkStatus) {
 		if status == .notReachable {

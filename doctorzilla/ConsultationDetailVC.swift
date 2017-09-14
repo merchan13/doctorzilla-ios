@@ -21,7 +21,6 @@ UICollectionViewDelegateFlowLayout {
 	@IBOutlet weak var PECollection: UICollectionView!
 	@IBOutlet weak var evolutionTextView: UITextView!
 	@IBOutlet weak var noteTextView: UITextView!
-	@IBOutlet weak var diagnosticTextView: UITextView!
 	@IBOutlet weak var planTextView: UITextView!
 	
 	var rConsultation: RConsultation!
@@ -49,7 +48,6 @@ UICollectionViewDelegateFlowLayout {
 		self.pressureLabel.text = "\(self.rConsultation.pressure_s)/\(self.rConsultation.pressure_d)"
 		self.evolutionTextView.text = self.rConsultation.evolution
 		self.noteTextView.text = self.rConsultation.note
-		self.diagnosticTextView.text = self.rConsultation.diagnostic?.diagnosticDescription
 		self.planTextView.text = self.rConsultation.plan?.planDescription
 	}
 	

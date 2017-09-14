@@ -18,7 +18,7 @@ class MedicalRecordVC: UIViewController {
 	@IBOutlet weak var operativeNoteView: UIView!
 	@IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 	
-	var detailVC: RecordDetailVC!
+	var showVC: ShowRecordVC!
 	var consultationVC: ConsultationsVC!
 	var noteVC: OperativeNotesVC!
 
@@ -29,11 +29,11 @@ class MedicalRecordVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 		
-		self.detailVC.rMedrecord = rMedrecord
+		self.showVC.rMedrecord = rMedrecord
 		self.consultationVC.rMedrecord = rMedrecord
 		self.noteVC.rMedrecord = rMedrecord
 		
-		self.detailVC.setDetails {}
+		self.showVC.setDetails {}
 		self.consultationVC.setDetails()
 		self.noteVC.setDetails()
     }
@@ -52,8 +52,8 @@ class MedicalRecordVC: UIViewController {
 	
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if let vc = segue.destination as? RecordDetailVC, segue.identifier == "RecordDetailVC" {
-			self.detailVC = vc
+		if let vc = segue.destination as? ShowRecordVC, segue.identifier == "ShowRecordVC" {
+			self.showVC = vc
 		}
 		if let vc = segue.destination as? ConsultationsVC, segue.identifier == "ConsultationsVC" {
 			self.consultationVC = vc
@@ -107,9 +107,9 @@ class MedicalRecordVC: UIViewController {
 			
 			self.sync.synchronizeDatabases(user: user, completed: {
 				
-				self.detailVC.setDetails {
-					self.detailVC.backgroundCollection.reloadData()
-					self.detailVC.attachmentsTableView.reloadData()
+				self.showVC.setDetails {
+					//self.showVC.backgroundCollection.reloadData()
+					//self.showVC.attachmentsTableView.reloadData()
 				}
 				self.consultationVC.setDetails()
 				self.noteVC.setDetails()

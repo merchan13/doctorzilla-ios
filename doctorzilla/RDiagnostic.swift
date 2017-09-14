@@ -12,6 +12,9 @@ import RealmSwift
 class RDiagnostic: Object {
 	dynamic var id = 0
 	dynamic var diagnosticDescription = ""
+	dynamic var lastUpdate = Date()
+	
+	let consultations = LinkingObjects(fromType: RConsultation.self, property: "diagnostics")
 	
 	override static func primaryKey() -> String? {
 		return "id"

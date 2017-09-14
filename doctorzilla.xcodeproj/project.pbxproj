@@ -33,6 +33,7 @@
 		FA4C7CE21EC3CC8E00A58937 /* RecoverPasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4C7CE11EC3CC8E00A58937 /* RecoverPasswordVC.swift */; };
 		FA4D055F1EF21C77005574B1 /* Synchronize.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4D055E1EF21C77005574B1 /* Synchronize.swift */; };
 		FA518F791ED3ED6100EAC1C4 /* MedRecordCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA518F781ED3ED6100EAC1C4 /* MedRecordCell.swift */; };
+		FA71DDD81F6A447A001EB5F6 /* ShowRecordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA71DDD71F6A447A001EB5F6 /* ShowRecordVC.swift */; };
 		FA87B6E71ECFFC85003C0DF4 /* DashboardVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA87B6E61ECFFC85003C0DF4 /* DashboardVC.swift */; };
 		FA916EF11EFC84D500BD5EFA /* DataHelperRLM.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA916EF01EFC84D500BD5EFA /* DataHelperRLM.swift */; };
 		FA9A6DD11F452D59007EA577 /* RAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9A6DD01F452D59007EA577 /* RAttachment.swift */; };
@@ -110,6 +111,7 @@
 		FA4C7CE11EC3CC8E00A58937 /* RecoverPasswordVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecoverPasswordVC.swift; sourceTree = "<group>"; };
 		FA4D055E1EF21C77005574B1 /* Synchronize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Synchronize.swift; sourceTree = "<group>"; };
 		FA518F781ED3ED6100EAC1C4 /* MedRecordCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MedRecordCell.swift; sourceTree = "<group>"; };
+		FA71DDD71F6A447A001EB5F6 /* ShowRecordVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowRecordVC.swift; sourceTree = "<group>"; };
 		FA87B6E61ECFFC85003C0DF4 /* DashboardVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashboardVC.swift; sourceTree = "<group>"; };
 		FA916EF01EFC84D500BD5EFA /* DataHelperRLM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataHelperRLM.swift; sourceTree = "<group>"; };
 		FA9A6DD01F452D59007EA577 /* RAttachment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RAttachment.swift; sourceTree = "<group>"; };
@@ -225,6 +227,7 @@
 				FADF11551EDE186000BB54E7 /* ConsultationDetailVC.swift */,
 				FAF952991ED6A2F000E3D2EA /* RecordDetailVC.swift */,
 				FA34C7501F60E28200F0964D /* ShowOperativeNoteVC.swift */,
+				FA71DDD71F6A447A001EB5F6 /* ShowRecordVC.swift */,
 				FAF9529B1ED6A35E00E3D2EA /* ConsultationsVC.swift */,
 				FA87B6E61ECFFC85003C0DF4 /* DashboardVC.swift */,
 				FA4C7CDF1EC3CA2800A58937 /* LoginVC.swift */,
@@ -626,6 +629,7 @@
 				FA9A6DD71F4530A7007EA577 /* RReport.swift in Sources */,
 				FA4D055F1EF21C77005574B1 /* Synchronize.swift in Sources */,
 				FAE433771EFDEB02003EB268 /* SettingsVC.swift in Sources */,
+				FA71DDD81F6A447A001EB5F6 /* ShowRecordVC.swift in Sources */,
 				FA2D0AD31EEB9A3E009BFBFA /* RConsultation.swift in Sources */,
 				FA2D0AD51EEBA393009BFBFA /* RPlan.swift in Sources */,
 				FA34C7511F60E28200F0964D /* ShowOperativeNoteVC.swift in Sources */,

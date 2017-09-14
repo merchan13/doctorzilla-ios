@@ -19,7 +19,6 @@ class RConsultation: Object {
 	dynamic var pressure_s = ""
 	dynamic var pressure_d = ""
 	dynamic var note = ""
-	dynamic var diagnostic: RDiagnostic?
 	dynamic var reason: RReason?
 	dynamic var plan: RPlan?
 	dynamic var lastUpdate = Date()
@@ -27,6 +26,7 @@ class RConsultation: Object {
 	
 	// Has many:
 	let physicalExams = List<RPhysicalExam>()
+	let diagnostics = List<RDiagnostic>()
 		
 	override static func primaryKey() -> String? {
 		return "id"
