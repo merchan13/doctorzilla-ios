@@ -8,20 +8,23 @@
 
 import UIKit
 
-class BackgroundCell: UICollectionViewCell {
+class BackgroundCell: UITableViewCell {
 	
-	@IBOutlet weak var typeLabel: UILabel!
-	@IBOutlet weak var descriptionTextView: UITextView!
+	@IBOutlet weak var type: UILabel!
+	@IBOutlet weak var descriptionText: UITextView!
 	
 	var rBackground: RBackground!
 	
-	required init?(coder aDecoder: NSCoder) {
-		super.init(coder: aDecoder)
+	override func awakeFromNib() {
+		
+		super.awakeFromNib()
 	}
 	
-	func configureCell(_ rBackground: RBackground) {
+	func configureCell(rBackground: RBackground) {
+		
 		self.rBackground = rBackground
-		typeLabel.text = self.rBackground.backgroundType
-		descriptionTextView.text = self.rBackground.backgroundDescription
+		
+		type.text = self.rBackground.backgroundType
+		descriptionText.text = self.rBackground.backgroundDescription
 	}
 }

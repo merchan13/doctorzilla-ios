@@ -41,6 +41,7 @@ UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource {
 	var networkConnection = false
 	
     override func viewDidLoad() {
+		
         super.viewDidLoad()
     }
 	
@@ -127,6 +128,7 @@ UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource {
 	
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+		/*
 		if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BackgroundCell", for: indexPath) as? BackgroundCell {
 			let bg: RBackground!
 			bg = self.rMedrecord.backgrounds[indexPath.row]
@@ -136,7 +138,9 @@ UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource {
 		} else {
 			return UICollectionViewCell()
 		}
+		*/
 		
+		return UICollectionViewCell()
 	}
 	
 	

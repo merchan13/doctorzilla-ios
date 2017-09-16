@@ -113,4 +113,28 @@ class RMedicalRecord: Object {
 		
 		return date
 	}
+	
+	func diagnostics() -> List<RDiagnostic> {
+		
+		let diagnosticsList = List<RDiagnostic>()
+		
+		for consultation in self.consultations {
+			
+			if consultation.diagnostics.count > 0 {
+			
+				diagnosticsList.append(objectsIn: consultation.diagnostics)
+			}
+		}
+		
+		return diagnosticsList
+	}
 }
+
+
+
+
+
+
+
+
+
