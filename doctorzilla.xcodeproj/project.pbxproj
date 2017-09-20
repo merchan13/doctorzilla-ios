@@ -226,15 +226,23 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
+		FA42448E1F72226A002EA743 /* Consultations */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Consultations;
+			sourceTree = "<group>";
+		};
 		FA518F6F1ED3BA3B00EAC1C4 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				FA42448E1F72226A002EA743 /* Consultations */,
+				FA973CB51F6C8FC00010CD92 /* Medical_Records */,
 				FAB955E41F5CEA940007EAA2 /* EditBackgroundsVC.swift */,
 				FA3A9CFC1EE1DE0F000EAB8B /* EditConsultationVC.swift */,
 				FADF11551EDE186000BB54E7 /* ConsultationDetailVC.swift */,
 				FAF952991ED6A2F000E3D2EA /* RecordDetailVC.swift */,
 				FA34C7501F60E28200F0964D /* ShowOperativeNoteVC.swift */,
-				FA973CB51F6C8FC00010CD92 /* Medical Record */,
 				FAF9529B1ED6A35E00E3D2EA /* ConsultationsVC.swift */,
 				FA87B6E61ECFFC85003C0DF4 /* DashboardVC.swift */,
 				FA4C7CDF1EC3CA2800A58937 /* LoginVC.swift */,
@@ -281,7 +289,7 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
-		FA973CB51F6C8FC00010CD92 /* Medical Record */ = {
+		FA973CB51F6C8FC00010CD92 /* Medical_Records */ = {
 			isa = PBXGroup;
 			children = (
 				FAF9528F1ED63CA400E3D2EA /* MedicalRecordVC.swift */,
@@ -291,7 +299,7 @@
 				FA973CB11F6C8F900010CD92 /* ShowRecordDiagnosticsVC.swift */,
 				FA3A9CF81EE1DDBB000EAB8B /* EditRecordVC.swift */,
 			);
-			name = "Medical Record";
+			name = Medical_Records;
 			sourceTree = "<group>";
 		};
 		FAF732221E9044C700FA6030 = {

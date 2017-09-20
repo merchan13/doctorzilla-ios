@@ -55,19 +55,19 @@ class Synchronize {
 					}
 				} else {
 					print("Descarga completa de datos...\n")
-					self.dataHelper.downloadOccupations {
-						self.dataHelper.downloadInsurances {
-							self.dataHelper.downloadReasons {
-								self.dataHelper.downloadRecords(rUser: self.user) {
-									self.dataHelper.downloadReports {
-										self.dataHelper.downloadAttachments {
-											self.dataHelper.downloadBackgrounds {
-												self.dataHelper.downloadConsultations {
-													self.saveSync(syncDesc: "Sincronizacion de todos los datos") {
-														completed()
-													}
-												}
-											}
+					self.dataHelper.downloadOccupations { print("Occupations DONE")
+						
+						self.dataHelper.downloadInsurances { print("Insurances DONE")
+							
+							self.dataHelper.downloadReasons { print("Reasons DONE")
+								
+								self.dataHelper.downloadRecords(rUser: self.user) { print("Records DONE")
+									
+									self.dataHelper.downloadConsultations { print("Consultations DONE")
+										
+										self.saveSync(syncDesc: "Sincronizacion de todos los datos") {
+											
+											completed()
 										}
 									}
 								}
@@ -178,6 +178,7 @@ class Synchronize {
 			completed()
 		}
 	}
+	
 	
 	/// Sincronizar Historias
 	//
