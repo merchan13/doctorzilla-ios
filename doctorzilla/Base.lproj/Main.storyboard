@@ -900,8 +900,8 @@
                             <outlet property="delegate" destination="ozZ-9s-48F" id="j1J-IH-geO"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="ase-jY-lWB">
-                        <barButtonItem key="leftBarButtonItem" title="Item" image="cancel_btn" id="U1A-3e-uol"/>
+                    <navigationItem key="navigationItem" leftItemsSupplementBackButton="YES" id="ase-jY-lWB">
+                        <barButtonItem key="backBarButtonItem" title="Hola" id="1i1-kw-vAT"/>
                     </navigationItem>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="304" height="1550"/>
@@ -3009,25 +3009,8 @@
         <scene sceneID="WWl-Nl-v1x">
             <objects>
                 <tabBarController id="Kge-Vl-2iv" sceneMemberID="viewController">
-                    <navigationItem key="navigationItem" id="evS-oO-c3O">
-                        <view key="titleView" contentMode="scaleToFill" id="yBv-Pq-tJe">
-                            <rect key="frame" x="96" y="5.5" width="128" height="33"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <subviews>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="drzilla_imagotipo_color_1" translatesAutoresizingMaskIntoConstraints="NO" id="5SD-Fy-mUh">
-                                    <rect key="frame" x="47.5" y="0.0" width="33" height="33"/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" constant="33" id="YSG-1S-6jd"/>
-                                        <constraint firstAttribute="height" constant="33" id="jHC-fS-MbO"/>
-                                    </constraints>
-                                </imageView>
-                            </subviews>
-                            <constraints>
-                                <constraint firstItem="5SD-Fy-mUh" firstAttribute="centerX" secondItem="yBv-Pq-tJe" secondAttribute="centerX" id="7eV-2o-al2"/>
-                                <constraint firstItem="5SD-Fy-mUh" firstAttribute="centerY" secondItem="yBv-Pq-tJe" secondAttribute="centerY" id="rNb-N5-dNN"/>
-                            </constraints>
-                        </view>
-                        <barButtonItem key="rightBarButtonItem" image="menubtn" id="vk9-8e-tWa"/>
+                    <navigationItem key="navigationItem" leftItemsSupplementBackButton="YES" id="evS-oO-c3O">
+                        <barButtonItem key="backBarButtonItem" title="Hola" id="DAT-wB-viA"/>
                     </navigationItem>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="ixS-VI-t7K">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
@@ -3383,7 +3366,6 @@
         <image name="antecedentesbg-1" width="310" height="90"/>
         <image name="attachment" width="16" height="20"/>
         <image name="backbutton" width="10" height="17"/>
-        <image name="cancel_btn" width="20" height="20"/>
         <image name="consultasbg-1" width="310" height="90"/>
         <image name="diagnosticosbg-1" width="310" height="90"/>
         <image name="drzilla_imagotipo_color_1" width="1080" height="1080"/>
