@@ -125,9 +125,9 @@ class ShowRecordVC: UITableViewController {
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		
-		let backItem = UIBarButtonItem()
-		backItem.title = "Volver"
-		navigationItem.backBarButtonItem = backItem
+		//let backItem = UIBarButtonItem()
+		//backItem.title = "Historia"
+		//navigationItem.backBarButtonItem = backItem
 		
 		if segue.identifier == "EditRecordVC" {
 			
