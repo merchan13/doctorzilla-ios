@@ -41,6 +41,8 @@ class ShowRecordVC: UITableViewController {
 	override func viewDidLoad() {
 		
 		super.viewDidLoad()
+		
+		self.updateUI()
 	}
 	
 	
@@ -62,28 +64,7 @@ class ShowRecordVC: UITableViewController {
 	
 	override func viewDidAppear(_ animated: Bool) {
 		
-		self.setDetails {
-			
-			//if let index = self.attachmentsTableView.indexPathForSelectedRow{
-				
-			//	self.attachmentsTableView.deselectRow(at: index, animated: true)
-			//}
-		}
-	}
-	
-	
-	func setDetails(completed: @escaping DownloadComplete) {
-		/*
-		self.diagnosticsTable.delegate = self
-		self.diagnosticsTable.dataSource = self
-		
-		self.backgroundsTable.delegate = self
-		self.backgroundsTable.dataSource = self
-		
-		self.attachmentsTable.delegate = self
-		self.attachmentsTable.dataSource = self
-		*/
-		self.updateUI()
+		//...
 	}
 	
 	
@@ -103,7 +84,7 @@ class ShowRecordVC: UITableViewController {
 		}
 		*/
 		
-		name.text = "\(self.rMedrecord.name) \(self.rMedrecord.lastName)"
+		name.text = "\(self.rMedrecord.name.capitalized) \(self.rMedrecord.lastName.capitalized)"
 		
 		document.text = self.rMedrecord.document
 		
@@ -111,19 +92,19 @@ class ShowRecordVC: UITableViewController {
 		
 		firstConsultation.text = self.rMedrecord.parsedFirstConsultationDate()
 		
-		occupation.text = self.rMedrecord.occupation?.name
+		occupation.text = self.rMedrecord.occupation?.name.capitalized
 		
-		email.text = self.rMedrecord.email
+		email.text = self.rMedrecord.email.lowercased()
 		
 		phoneNumber.text = self.rMedrecord.phone
 		
 		cellphoneNumber.text = self.rMedrecord.cellphone
 		
-		insurance.text = self.rMedrecord.insurance?.name
+		insurance.text = self.rMedrecord.insurance?.name.capitalized
 		
-		address.text = self.rMedrecord.address
+		address.text = self.rMedrecord.address.capitalized
 		
-		referredBy.text = self.rMedrecord.referredBy
+		referredBy.text = self.rMedrecord.referredBy.capitalized
 		
 		weight.text = "\(self.rMedrecord.weight) kg."
 		
@@ -144,6 +125,10 @@ class ShowRecordVC: UITableViewController {
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		
+		let backItem = UIBarButtonItem()
+		backItem.title = "Volver"
+		navigationItem.backBarButtonItem = backItem
+		
 		if segue.identifier == "EditRecordVC" {
 			
 			if let editRecordVC = segue.destination as? EditRecordVC {
@@ -154,16 +139,6 @@ class ShowRecordVC: UITableViewController {
 				}
 			}
 		}
-		else if segue.identifier == "ShowRecordBackgroundsVC" {
-			
-			if let showRecordBgVC = segue.destination as? ShowRecordBackgroundsVC {
-				
-				if let rBackgrounds = sender as? List<RBackground> {
-					
-					showRecordBgVC.rBackgrounds = rBackgrounds
-				}
-			}
-		}
 		else if segue.identifier == "ShowRecordDiagnosticsVC" {
 			
 			if let showRecordDxVC = segue.destination as? ShowRecordDiagnosticsVC {
@@ -171,6 +146,16 @@ class ShowRecordVC: UITableViewController {
 				if let rDiagnostics = sender as? List<RDiagnostic> {
 					
 					showRecordDxVC.rDiagnostics = rDiagnostics
+				}
+			}
+		}
+		else if segue.identifier == "ShowRecordBackgroundsVC" {
+			
+			if let showRecordBgVC = segue.destination as? ShowRecordBackgroundsVC {
+				
+				if let rBackgrounds = sender as? List<RBackground> {
+					
+					showRecordBgVC.rBackgrounds = rBackgrounds
 				}
 			}
 		}
@@ -193,7 +178,7 @@ class ShowRecordVC: UITableViewController {
 			
 			if indexPath.row == 4 {
 				
-				performSegue(withIdentifier: "ShowRecordBackgroundsVC", sender: self.rMedrecord.backgrounds)
+				//performSegue(withIdentifier: "IndexConsultationsVC", sender: self.rMedrecord.consultations)
 			}
 			else if indexPath.row == 5 {
 				
@@ -201,6 +186,14 @@ class ShowRecordVC: UITableViewController {
 			}
 			else if indexPath.row == 6 {
 			
+				performSegue(withIdentifier: "ShowRecordBackgroundsVC", sender: self.rMedrecord.backgrounds)
+			}
+			else if indexPath.row == 7 {
+				
+				//performSegue(withIdentifier: "IndexOperativeNotesVC", sender: self.rMedrecord.operativeNotes())
+			}
+			else if indexPath.row == 8 {
+				
 				performSegue(withIdentifier: "ShowRecordAttachmentsVC", sender: self.rMedrecord.attachments)
 			}
 		}

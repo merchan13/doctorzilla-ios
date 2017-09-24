@@ -10,12 +10,12 @@ import Foundation
 import RealmSwift
 
 class RPlan: Object {
-	dynamic var id = 0
-	dynamic var planDescription = ""
-	dynamic var emergency = false
-	dynamic var consultationId = 0
+	@objc dynamic var id = 0
+	@objc dynamic var planDescription = ""
+	@objc dynamic var emergency = false
+	@objc dynamic var consultationId = 0
 	
-	dynamic var operativeNote: ROperativeNote?
+	@objc dynamic var operativeNote: ROperativeNote?
 	
 	let procedures = List<RProcedure>()
 	

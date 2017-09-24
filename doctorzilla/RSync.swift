@@ -10,6 +10,6 @@ import Foundation
 import RealmSwift
 
 class RSync: Object {
-	dynamic var date = Date()
-	dynamic var syncDescription = ""	
+	@objc dynamic var date = Date()
+	@objc dynamic var syncDescription = ""	
 }

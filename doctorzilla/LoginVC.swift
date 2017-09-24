@@ -77,7 +77,8 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 						DispatchQueue.main.async {
 							self.activityIndicatorView.stopAnimating()
 						}
-						self.performSegue(withIdentifier: "DashboardVC", sender: nil)
+						//self.performSegue(withIdentifier: "DashboardVC", sender: nil)
+						self.performSegue(withIdentifier: "LoginSuccessful", sender: nil)
 					}
 					
 				} else {

@@ -10,11 +10,11 @@ import Foundation
 import RealmSwift
 
 class RPhysicalExam: Object {
-	dynamic var id = 0
-	dynamic var examType = ""
-	dynamic var observation = ""
-	dynamic var lastUpdate = Date()
-	dynamic var consultationId = 0
+	@objc dynamic var id = 0
+	@objc dynamic var examType = ""
+	@objc dynamic var observation = ""
+	@objc dynamic var lastUpdate = Date()
+	@objc dynamic var consultationId = 0
 	
 	override static func primaryKey() -> String? {
 		return "id"

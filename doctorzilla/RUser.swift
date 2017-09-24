@@ -10,9 +10,9 @@ import Foundation
 import RealmSwift
 
 class RUser: Object {
-	dynamic var id = 0
-	dynamic var email = ""
-	dynamic var password = ""
+	@objc dynamic var id = 0
+	@objc dynamic var email = ""
+	@objc dynamic var password = ""
 	
 	override static func primaryKey() -> String? {
 		return "id"

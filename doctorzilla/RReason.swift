@@ -10,8 +10,8 @@ import Foundation
 import RealmSwift
 
 class RReason: Object {
-	dynamic var id = 0
-	dynamic var reasonDescription = ""
+	@objc dynamic var id = 0
+	@objc dynamic var reasonDescription = ""
 	
 	override static func primaryKey() -> String? {
 		return "id"

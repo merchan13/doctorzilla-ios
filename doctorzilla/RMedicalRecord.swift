@@ -10,28 +10,28 @@ import Foundation
 import RealmSwift
 
 class RMedicalRecord: Object {
-	dynamic var id = 0
-	dynamic var document = ""
-	dynamic var name = ""
-	dynamic var lastName = ""
-	dynamic var birthday = ""
-	dynamic var firstConsultation = ""
-	dynamic var email = ""
-	dynamic var phone = ""
-	dynamic var cellphone = ""
-	dynamic var address = ""
-	dynamic var gender = ""
-	dynamic var referredBy = ""
-	dynamic var height = 0
-	dynamic var weight = 0
-	dynamic var pressure_d = ""
-	dynamic var pressure_s = ""
-	dynamic var lastUpdate = Date()
-	dynamic var profilePicURL = ""
-	dynamic var profilePic = NSData()
-	dynamic var user: RUser?
-	dynamic var occupation: ROccupation?
-	dynamic var insurance: RInsurance?
+	@objc dynamic var id = 0
+	@objc dynamic var document = ""
+	@objc dynamic var name = ""
+	@objc dynamic var lastName = ""
+	@objc dynamic var birthday = ""
+	@objc dynamic var firstConsultation = ""
+	@objc dynamic var email = ""
+	@objc dynamic var phone = ""
+	@objc dynamic var cellphone = ""
+	@objc dynamic var address = ""
+	@objc dynamic var gender = ""
+	@objc dynamic var referredBy = ""
+	@objc dynamic var height = 0
+	@objc dynamic var weight = 0
+	@objc dynamic var pressure_d = ""
+	@objc dynamic var pressure_s = ""
+	@objc dynamic var lastUpdate = Date()
+	@objc dynamic var profilePicURL = ""
+	@objc dynamic var profilePic = NSData()
+	@objc dynamic var user: RUser?
+	@objc dynamic var occupation: ROccupation?
+	@objc dynamic var insurance: RInsurance?
 	
 	// Has many:
 	let consultations = List<RConsultation>()

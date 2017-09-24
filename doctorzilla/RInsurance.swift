@@ -10,8 +10,8 @@ import Foundation
 import RealmSwift
 
 class RInsurance: Object {
-	dynamic var id = 0
-	dynamic var name = ""
+	@objc dynamic var id = 0
+	@objc dynamic var name = ""
 	
 	override static func primaryKey() -> String? {
 		return "id"

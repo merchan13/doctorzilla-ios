@@ -10,9 +10,9 @@ import Foundation
 import RealmSwift
 
 class RDiagnostic: Object {
-	dynamic var id = 0
-	dynamic var diagnosticDescription = ""
-	dynamic var lastUpdate = Date()
+	@objc dynamic var id = 0
+	@objc dynamic var diagnosticDescription = ""
+	@objc dynamic var lastUpdate = Date()
 	
 	let consultations = LinkingObjects(fromType: RConsultation.self, property: "diagnostics")
 	

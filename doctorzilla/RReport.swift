@@ -10,10 +10,10 @@ import Foundation
 import RealmSwift
 
 class RReport: Object {
-	dynamic var id = 0
-	dynamic var reportType = ""
-	dynamic var reportDescription = ""
-	dynamic var recordId = 0
+	@objc dynamic var id = 0
+	@objc dynamic var reportType = ""
+	@objc dynamic var reportDescription = ""
+	@objc dynamic var recordId = 0
 	
 	override static func primaryKey() -> String? {
 		return "id"

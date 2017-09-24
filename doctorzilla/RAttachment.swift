@@ -10,9 +10,9 @@ import Foundation
 import RealmSwift
 
 class RAttachment: Object {
-	dynamic var id = 0
-	dynamic var attachmentDescription = ""
-	dynamic var recordId = 0
+	@objc dynamic var id = 0
+	@objc dynamic var attachmentDescription = ""
+	@objc dynamic var recordId = 0
 	
 	override static func primaryKey() -> String? {
 		return "id"

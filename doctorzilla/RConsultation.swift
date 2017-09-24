@@ -10,19 +10,19 @@ import Foundation
 import RealmSwift
 
 class RConsultation: Object {
-	dynamic var id = 0
-	dynamic var date = ""
-	dynamic var affliction = ""
-	dynamic var evolution = ""
-	dynamic var height = 0
-	dynamic var weight = 0
-	dynamic var pressure_s = ""
-	dynamic var pressure_d = ""
-	dynamic var note = ""
-	dynamic var reason: RReason?
-	dynamic var plan: RPlan?
-	dynamic var lastUpdate = Date()
-	dynamic var recordId = 0
+	@objc dynamic var id = 0
+	@objc dynamic var date = ""
+	@objc dynamic var affliction = ""
+	@objc dynamic var evolution = ""
+	@objc dynamic var height = 0
+	@objc dynamic var weight = 0
+	@objc dynamic var pressure_s = ""
+	@objc dynamic var pressure_d = ""
+	@objc dynamic var note = ""
+	@objc dynamic var reason: RReason?
+	@objc dynamic var plan: RPlan?
+	@objc dynamic var lastUpdate = Date()
+	@objc dynamic var recordId = 0
 	
 	// Has many:
 	let physicalExams = List<RPhysicalExam>()

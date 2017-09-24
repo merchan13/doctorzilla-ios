@@ -10,9 +10,9 @@ import Foundation
 import RealmSwift
 
 class RProcedure: Object {
-	dynamic var id = 0
-	dynamic var name = ""
-	dynamic var procedureDescription = ""
+	@objc dynamic var id = 0
+	@objc dynamic var name = ""
+	@objc dynamic var procedureDescription = ""
 	
 	let plans = LinkingObjects(fromType: RPlan.self, property: "procedures")
 	

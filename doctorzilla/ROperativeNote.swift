@@ -10,12 +10,12 @@ import Foundation
 import RealmSwift
 
 class ROperativeNote: Object {
-	dynamic var id = 0
-	dynamic var opNoteDescription = ""
-	dynamic var find = ""
-	dynamic var diagnostic = ""
-	dynamic var date = ""
-	dynamic var planId = 0
+	@objc dynamic var id = 0
+	@objc dynamic var opNoteDescription = ""
+	@objc dynamic var find = ""
+	@objc dynamic var diagnostic = ""
+	@objc dynamic var date = ""
+	@objc dynamic var planId = 0
 	
 	override static func primaryKey() -> String? {
 		return "id"

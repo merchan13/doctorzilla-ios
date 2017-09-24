@@ -10,11 +10,11 @@ import Foundation
 import RealmSwift
 
 class RBackground: Object {
-	dynamic var id = 0
-	dynamic var backgroundType = ""
-	dynamic var backgroundDescription = ""
-	dynamic var lastUpdate = Date()
-	dynamic var recordId = 0
+	@objc dynamic var id = 0
+	@objc dynamic var backgroundType = ""
+	@objc dynamic var backgroundDescription = ""
+	@objc dynamic var lastUpdate = Date()
+	@objc dynamic var recordId = 0
 		
 	override static func primaryKey() -> String? {
 		return "id"
