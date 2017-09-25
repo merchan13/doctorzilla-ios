@@ -9,19 +9,20 @@
 import UIKit
 import RealmSwift
 
-class ShowOperativeNoteVC: UIViewController {
+class ShowOperativeNoteVC: UITableViewController {
 
-	@IBOutlet weak var dateLabel: UILabel!
-	@IBOutlet weak var planDescriptionLabel: UILabel!
-	@IBOutlet weak var proceduresLabel: UILabel!
-	@IBOutlet weak var findsLabel: UILabel!
-	@IBOutlet weak var noteDescriptionLabel: UILabel!
-	@IBOutlet weak var diagnosticLabel: UILabel!
+	@IBOutlet weak var date: UILabel!
+	@IBOutlet weak var planDescription: UITextView!
+	@IBOutlet weak var procedures: UITextView!
+	@IBOutlet weak var finds: UITextView!
+	@IBOutlet weak var descriptionText: UITextView!
+	@IBOutlet weak var diagnostic: UITextView!
 	
 	var rOperativeNote: ROperativeNote!
 	let realm = try! Realm()
 	
     override func viewDidLoad() {
+		
         super.viewDidLoad()
 		
 		self.updateUI()
@@ -29,6 +30,7 @@ class ShowOperativeNoteVC: UIViewController {
 	
 	
 	override func viewDidAppear(_ animated: Bool) {
+		
 		self.updateUI()
 	}
 	
@@ -39,31 +41,29 @@ class ShowOperativeNoteVC: UIViewController {
 		var parsedProcedures = "N/A"
 		
 		if let notePlan = self.realm.object(ofType: RPlan.self, forPrimaryKey: self.rOperativeNote.planId) {
+			
 			planDescription = notePlan.planDescription
 			
 			parsedProcedures = ""
 			
 			for procedure in notePlan.procedures {
+				
 				if parsedProcedures == "" {
+					
 					parsedProcedures += "\(procedure.name)"
 				}
 				else {
+					
 					parsedProcedures += " - \(procedure.name)"
 				}
 			}
 		}
 		
-		self.dateLabel.text = "Consulta [\(self.rOperativeNote.parsedCreationDate())]"
-		self.planDescriptionLabel.text = planDescription
-		self.proceduresLabel.text = parsedProcedures
-		self.findsLabel.text = self.rOperativeNote.find
-		self.noteDescriptionLabel.text = self.rOperativeNote.opNoteDescription
-		self.diagnosticLabel.text = self.rOperativeNote.diagnostic
+		self.date.text = "Nota Operatoria [\(self.rOperativeNote.parsedCreationDate())]"
+		self.planDescription.text = planDescription
+		self.procedures.text = parsedProcedures
+		self.finds.text = self.rOperativeNote.find
+		self.descriptionText.text = self.rOperativeNote.opNoteDescription
+		self.diagnostic.text = self.rOperativeNote.diagnostic
 	}
-	
-	
-	@IBAction func backButtonTapped(_ sender: Any) {
-		dismiss(animated: true, completion: nil)
-	}
-
 }

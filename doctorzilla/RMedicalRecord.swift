@@ -39,9 +39,11 @@ class RMedicalRecord: Object {
 	let attachments = List<RAttachment>()
 	let reports = List<RReport>()
 	
+	
 	override static func primaryKey() -> String? {
 		return "id"
 	}
+	
 	
 	func age() -> Int {
 		var age = 0
@@ -59,6 +61,7 @@ class RMedicalRecord: Object {
 		return age
 	}
 	
+	
 	func IMC() -> Double {
 		if self.weight != 0 && self.height != 0 {
 			let imc = ((Double(self.weight))/(pow(Double(self.height)/100, 2)) * 100).rounded() / 100
@@ -67,6 +70,7 @@ class RMedicalRecord: Object {
 			return 0.0
 		}
 	}
+	
 	
 	func parsedFirstConsultationDate() -> String {
 		var parsedDate = " "
@@ -85,6 +89,7 @@ class RMedicalRecord: Object {
 		return parsedDate
 	}
 	
+	
 	func parsedBirthdayDate() -> String {
 		var parsedDate = " "
 		
@@ -101,6 +106,7 @@ class RMedicalRecord: Object {
 		return parsedDate
 	}
 	
+	
 	func birthdayToDate() -> Date {
 		let date = Date()
 		
@@ -114,19 +120,43 @@ class RMedicalRecord: Object {
 		return date
 	}
 	
-	func diagnostics() -> List<RDiagnostic> {
-		
-		let diagnosticsList = List<RDiagnostic>()
+	
+	func diagnostics() -> [RDiagnostic] {
+	
+		var sortedDiagnostics = [RDiagnostic]()
 		
 		for consultation in self.consultations {
 			
 			if consultation.diagnostics.count > 0 {
-			
-				diagnosticsList.append(objectsIn: consultation.diagnostics)
+				
+				sortedDiagnostics.append(contentsOf: consultation.diagnostics)
 			}
 		}
 		
-		return diagnosticsList
+		sortedDiagnostics.sort(by: { $0.lastUpdate > $1.lastUpdate })
+		
+		return sortedDiagnostics
+	}
+	
+	
+	func operativeNotes() -> [ROperativeNote] {
+		
+		var sortedNotes = [ROperativeNote]()
+		
+		for consultation in self.consultations {
+			
+			if let plan = consultation.plan {
+				
+				if let opNote = plan.operativeNote {
+					
+					sortedNotes.append(opNote)
+				}
+			}
+		}
+		
+		sortedNotes.sort(by: { $0.date > $1.date })
+		
+		return sortedNotes
 	}
 }
 

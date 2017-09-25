@@ -26,4 +26,6 @@ class RUser: Object {
 			return false
 		}
 	}
+	
+	// Do sign out (for offline purposes)
 }

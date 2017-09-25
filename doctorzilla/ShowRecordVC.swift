@@ -125,10 +125,6 @@ class ShowRecordVC: UITableViewController {
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		
-		//let backItem = UIBarButtonItem()
-		//backItem.title = "Historia"
-		//navigationItem.backBarButtonItem = backItem
-		
 		if segue.identifier == "EditRecordVC" {
 			
 			if let editRecordVC = segue.destination as? EditRecordVC {
@@ -139,11 +135,21 @@ class ShowRecordVC: UITableViewController {
 				}
 			}
 		}
+		else if segue.identifier == "IndexConsultationsVC" {
+			
+			if let indexConsultationsVC = segue.destination as? IndexConsultationsVC {
+			
+				if let rConsultations = sender as? List<RConsultation> {
+					
+					indexConsultationsVC.rConsultations = rConsultations
+				}
+			}
+		}
 		else if segue.identifier == "ShowRecordDiagnosticsVC" {
 			
 			if let showRecordDxVC = segue.destination as? ShowRecordDiagnosticsVC {
 				
-				if let rDiagnostics = sender as? List<RDiagnostic> {
+				if let rDiagnostics = sender as? [RDiagnostic] {
 					
 					showRecordDxVC.rDiagnostics = rDiagnostics
 				}
@@ -156,6 +162,16 @@ class ShowRecordVC: UITableViewController {
 				if let rBackgrounds = sender as? List<RBackground> {
 					
 					showRecordBgVC.rBackgrounds = rBackgrounds
+				}
+			}
+		}
+		else if segue.identifier == "IndexOperativeNotesVC" {
+			
+			if let indexNotesVC = segue.destination as? IndexOperativeNotesVC {
+				
+				if let rOperativeNotes = sender as? [ROperativeNote] {
+					
+					indexNotesVC.rOperativeNotes = rOperativeNotes
 				}
 			}
 		}
@@ -178,7 +194,7 @@ class ShowRecordVC: UITableViewController {
 			
 			if indexPath.row == 4 {
 				
-				//performSegue(withIdentifier: "IndexConsultationsVC", sender: self.rMedrecord.consultations)
+				performSegue(withIdentifier: "IndexConsultationsVC", sender: self.rMedrecord.consultations)
 			}
 			else if indexPath.row == 5 {
 				
@@ -190,7 +206,7 @@ class ShowRecordVC: UITableViewController {
 			}
 			else if indexPath.row == 7 {
 				
-				//performSegue(withIdentifier: "IndexOperativeNotesVC", sender: self.rMedrecord.operativeNotes())
+				performSegue(withIdentifier: "IndexOperativeNotesVC", sender: self.rMedrecord.operativeNotes())
 			}
 			else if indexPath.row == 8 {
 				

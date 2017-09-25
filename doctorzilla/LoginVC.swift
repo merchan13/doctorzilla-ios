@@ -24,6 +24,8 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 	
 	var networkConnection = false
 	
+	@IBAction func unwindToLoginVC(segue:UIStoryboardSegue) { }
+	
 	
     override func viewDidLoad() {
         super.viewDidLoad()

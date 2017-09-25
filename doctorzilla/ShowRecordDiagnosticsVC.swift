@@ -14,7 +14,7 @@ class ShowRecordDiagnosticsVC: UIViewController, UITableViewDelegate, UITableVie
 	
 	@IBOutlet var diagnosticsTable: UITableView!
 	
-	var rDiagnostics: List<RDiagnostic>!
+	var rDiagnostics: [RDiagnostic]!
 	let realm = try! Realm()
 	let dataHelper = DataHelper()
 	let sync = Synchronize()

@@ -1,8 +1,8 @@
 //
-//  OperativeNotesVC.swift
+//  IndexOperativeNotesVC.swift
 //  doctorzilla
 //
-//  Created by Javier Merchán on 5/25/17.
+//  Created by Javier Merchán on 9/24/17.
 //  Copyright © 2017 Merchan. All rights reserved.
 //
 
@@ -10,47 +10,28 @@ import UIKit
 import RealmSwift
 import ReachabilitySwift
 
-class OperativeNotesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class IndexOperativeNotesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-	@IBOutlet weak var tableView: UITableView!
+	@IBOutlet weak var notesTable: UITableView!
 	
-	var rMedrecord: RMedicalRecord!
-	var sortedNotes = [ROperativeNote]()
+	var rOperativeNotes: [ROperativeNote]!
 	let realm = try! Realm()
 	
 	override func viewDidLoad() {
+		
 		super.viewDidLoad()
+		
+		self.notesTable.delegate = self
+		self.notesTable.dataSource = self
 	}
 	
 	
 	override func viewDidAppear(_ animated: Bool) {
 		
-		if let index = self.tableView.indexPathForSelectedRow{
+		if let index = self.notesTable.indexPathForSelectedRow{
 			
-			self.tableView.deselectRow(at: index, animated: true)
+			self.notesTable.deselectRow(at: index, animated: true)
 		}
-	}
-	
-	
-	func setDetails() {
-		
-		let consultations = self.rMedrecord.consultations
-		
-		for consultation in consultations {
-			
-			if let plan = consultation.plan {
-				
-				if let opNote = plan.operativeNote {
-					
-					self.sortedNotes.append(opNote)
-				}
-			}
-		}
-		
-		self.sortedNotes.sort(by: { $0.date > $1.date })
-		
-		self.tableView.delegate = self
-		self.tableView.dataSource = self
 	}
 	
 	
@@ -58,7 +39,7 @@ class OperativeNotesVC: UIViewController, UITableViewDelegate, UITableViewDataSo
 		
 		if let cell = tableView.dequeueReusableCell(withIdentifier: "OperativeNoteCell", for: indexPath) as? OperativeNoteCell {
 			
-			let rOperativeNote = self.sortedNotes[indexPath.row]
+			let rOperativeNote = self.rOperativeNotes[indexPath.row]
 			
 			cell.configureCell(rOperativeNote: rOperativeNote)
 			
@@ -71,22 +52,28 @@ class OperativeNotesVC: UIViewController, UITableViewDelegate, UITableViewDataSo
 	
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return self.sortedNotes.count
+		
+		return self.rOperativeNotes.count
 	}
 	
 	
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let rOperativeNote = self.sortedNotes[indexPath.row]
+		
+		let rOperativeNote = self.rOperativeNotes[indexPath.row]
+		
 		performSegue(withIdentifier: "ShowOperativeNoteVC", sender: rOperativeNote)
 	}
 	
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		
 		if let vc = segue.destination as? ShowOperativeNoteVC, segue.identifier == "ShowOperativeNoteVC" {
+			
 			if let rOperativeNote = sender as? ROperativeNote {
+				
 				vc.rOperativeNote = rOperativeNote
 			}
 		}
 	}
-	
+
 }

@@ -23,7 +23,6 @@ class IndexRecordsVC: UIViewController, UITableViewDelegate, UITableViewDataSour
 	let realm = try! Realm()
 	let dataHelper = DataHelper()
 	let sync = Synchronize()
-	let user = User()
 	
 	var firstTime = true
 	var reloadImages = false
