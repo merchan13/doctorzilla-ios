@@ -80,6 +80,41 @@ class Synchronize {
 	}
 	
 	
+	/// Descargar todos los datos cuando se inicia sesion por primera vez
+	//
+	func downloadRecords(completed: @escaping DownloadComplete) {
+		
+		self.dataHelper.downloadOccupations { print("Occupations DONE")
+			
+			self.dataHelper.downloadInsurances { print("Insurances DONE")
+				
+				self.dataHelper.downloadReasons { print("Reasons DONE")
+					
+					self.latestUpdates {
+						
+						try! self.realm.write {
+							
+							for record in self.latestMedicalRecords {
+								
+								self.dataHelperRLM.updateMedicalRecord(record: record)
+							}
+							print("Records DONE")
+							
+							for consultation in self.latestConsultations {
+								
+								self.dataHelperRLM.updateConsultation(consultation: consultation)
+							}
+							print("Consultations DONE")
+						}
+						
+						completed()
+					}
+				}
+			}
+		}
+	}
+	
+	
 	/// Fecha de ultima sincronizacion en Servidor
 	//
 	func lastSync(completed: @escaping DownloadComplete) {

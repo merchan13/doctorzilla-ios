@@ -142,6 +142,20 @@ class IndexRecordsVC: UIViewController, UITableViewDelegate, UITableViewDataSour
 	}
 	
 	
+	func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+		
+		if !searchBar.text!.isEmpty && searchBar.text!.count > 3 {
+			
+			print("BUSCAR: \(searchBar.text!)")
+		}
+	}
+	
+	
+	func searchBarResultsListButtonClicked(_ searchBar: UISearchBar) {
+		print("BUSCAR! by button")
+	}
+	
+	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		
 		if let cell = tableView.dequeueReusableCell(withIdentifier: "MedicalRecordCell", for: indexPath) as? MedicalRecordCell {
