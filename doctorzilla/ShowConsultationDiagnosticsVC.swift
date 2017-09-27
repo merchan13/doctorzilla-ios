@@ -23,6 +23,8 @@ class ShowConsultationDiagnosticsVC: UITableViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
+		self.rDiagnostics.sorted(byKeyPath: "lastUpdate", ascending: false)
+		
 		self.navigationItem.backBarButtonItem?.title = "Consulta"
 		
 		self.diagnosticsTable.delegate = self

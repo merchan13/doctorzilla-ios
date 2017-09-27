@@ -439,6 +439,10 @@ class DataHelper {
 		if let recordId = recordDict["id"] as? Int {
 			rMedRecord.id = recordId
 		}
+		// HV
+		if let recordHV = recordDict["old_record_number"] as? String {
+			rMedRecord.hv = recordHV
+		}
 		// ADDRESS
 		if let address = recordDict["address"] as? String {
 			rMedRecord.address = address
@@ -679,7 +683,7 @@ class DataHelper {
 				if let diagnosticDescription = diagnosticDict["description"] as? String {
 					rDiagnostic.diagnosticDescription = diagnosticDescription
 				}
-				if let diagnosticLastUpdate = diagnosticDict["updated_at"] as? String {
+				if let diagnosticLastUpdate = diagnosticDict["added_at"] as? String {
 					rDiagnostic.lastUpdate = diagnosticLastUpdate.dateFromISO8601!
 				}
 				

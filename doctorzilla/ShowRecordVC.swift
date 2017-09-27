@@ -13,6 +13,7 @@ import SafariServices
 
 class ShowRecordVC: UITableViewController {
 
+	@IBOutlet weak var hvNumber: UILabel!
 	@IBOutlet weak var profilePicture: UIImageView!
 	@IBOutlet weak var name: UILabel!
 	@IBOutlet weak var document: UILabel!
@@ -29,6 +30,13 @@ class ShowRecordVC: UITableViewController {
 	@IBOutlet weak var height: UILabel!
 	@IBOutlet weak var imc: UILabel!
 	@IBOutlet weak var pressure: UILabel!
+	
+	//Counters
+	@IBOutlet weak var consultationsCounter: UILabel!
+	@IBOutlet weak var diagnosticsCounter: UILabel!
+	@IBOutlet weak var backgroundsCounter: UILabel!
+	@IBOutlet weak var notesCounter: UILabel!
+	@IBOutlet weak var attachmentsCounter: UILabel!
 	
 	var rMedrecord: RMedicalRecord!
 	let realm = try! Realm()
@@ -70,6 +78,10 @@ class ShowRecordVC: UITableViewController {
 		
 		checkNetwork()
 		
+		hvNumber.text = self.rMedrecord.hv.isEmpty
+			? "Nueva en DoctorZilla"
+			: "[ #HV \(self.rMedrecord.hv) ]"
+		
 		/*
 		if self.rMedrecord.profilePic.length == 0 {
 		
@@ -88,7 +100,9 @@ class ShowRecordVC: UITableViewController {
 		
 		birthday.text = "\(self.rMedrecord.parsedBirthdayDate()) (\(self.rMedrecord.age()) años)"
 		
-		firstConsultation.text = self.rMedrecord.parsedFirstConsultationDate()
+		firstConsultation.text = self.rMedrecord.parsedFirstConsultationDate().isEmpty
+			? "N/A"
+			: self.rMedrecord.parsedFirstConsultationDate()
 		
 		occupation.text = self.rMedrecord.occupation?.name.capitalized
 		
@@ -104,13 +118,31 @@ class ShowRecordVC: UITableViewController {
 		
 		referredBy.text = self.rMedrecord.referredBy.capitalized
 		
-		weight.text = "\(self.rMedrecord.weight) kg."
+		weight.text = self.rMedrecord.weight == 0
+			? "N/A"
+			: "\(self.rMedrecord.weight) kg."
 		
-		height.text = "\(self.rMedrecord.height) m."
+		height.text = self.rMedrecord.height == 0
+			? "N/A"
+			: "\(Float(self.rMedrecord.height)/100)m"
 		
-		imc.text = "\(self.rMedrecord.IMC())"
+		imc.text = self.rMedrecord.IMC() == 0
+			? "N/A"
+			: "\(self.rMedrecord.IMC())"
 		
-		pressure.text = "\(self.rMedrecord.pressure_s)/\(self.rMedrecord.pressure_d)"
+		pressure.text =  (self.rMedrecord.pressure_s == "?" || self.rMedrecord.pressure_d == "?")
+			? "N/A"
+			: "\(self.rMedrecord.pressure_s)/\(self.rMedrecord.pressure_d)"
+		
+		consultationsCounter.text = "Consultas Médicas (\(self.rMedrecord.consultations.count))"
+		
+		diagnosticsCounter.text = "Diagnósticos (\(self.rMedrecord.diagnostics().count))"
+		
+		backgroundsCounter.text = "Antecedentes (\(self.rMedrecord.backgrounds.count))"
+		
+		notesCounter.text = "Notas Operatorias (\(self.rMedrecord.operativeNotes().count))"
+		
+		attachmentsCounter.text = "Anexos (\(self.rMedrecord.attachments.count))"
 		
 	}
 	
