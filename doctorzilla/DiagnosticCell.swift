@@ -24,7 +24,7 @@ class DiagnosticCell: UITableViewCell {
 		
 		self.rDiagnostic = rDiagnostic
 		
-		createdAt.text = self.rDiagnostic.lastUpdate.iso8601
+		createdAt.text = self.rDiagnostic.parsedDate()
 		descriptionText.text = self.rDiagnostic.diagnosticDescription
 	}
 

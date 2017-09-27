@@ -29,7 +29,6 @@ class EditConsultationVC: UIViewController, UIPickerViewDelegate, UIPickerViewDa
 	let dataHelperRLM = DataHelperRLM()
 	let synchronizer = Synchronize()
 	
-	var networkConnection = false
 	
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -95,7 +94,7 @@ class EditConsultationVC: UIViewController, UIPickerViewDelegate, UIPickerViewDa
 				
 				self.checkNetwork()
 				
-				if self.networkConnection {
+				if NetworkConnection.sharedInstance.haveConnection {
 					
 					self.dataHelper.updateConsultation(consultation: self.rConsultation, completed: {
 						
@@ -164,27 +163,4 @@ class EditConsultationVC: UIViewController, UIPickerViewDelegate, UIPickerViewDa
 		}
 		return true
 	}
-}
-
-extension EditConsultationVC: NetworkStatusListener {
-	
-	func networkStatusDidChange(status: Reachability.NetworkStatus) {
-		if status == .notReachable {
-			networkConnection = false
-		} else {
-			networkConnection = true
-		}
-	}
-	
-	func checkNetwork() {
-		switch ReachabilityManager.shared.reachability.currentReachabilityStatus {
-		case .notReachable:
-			networkConnection = false
-		case .reachableViaWiFi:
-			networkConnection = true
-		case .reachableViaWWAN:
-			networkConnection = true
-		}
-	}
-	
 }

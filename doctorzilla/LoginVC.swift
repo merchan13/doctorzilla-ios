@@ -22,8 +22,6 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 	let realm = try! Realm()
 	let sync = Synchronize()
 	
-	var networkConnection = false
-	
 	@IBAction func unwindToLoginVC(segue:UIStoryboardSegue) { }
 	
 	
@@ -35,22 +33,28 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 	
 	
 	override func viewWillAppear(_ animated: Bool) {
+		
 		super.viewWillAppear(animated)
+		
 		ReachabilityManager.shared.addListener(listener: self)
 	}
 	
 	
 	override func viewDidDisappear(_ animated: Bool) {
+		
 		super.viewDidDisappear(animated)
+		
 		ReachabilityManager.shared.removeListener(listener: self)
 	}
 	
 	
 	@IBAction func loginButtonTapped(_ sender: Any) {
+		
 		let userEmail = emailTextField.text!
 		let userPassword = passwordTextField.text!
 		
 		DispatchQueue.main.async {
+			
 			self.activityIndicatorView.startAnimating()
 		}
 
@@ -73,7 +77,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 		
 		checkNetwork()
 		
-		if networkConnection {
+		if NetworkConnection.sharedInstance.haveConnection {
 		
 			self.user.signIn(email: email, password: password, completed: {
 				
@@ -190,7 +194,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 		
 		checkNetwork()
 		
-		if networkConnection {
+		if NetworkConnection.sharedInstance.haveConnection {
 			
 			self.user.signIn(email: userEmail, password: userPassword) {
 				
@@ -287,26 +291,3 @@ class LoginVC: UIViewController, UITextFieldDelegate {
     }
     
 }
-
-extension LoginVC: NetworkStatusListener {
-	
-	func networkStatusDidChange(status: Reachability.NetworkStatus) {
-		if status == .notReachable {
-			networkConnection = false
-		} else {
-			networkConnection = true
-		}
-	}
-	
-	func checkNetwork() {
-		switch ReachabilityManager.shared.reachability.currentReachabilityStatus {
-		case .notReachable:
-			networkConnection = false
-		case .reachableViaWiFi:
-			networkConnection = true
-		case .reachableViaWWAN:
-			networkConnection = true
-		}
-	}
-}
-

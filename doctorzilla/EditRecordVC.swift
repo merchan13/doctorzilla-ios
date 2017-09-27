@@ -31,7 +31,6 @@ class EditRecordVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSour
 	let dataHelper = DataHelper()
 	let synchronizer = Synchronize()
 	
-	var networkConnection = false
 	
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -122,7 +121,7 @@ class EditRecordVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSour
 				
 				self.checkNetwork()
 				
-				if self.networkConnection {
+				if NetworkConnection.sharedInstance.haveConnection {
 					
 					self.dataHelper.updateRecord(record: self.rMedrecord, completed: {
 						
@@ -218,27 +217,4 @@ class EditRecordVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSour
 		}
 		return true
 	}
-}
-
-extension EditRecordVC: NetworkStatusListener {
-	
-	func networkStatusDidChange(status: Reachability.NetworkStatus) {
-		if status == .notReachable {
-			networkConnection = false
-		} else {
-			networkConnection = true
-		}
-	}
-	
-	func checkNetwork() {
-		switch ReachabilityManager.shared.reachability.currentReachabilityStatus {
-		case .notReachable:
-			networkConnection = false
-		case .reachableViaWiFi:
-			networkConnection = true
-		case .reachableViaWWAN:
-			networkConnection = true
-		}
-	}
-	
 }

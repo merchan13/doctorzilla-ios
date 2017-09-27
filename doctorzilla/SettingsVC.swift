@@ -22,7 +22,6 @@ class SettingsVC: UITableViewController {
 	let realm = try! Realm()
 	let sync = Synchronize()
 	
-	var networkConnection = false
 	
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,18 +32,23 @@ class SettingsVC: UITableViewController {
     }
 	
 	func updateUI() {
+		
 		//self.nameLabel.text = "Dr. \(self.rUser.name) \(self.rUser.lastName)."
+		
 		self.emailLabel.text = self.rUser.email
+		
 		//self.profilePictureImageView.image = self.rUser.profilePicture
 	}
 	
 	
 	@IBAction func backButtonTapped(_ sender: Any) {
+		
 		dismiss(animated: true, completion: nil)
 	}
 	
 	
 	override func viewWillAppear(_ animated: Bool) {
+		
 		self.deselectRow()
 	}
 
@@ -57,9 +61,10 @@ class SettingsVC: UITableViewController {
 			}
 			
 		} else if indexPath.section == 1 {
+			
 			checkNetwork()
 			
-			if networkConnection {
+			if NetworkConnection.sharedInstance.haveConnection {
 				
 				// [Sincronizacion]
 				if indexPath.row == 0 {
@@ -83,23 +88,27 @@ class SettingsVC: UITableViewController {
 	/// Sincronizar bases de datos.
 	//
 	func synchronizeDrZilla() {
+		
 		let syncAlert = UIAlertController(title: "Alerta", message: "¿Está seguro de que quiere sincronizar los datos?", preferredStyle: UIAlertControllerStyle.alert)
 		
 		syncAlert.addAction(UIAlertAction(title: "Si", style: .destructive, handler: { (action: UIAlertAction!) in
 			
 			DispatchQueue.main.async {
+				
 				self.syncActivityIndicator.startAnimating()
 			}
 			
 			self.sync.synchronizeDatabases(user: self.rUser, completed: {
 				
 				DispatchQueue.main.async {
+					
 					self.syncActivityIndicator.stopAnimating()
 				}
 				
 				let successAlert = UIAlertController(title: "Sincronización", message: "Los datos han sido sincronizados con éxito", preferredStyle: UIAlertControllerStyle.alert)
 				
 				successAlert.addAction(UIAlertAction(title: "Cerrar", style: .default, handler: { (action: UIAlertAction!) in
+					
 					self.dismiss(animated: true, completion: nil)
 				}))
 				
@@ -108,7 +117,9 @@ class SettingsVC: UITableViewController {
 		}))
 		
 		syncAlert.addAction(UIAlertAction(title: "Cancelar", style: .cancel, handler: { (action: UIAlertAction!) in
+			
 			self.deselectRow()
+			
 			print("Sync Canceled")
 		}))
 		
@@ -119,6 +130,7 @@ class SettingsVC: UITableViewController {
 	/// Borrar base de datos del teléfono y descarga toda la información del servidor.
 	//
 	func resetDrZilla() {
+		
 		let syncAlert = UIAlertController(title: "Alerta", message: "¿Está seguro de que quiere eliminar y restaurar los datos?\n\nLuego de realizar esta acción, deberá iniciar sesión nuevamente.", preferredStyle: UIAlertControllerStyle.alert)
 		
 		syncAlert.addAction(UIAlertAction(title: "Si", style: .destructive, handler: { (action: UIAlertAction!) in
@@ -136,6 +148,7 @@ class SettingsVC: UITableViewController {
 				let successAlert = UIAlertController(title: "Sincronización", message: "Los datos han sido restaurados con éxito", preferredStyle: UIAlertControllerStyle.alert)
 				
 				successAlert.addAction(UIAlertAction(title: "Cerrar", style: .default, handler: { (action: UIAlertAction!) in
+					
 					self.performSegue(withIdentifier: "LoginVC", sender: nil)
 				}))
 				
@@ -144,7 +157,9 @@ class SettingsVC: UITableViewController {
 		}))
 		
 		syncAlert.addAction(UIAlertAction(title: "Cancelar", style: .cancel, handler: { (action: UIAlertAction!) in
+			
 			self.deselectRow()
+			
 			print("Sync Canceled")
 		}))
 		
@@ -155,9 +170,11 @@ class SettingsVC: UITableViewController {
 	/// Alerta al no poseer conexión a internet.
 	//
 	func offlineAlert() {
+		
 		let offlineAlert = UIAlertController(title: "Sin conexión a Internet", message: "Esta acción no puede realizarse sin conexión a Internet", preferredStyle: UIAlertControllerStyle.alert)
 		
 		offlineAlert.addAction(UIAlertAction(title: "Cerrar", style: .default, handler: { (action: UIAlertAction!) in
+			
 			self.deselectRow()
 		}))
 		
@@ -166,36 +183,14 @@ class SettingsVC: UITableViewController {
 	
 	
 	func deselectRow() {
+		
 		if let index = self.tableView.indexPathForSelectedRow{
+			
 			self.tableView.deselectRow(at: index, animated: true)
 		}
 	}
 	
 }
-
-extension SettingsVC: NetworkStatusListener {
-	
-	func networkStatusDidChange(status: Reachability.NetworkStatus) {
-		if status == .notReachable {
-			networkConnection = false
-		} else {
-			networkConnection = true
-		}
-	}
-	
-	func checkNetwork() {
-		switch ReachabilityManager.shared.reachability.currentReachabilityStatus {
-		case .notReachable:
-			networkConnection = false
-		case .reachableViaWiFi:
-			networkConnection = true
-		case .reachableViaWWAN:
-			networkConnection = true
-		}
-	}
-	
-}
-
 
 
 

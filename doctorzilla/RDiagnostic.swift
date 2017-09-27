@@ -19,4 +19,21 @@ class RDiagnostic: Object {
 	override static func primaryKey() -> String? {
 		return "id"
 	}
+	
+	func parsedDate() -> String {
+		var parsedDate = " "
+		
+		let dateFormatterGet = DateFormatter()
+		dateFormatterGet.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+		
+		let dateFormatterResult = DateFormatter()
+		dateFormatterResult.dateFormat = "dd MMM yyyy"
+		
+		
+		if let date: Date = dateFormatterGet.date(from: self.lastUpdate.iso8601){
+			parsedDate = dateFormatterResult.string(from: date)
+		}
+		
+		return parsedDate
+	}
 }

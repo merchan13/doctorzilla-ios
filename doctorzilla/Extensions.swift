@@ -8,6 +8,8 @@
 
 import Foundation
 import UIKit
+import RealmSwift
+import ReachabilitySwift
 
 extension Date {
 
@@ -59,6 +61,74 @@ extension UIImage {
 	
 	func jpeg(_ quality: JPEGQuality) -> Data? {
 		return UIImageJPEGRepresentation(self, quality.rawValue)
+	}
+	
+}
+
+extension UIViewController: NetworkStatusListener {
+	
+	/// Cambio de status de la conexión
+	//
+	public func networkStatusDidChange(status: Reachability.NetworkStatus) {
+		
+		if status == .notReachable {
+			
+			NetworkConnection.sharedInstance.haveConnection = false
+			
+			let successAlert = UIAlertController(title: "SIN CONEXIÓN", message: "Actualmente no posee conexión a internet.\n\nSe advierte que es posible que trabaje con información desactualizada.", preferredStyle: UIAlertControllerStyle.alert)
+			
+			successAlert.addAction(UIAlertAction(title: "Cerrar", style: .default, handler: { (action: UIAlertAction!) in
+				
+			}))
+			
+			self.present(successAlert, animated: true, completion: nil)
+		}
+		else {
+			
+			NetworkConnection.sharedInstance.haveConnection = true
+			
+			if self.title != "Login" {
+				
+				self.recoveredNetworkData()
+			}
+		}
+	}
+	
+	
+	/// Checkear el status de la conexión
+	//
+	func checkNetwork() {
+		
+		switch ReachabilityManager.shared.reachability.currentReachabilityStatus {
+			
+		case .notReachable:
+			NetworkConnection.sharedInstance.haveConnection = false
+			
+		case .reachableViaWiFi:
+			NetworkConnection.sharedInstance.haveConnection = true
+			
+		case .reachableViaWWAN:
+			NetworkConnection.sharedInstance.haveConnection = true
+		}
+	}
+	
+	
+	/// Al recuperar la data celular, generar token y preguntar si se desea sincronizar la data.
+	//
+	func recoveredNetworkData() {
+		
+		let realm = try! Realm()
+		
+		let activeUser = realm.objects(RUser.self).first!
+		
+		let userHelper = User()
+		
+		userHelper.signIn(email: activeUser.email, password: activeUser.password) {
+			
+			print("[ \(AuthToken.sharedInstance.token!) ]\n")
+		}
+		
+		// Preguntar si quiere sincronizar..
 	}
 	
 }

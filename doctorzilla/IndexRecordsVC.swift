@@ -27,7 +27,6 @@ class IndexRecordsVC: UIViewController, UITableViewDelegate, UITableViewDataSour
 	var firstTime = true
 	var reloadImages = false
 	
-	var networkConnection = false
 
 	override func viewDidLoad() {
 		
@@ -146,7 +145,7 @@ class IndexRecordsVC: UIViewController, UITableViewDelegate, UITableViewDataSour
 		
 		checkNetwork()
 		
-		if networkConnection && !searchBar.text!.isEmpty && searchBar.text!.count > 3 {
+		if NetworkConnection.sharedInstance.haveConnection && !searchBar.text!.isEmpty && searchBar.text!.count > 3 {
 			
 			inSearchMode = true
 			
@@ -212,17 +211,24 @@ class IndexRecordsVC: UIViewController, UITableViewDelegate, UITableViewDataSour
 			
 			if isInRLM == nil {
 				
-				self.dataHelper.downloadRecord(recordId: rMedrec.id, completed: {
+				if NetworkConnection.sharedInstance.haveConnection {
 					
-					self.dataHelper.downloadConsultations(recordId: rMedrec.id, completed: {
+					self.dataHelper.downloadRecord(recordId: rMedrec.id, completed: {
 						
-						print("Nueva Historia guardada")
-						
-						rMedrec = self.realm.object(ofType: RMedicalRecord.self, forPrimaryKey: rMedrec.id)!
-						
-						self.performSegue(withIdentifier: "ShowRecordVC", sender: rMedrec)
+						self.dataHelper.downloadConsultations(recordId: rMedrec.id, completed: {
+							
+							print("Nueva Historia guardada")
+							
+							rMedrec = self.realm.object(ofType: RMedicalRecord.self, forPrimaryKey: rMedrec.id)!
+							
+							self.performSegue(withIdentifier: "ShowRecordVC", sender: rMedrec)
+						})
 					})
-				})
+				}
+				else {
+					
+					// Alerta de que se necesita señal para realizar la busqueda.
+				}
 			}
 			else {
 				
@@ -263,54 +269,6 @@ class IndexRecordsVC: UIViewController, UITableViewDelegate, UITableViewDataSour
 		//..
 	}
 	
-	/// Al recuperar la data celular, generar token y preguntar si se desea sincronizar la data.
-	//
-	func recoveredNetworkData() {
-		
-		let activeUser = self.realm.objects(RUser.self).first!
-		//let email = self.realm.objects(RUser.self).first!.email
-		//let password = self.realm.objects(RUser.self).first!.password
-		
-		let userHelper = User()
-		
-		userHelper.signIn(email: activeUser.email, password: activeUser.password) {
-			
-			print("[ \(AuthToken.sharedInstance.token!) ]\n")
-		}
-		
-		// Preguntar si quiere sincronizar..
-	}
 	
-}
-
-extension IndexRecordsVC: NetworkStatusListener {
-	
-	func networkStatusDidChange(status: Reachability.NetworkStatus) {
-		if status == .notReachable {
-			let successAlert = UIAlertController(title: "SIN CONEXIÓN", message: "Actualmente no posee conexión a internet.\n\nSe advierte que es posible que trabaje con información desactualizada.", preferredStyle: UIAlertControllerStyle.alert)
-			
-			successAlert.addAction(UIAlertAction(title: "Cerrar", style: .default, handler: { (action: UIAlertAction!) in
-				
-			}))
-			
-			self.present(successAlert, animated: true, completion: nil)
-		} else {
-			
-			networkConnection = true
-			
-			self.recoveredNetworkData()
-		}
-	}
-	
-	func checkNetwork() {
-		switch ReachabilityManager.shared.reachability.currentReachabilityStatus {
-		case .notReachable:
-			networkConnection = false
-		case .reachableViaWiFi:
-			networkConnection = true
-		case .reachableViaWWAN:
-			networkConnection = true
-		}
-	}
 	
 }

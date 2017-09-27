@@ -28,7 +28,6 @@ class EditBackgroundsVC: UIViewController, UITextViewDelegate {
 	let dataHelperRLM = DataHelperRLM()
 	let synchronizer = Synchronize()
 	
-	var networkConnection = false
 	
     override func viewDidLoad() {
 		self.familyTextView.delegate = self
@@ -46,6 +45,7 @@ class EditBackgroundsVC: UIViewController, UITextViewDelegate {
     }
 	
 	func loadValues() {
+		
 		if recordBgs.contains(where: { $0.backgroundType == "Familiares" }) {
 			self.familyTextView.text = self.recordBgs.first(where: { $0.backgroundType == "Familiares" })!.backgroundDescription
 		}
@@ -81,7 +81,9 @@ class EditBackgroundsVC: UIViewController, UITextViewDelegate {
 	
 	
 	@IBAction func saveChangesButtonTapped(_ sender: Any) {
+		
 		let refreshAlert = UIAlertController(title: "Alerta", message: "¿Está seguro de que quiere editar los Antecedentes?", preferredStyle: UIAlertControllerStyle.alert)
+		
 		refreshAlert.addAction(UIAlertAction(title: "Si", style: .destructive, handler: { (action: UIAlertAction!) in
 			
 			let family = self.familyTextView.text!
@@ -98,15 +100,22 @@ class EditBackgroundsVC: UIViewController, UITextViewDelegate {
 				self.rRecord.lastUpdate = Date().iso8601.dateFromISO8601!
 				
 				if self.recordBgs.contains(where: { $0.backgroundType == "Familiares" }) {
+					
 					let bg = self.recordBgs.first(where: { $0.backgroundType == "Familiares" })!
 					
 					if family == "" {
+						
 						self.realm.delete(bg)
-					} else {
+					}
+					else {
+						
 						self.realm.create(RBackground.self, value: ["id":bg.id, "backgroundDescription":family], update: true)
 					}
-				} else {
+				}
+				else {
+					
 					if family != "" {
+						
 						let rBg = RBackground()
 						rBg.id = -1
 						rBg.recordId = self.rRecord.id
@@ -119,15 +128,22 @@ class EditBackgroundsVC: UIViewController, UITextViewDelegate {
 				}
 				
 				if self.recordBgs.contains(where: { $0.backgroundType == "Alergias" }) {
+					
 					let bg = self.recordBgs.first(where: { $0.backgroundType == "Alergias" })!
 					
 					if allergy == "" {
+						
 						self.realm.delete(bg)
-					} else {
+					}
+					else {
+						
 						self.realm.create(RBackground.self, value: ["id":bg.id, "backgroundDescription":allergy], update: true)
 					}
-				} else {
+				}
+				else {
+					
 					if allergy != "" {
+						
 						let rBg = RBackground()
 						rBg.id = -2
 						rBg.recordId = self.rRecord.id
@@ -140,15 +156,22 @@ class EditBackgroundsVC: UIViewController, UITextViewDelegate {
 				}
 				
 				if self.recordBgs.contains(where: { $0.backgroundType == "Diábetes" }) {
+					
 					let bg = self.recordBgs.first(where: { $0.backgroundType == "Diábetes" })!
 					
 					if diabetes == "" {
+						
 						self.realm.delete(bg)
-					} else {
+					}
+					else {
+						
 						self.realm.create(RBackground.self, value: ["id":bg.id, "backgroundDescription":diabetes], update: true)
 					}
-				} else {
+				}
+				else {
+					
 					if diabetes != "" {
+						
 						let rBg = RBackground()
 						rBg.id = -3
 						rBg.recordId = self.rRecord.id
@@ -161,14 +184,20 @@ class EditBackgroundsVC: UIViewController, UITextViewDelegate {
 				}
 				
 				if self.recordBgs.contains(where: { $0.backgroundType == "Asma" }) {
+					
 					let bg = self.recordBgs.first(where: { $0.backgroundType == "Asma" })!
 					
 					if asthma == "" {
+						
 						self.realm.delete(bg)
-					} else {
+					}
+					else {
+						
 						self.realm.create(RBackground.self, value: ["id":bg.id, "backgroundDescription":asthma], update: true)
 					}
-				} else {
+				}
+				else {
+					
 					if asthma != "" {
 						let rBg = RBackground()
 						rBg.id = -4
@@ -224,15 +253,21 @@ class EditBackgroundsVC: UIViewController, UITextViewDelegate {
 				}
 				
 				if self.recordBgs.contains(where: { $0.backgroundType == "Quirúrgicos" }) {
+					
 					let bg = self.recordBgs.first(where: { $0.backgroundType == "Quirúrgicos" })!
 					
 					if surgical == "" {
+						
 						self.realm.delete(bg)
-					} else {
+					}
+					else {
+						
 						self.realm.create(RBackground.self, value: ["id":bg.id, "backgroundDescription":surgical], update: true)
 					}
-				} else {
+				}
+				else {
 					if surgical != "" {
+						
 						let rBg = RBackground()
 						rBg.id = -7
 						rBg.recordId = self.rRecord.id
@@ -245,15 +280,22 @@ class EditBackgroundsVC: UIViewController, UITextViewDelegate {
 				}
 				
 				if self.recordBgs.contains(where: { $0.backgroundType == "Otros" }) {
+					
 					let bg = self.recordBgs.first(where: { $0.backgroundType == "Otros" })!
 					
 					if other == "" {
+						
 						self.realm.delete(bg)
-					} else {
+					}
+					else {
+						
 						self.realm.create(RBackground.self, value: ["id":bg.id, "backgroundDescription":other], update: true)
 					}
-				} else {
+				}
+				else {
+					
 					if other != "" {
+						
 						let rBg = RBackground()
 						rBg.id = -8
 						rBg.recordId = self.rRecord.id
@@ -267,13 +309,14 @@ class EditBackgroundsVC: UIViewController, UITextViewDelegate {
 				
 				self.checkNetwork()
 				
-				if self.networkConnection {
+				if NetworkConnection.sharedInstance.haveConnection {
 					
 					self.dataHelper.updateBackgrounds(record: self.rRecord, recordBgs: self.recordBgs, completed: {
 						
 						self.dataHelper.fixNewBackgrounds(record: self.rRecord, recordBgs: self.recordBgs, completed: {
 							
 							self.synchronizer.saveSync(syncDesc: "Sincronización de actualización de Antecedentes en app móvil") {
+								
 								self.dismiss(animated: true, completion: nil)
 							}
 						})
@@ -288,6 +331,7 @@ class EditBackgroundsVC: UIViewController, UITextViewDelegate {
 		}))
 		
 		refreshAlert.addAction(UIAlertAction(title: "Cancelar", style: .cancel, handler: { (action: UIAlertAction!) in
+			
 			print("Update Canceled")
 		}))
 		
@@ -296,45 +340,28 @@ class EditBackgroundsVC: UIViewController, UITextViewDelegate {
 	
 	
 	@IBAction func backButtonTapped(_ sender: Any) {
+		
 		dismiss(animated: true, completion: nil)
 	}
 	
 	
 	//Cerrar teclado cuando se toca cualquier espacio de la pantalla.
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+		
 		self.view.endEditing(true)
 	}
 	
 
 	func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+		
 		if(text == "\n") {
+			
 			textView.resignFirstResponder()
+			
 			return false
 		}
+		
 		return true
-	}
-	
-}
-
-extension EditBackgroundsVC: NetworkStatusListener {
-	
-	func networkStatusDidChange(status: Reachability.NetworkStatus) {
-		if status == .notReachable {
-			networkConnection = false
-		} else {
-			networkConnection = true
-		}
-	}
-	
-	func checkNetwork() {
-		switch ReachabilityManager.shared.reachability.currentReachabilityStatus {
-		case .notReachable:
-			networkConnection = false
-		case .reachableViaWiFi:
-			networkConnection = true
-		case .reachableViaWWAN:
-			networkConnection = true
-		}
 	}
 	
 }

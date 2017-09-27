@@ -19,7 +19,6 @@ class ShowRecordDiagnosticsVC: UIViewController, UITableViewDelegate, UITableVie
 	let dataHelper = DataHelper()
 	let sync = Synchronize()
 	
-	var networkConnection = false
 	
 	override func viewDidLoad() {
 		
@@ -73,7 +72,7 @@ class ShowRecordDiagnosticsVC: UIViewController, UITableViewDelegate, UITableVie
 		dismiss(animated: true, completion: nil)
 	}
 	
-	
+	/*
 	func recoveredNetworkData() {
 		let syncAlert = UIAlertController(title: "ALERTA", message: "Se ha recupero la conexión a internet, se recomienda que sincronice los datos antes de seguir.", preferredStyle: UIAlertControllerStyle.alert)
 		
@@ -109,38 +108,5 @@ class ShowRecordDiagnosticsVC: UIViewController, UITableViewDelegate, UITableVie
 		
 		self.present(syncAlert, animated: true, completion: nil)
 	}
-}
-
-extension ShowRecordDiagnosticsVC: NetworkStatusListener {
-	
-	func networkStatusDidChange(status: Reachability.NetworkStatus) {
-		
-		if status == .notReachable {
-			
-			let successAlert = UIAlertController(title: "SIN CONEXIÓN", message: "Actualmente no posee conexión a internet.\n\nSe advierte que es posible que trabaje con información desactualizada.", preferredStyle: UIAlertControllerStyle.alert)
-			
-			successAlert.addAction(UIAlertAction(title: "Cerrar", style: .default, handler: { (action: UIAlertAction!) in
-				
-			}))
-			
-			self.present(successAlert, animated: true, completion: nil)
-		} else {
-			
-			networkConnection = true
-			
-			self.recoveredNetworkData()
-		}
-	}
-	
-	func checkNetwork() {
-		switch ReachabilityManager.shared.reachability.currentReachabilityStatus {
-		case .notReachable:
-			networkConnection = false
-		case .reachableViaWiFi:
-			networkConnection = true
-		case .reachableViaWWAN:
-			networkConnection = true
-		}
-	}
-	
+	*/
 }

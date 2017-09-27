@@ -30,8 +30,6 @@ class ShowConsultationVC: UITableViewController {
 	let dataHelper = DataHelper()
 	let sync = Synchronize()
 	
-	var networkConnection = false
-	
 	
     override func viewDidLoad() {
 		
@@ -97,9 +95,7 @@ class ShowConsultationVC: UITableViewController {
 			? "N/A"
 			: self.rConsultation.note
 		
-		self.plan.text = (self.rConsultation.plan?.planDescription.isEmpty)!
-			? "N/A"
-			: self.rConsultation.plan?.planDescription
+		self.plan.text = self.rConsultation.plan?.planDescription
 	}
 	
 	
@@ -117,21 +113,21 @@ class ShowConsultationVC: UITableViewController {
 		}
 		else if segue.identifier == "ShowConsultationDiagnosticsVC" {
 			
-			if let showRecordDxVC = segue.destination as? ShowRecordDiagnosticsVC {
+			if let showConsultationDxVC = segue.destination as? ShowConsultationDiagnosticsVC {
 				
-				if let rDiagnostics = sender as? [RDiagnostic] {
+				if let rDiagnostics = sender as? List<RDiagnostic> {
 					
-					showRecordDxVC.rDiagnostics = rDiagnostics
+					showConsultationDxVC.rDiagnostics = rDiagnostics
 				}
 			}
 		}
-		else if segue.identifier == "ShowConsultationPEVC" {
+		else if segue.identifier == "ShowConsultationExamsVC" {
 			
-			if let showRecordBgVC = segue.destination as? ShowRecordBackgroundsVC {
+			if let showConsultationPEVC = segue.destination as? ShowConsultationExamsVC {
 				
-				if let rBackgrounds = sender as? List<RBackground> {
+				if let rExams = sender as? List<RPhysicalExam> {
 					
-					showRecordBgVC.rBackgrounds = rBackgrounds
+					showConsultationPEVC.rExams = rExams
 				}
 			}
 		}
@@ -144,58 +140,16 @@ class ShowConsultationVC: UITableViewController {
 			
 			if indexPath.row == 0 {
 				
-				print("Examenes!")
-				//performSegue(withIdentifier: "IndexConsultationsVC", sender: self.rMedrecord.consultations)
+				performSegue(withIdentifier: "ShowConsultationExamsVC", sender: self.rConsultation.physicalExams)
 			}
 		}
 		else if indexPath.section == 6 {
 			
 			if indexPath.row == 0 {
 				
-				print("Diagnosticos!")
-				//performSegue(withIdentifier: "IndexConsultationsVC", sender: self.rMedrecord.consultations)
+				performSegue(withIdentifier: "ShowConsultationDiagnosticsVC", sender: self.rConsultation.diagnostics)
 			}
 		}
 	}
-	
-	
-	func recoveredNetworkData() {
-		//
-	}
 
-}
-
-extension ShowConsultationVC: NetworkStatusListener {
-	
-	func networkStatusDidChange(status: Reachability.NetworkStatus) {
-		
-		if status == .notReachable {
-			
-			let successAlert = UIAlertController(title: "SIN CONEXIÓN", message: "Actualmente no posee conexión a internet.\n\nSe advierte que es posible que trabaje con información desactualizada.", preferredStyle: UIAlertControllerStyle.alert)
-			
-			successAlert.addAction(UIAlertAction(title: "Cerrar", style: .default, handler: { (action: UIAlertAction!) in
-				
-			}))
-			
-			self.present(successAlert, animated: true, completion: nil)
-		}
-		else {
-			
-			networkConnection = true
-			
-			self.recoveredNetworkData()
-		}
-	}
-	
-	func checkNetwork() {
-		switch ReachabilityManager.shared.reachability.currentReachabilityStatus {
-		case .notReachable:
-			networkConnection = false
-		case .reachableViaWiFi:
-			networkConnection = true
-		case .reachableViaWWAN:
-			networkConnection = true
-		}
-	}
-	
 }

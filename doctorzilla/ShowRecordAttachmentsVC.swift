@@ -20,7 +20,6 @@ class ShowRecordAttachmentsVC: UIViewController, UITableViewDelegate, UITableVie
 	let dataHelper = DataHelper()
 	let sync = Synchronize()
 	
-	var networkConnection = false
 	
 	override func viewDidLoad() {
 		
@@ -73,7 +72,7 @@ class ShowRecordAttachmentsVC: UIViewController, UITableViewDelegate, UITableVie
 		
 		checkNetwork()
 		
-		if self.networkConnection {
+		if NetworkConnection.sharedInstance.haveConnection {
 			
 			let rAttachment = self.rAttachments[indexPath.row]
 			
@@ -101,75 +100,4 @@ class ShowRecordAttachmentsVC: UIViewController, UITableViewDelegate, UITableVie
 		
 		dismiss(animated: true, completion: nil)
 	}
-	
-	
-	func recoveredNetworkData() {
-		let syncAlert = UIAlertController(title: "ALERTA", message: "Se ha recupero la conexión a internet, se recomienda que sincronice los datos antes de seguir.", preferredStyle: UIAlertControllerStyle.alert)
-		
-		syncAlert.addAction(UIAlertAction(title: "Sincronizar", style: .destructive, handler: { (action: UIAlertAction!) in
-			
-			DispatchQueue.main.async {
-				//self.activityIndicator.startAnimating()
-			}
-			
-			let user = self.realm.object(ofType: RUser.self, forPrimaryKey: 1)!
-			
-			self.sync.synchronizeDatabases(user: user, completed: {
-				
-				self.attachmentsTable.reloadData()
-				
-				DispatchQueue.main.async {
-					//self.activityIndicator.stopAnimating()
-				}
-				
-				let successAlert = UIAlertController(title: "Sincronización", message: "Los datos han sido sincronizados con éxito", preferredStyle: UIAlertControllerStyle.alert)
-				
-				successAlert.addAction(UIAlertAction(title: "Cerrar", style: .default, handler: { (action: UIAlertAction!) in
-					
-				}))
-				
-				self.present(successAlert, animated: true, completion: nil)
-			})
-		}))
-		
-		syncAlert.addAction(UIAlertAction(title: "Cancelar", style: .cancel, handler: { (action: UIAlertAction!) in
-			print("Sync Canceled")
-		}))
-		
-		self.present(syncAlert, animated: true, completion: nil)
-	}
-}
-
-extension ShowRecordAttachmentsVC: NetworkStatusListener {
-	
-	func networkStatusDidChange(status: Reachability.NetworkStatus) {
-		
-		if status == .notReachable {
-			
-			let successAlert = UIAlertController(title: "SIN CONEXIÓN", message: "Actualmente no posee conexión a internet.\n\nSe advierte que es posible que trabaje con información desactualizada.", preferredStyle: UIAlertControllerStyle.alert)
-			
-			successAlert.addAction(UIAlertAction(title: "Cerrar", style: .default, handler: { (action: UIAlertAction!) in
-				
-			}))
-			
-			self.present(successAlert, animated: true, completion: nil)
-		} else {
-			
-			networkConnection = true
-			
-			self.recoveredNetworkData()
-		}
-	}
-	
-	func checkNetwork() {
-		switch ReachabilityManager.shared.reachability.currentReachabilityStatus {
-		case .notReachable:
-			networkConnection = false
-		case .reachableViaWiFi:
-			networkConnection = true
-		case .reachableViaWWAN:
-			networkConnection = true
-		}
-	}
-	
 }
