@@ -144,15 +144,19 @@ class IndexRecordsVC: UIViewController, UITableViewDelegate, UITableViewDataSour
 	
 	func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
 		
-		if !searchBar.text!.isEmpty && searchBar.text!.count > 3 {
+		checkNetwork()
+		
+		if networkConnection && !searchBar.text!.isEmpty && searchBar.text!.count > 3 {
 			
-			print("BUSCAR: \(searchBar.text!)")
+			inSearchMode = true
+			
+			self.dataHelper.searchRecord(search: searchBar.text!, completion: { (result: [RMedicalRecord]) in
+				
+				self.rFilteredRecords = result
+				
+				self.recordsTable.reloadData()
+			})
 		}
-	}
-	
-	
-	func searchBarResultsListButtonClicked(_ searchBar: UISearchBar) {
-		print("BUSCAR! by button")
 	}
 	
 	
@@ -201,12 +205,35 @@ class IndexRecordsVC: UIViewController, UITableViewDelegate, UITableViewDataSour
 		if inSearchMode {
 			
 			rMedrec = rFilteredRecords[indexPath.row]
+			
+			checkNetwork()
+			
+			let isInRLM = self.realm.object(ofType: RMedicalRecord.self, forPrimaryKey: rMedrec.id)
+			
+			if isInRLM == nil {
+				
+				self.dataHelper.downloadRecord(recordId: rMedrec.id, completed: {
+					
+					self.dataHelper.downloadConsultations(recordId: rMedrec.id, completed: {
+						
+						print("Nueva Historia guardada")
+						
+						rMedrec = self.realm.object(ofType: RMedicalRecord.self, forPrimaryKey: rMedrec.id)!
+						
+						self.performSegue(withIdentifier: "ShowRecordVC", sender: rMedrec)
+					})
+				})
+			}
+			else {
+				
+				performSegue(withIdentifier: "ShowRecordVC", sender: rMedrec)
+			}
 		} else {
 			
 			rMedrec = rMedrecords[indexPath.row]
+			
+			performSegue(withIdentifier: "ShowRecordVC", sender: rMedrec)
 		}
-		
-		performSegue(withIdentifier: "ShowRecordVC", sender: rMedrec)
 	}
 
 	
@@ -236,6 +263,24 @@ class IndexRecordsVC: UIViewController, UITableViewDelegate, UITableViewDataSour
 		//..
 	}
 	
+	/// Al recuperar la data celular, generar token y preguntar si se desea sincronizar la data.
+	//
+	func recoveredNetworkData() {
+		
+		let activeUser = self.realm.objects(RUser.self).first!
+		//let email = self.realm.objects(RUser.self).first!.email
+		//let password = self.realm.objects(RUser.self).first!.password
+		
+		let userHelper = User()
+		
+		userHelper.signIn(email: activeUser.email, password: activeUser.password) {
+			
+			print("[ \(AuthToken.sharedInstance.token!) ]\n")
+		}
+		
+		// Preguntar si quiere sincronizar..
+	}
+	
 }
 
 extension IndexRecordsVC: NetworkStatusListener {
@@ -250,8 +295,10 @@ extension IndexRecordsVC: NetworkStatusListener {
 			
 			self.present(successAlert, animated: true, completion: nil)
 		} else {
+			
 			networkConnection = true
-			//self.recoveredNetworkData()
+			
+			self.recoveredNetworkData()
 		}
 	}
 	

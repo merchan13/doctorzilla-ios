@@ -61,15 +61,9 @@ class Synchronize {
 							
 							self.dataHelper.downloadReasons { print("Reasons DONE")
 								
-								self.dataHelper.downloadRecords(rUser: self.user) { print("Records DONE")
+								self.saveSync(syncDesc: "Sincronizacion de todos los datos") {
 									
-									self.dataHelper.downloadConsultations { print("Consultations DONE")
-										
-										self.saveSync(syncDesc: "Sincronizacion de todos los datos") {
-											
-											completed()
-										}
-									}
+									completed()
 								}
 							}
 						}
@@ -118,16 +112,21 @@ class Synchronize {
 	/// Fecha de ultima sincronizacion en Servidor
 	//
 	func lastSync(completed: @escaping DownloadComplete) {
+		
 		let headers: HTTPHeaders = [
 			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
 		]
 		
 		Alamofire.request("\(URL_BASE)\(URL_LAST_SYNC)", method: .get, headers: headers).responseJSON { (response) in
+			
 			if let dict = response.result.value as? Dictionary<String, AnyObject> {
+				
 				if let lastSync = dict["sync_date"] as? String {
+					
 					self.lastSync = lastSync.dateFromISO8601
 				}
 			}
+			
 			completed()
 		}
 	}
@@ -136,7 +135,9 @@ class Synchronize {
 	/// Fecha de ultima sincronizacion en Realm
 	//
 	func lastSynchRLM(completed: @escaping DownloadComplete) {
+		
 		self.lastSyncRLM = self.realm.objects(RSync.self).last?.date.iso8601.dateFromISO8601
+		
 		completed()
 	}
 	
@@ -144,6 +145,7 @@ class Synchronize {
 	/// Carga de los records actualizados despues de la ultima fecha de sincronizacion. [Servidor]
 	//
 	func latestUpdates(completed: @escaping DownloadComplete) {
+		
 		let headers: HTTPHeaders = [
 			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
 		]
@@ -151,23 +153,34 @@ class Synchronize {
 		Alamofire.request("\(URL_BASE)\(URL_LATEST_UPDATES)", method: .get, headers: headers).responseJSON { (response) in
 			
 			if let dict = response.result.value as? Dictionary<String, AnyObject> {
+				
 				if let medicalRecords = dict["medical_records"] as? [Dictionary<String, AnyObject>] {
+					
 					self.latestMedicalRecords.removeAll()
+					
 					for record in medicalRecords {
+						
 						try! self.realm.write {
+							
 							self.latestMedicalRecords.append(self.dataHelper.parseMedicalRecord(recordDict: record))
 						}
 					}
 				}
+				
 				if let consultations = dict["consultations"] as? [Dictionary<String, AnyObject>] {
+					
 					self.latestConsultations.removeAll()
+					
 					for consultation in consultations {
+						
 						try! self.realm.write {
+							
 							self.latestConsultations.append(self.dataHelper.parseConsultation(consultationDict: consultation))
 						}
 					}
 				}
 			}
+			
 			completed()
 		}
 	}
@@ -176,7 +189,9 @@ class Synchronize {
 	/// Carga de los records actualizados despues de la ultima fecha de sincronizacion. [Realm]
 	//
 	func latestUpdatesRLM(completed: @escaping DownloadComplete) {
+		
 		self.latestMedicalRecordsRLM = Array(self.realm.objects(RMedicalRecord.self).filter("lastUpdate > %@", self.lastSync))
+		
 		
 		self.latestConsultationsRLM = Array(self.realm.objects(RConsultation.self).filter("lastUpdate > %@", self.lastSync))
 		
@@ -187,14 +202,21 @@ class Synchronize {
 	/// Guardar nueva fecha de sincronizacion. [Servidor y Realm]
 	//
 	func saveSync(syncDesc: String, completed: @escaping DownloadComplete) {
+		
 		let syncDate = Date().iso8601.dateFromISO8601!
+		
 		let syncDescription = syncDesc
 		
 		try! self.realm.write {
+			
 			let rSync = RSync()
+			
 			rSync.date = syncDate
+			
 			rSync.syncDescription = syncDescription
+			
 			self.realm.add(rSync)
+			
 			print("\nNueva Sincronizacion guardada en Realm\n")
 		}
 		
@@ -210,6 +232,7 @@ class Synchronize {
 		]
 		
 		Alamofire.request("\(URL_BASE)\(URL_SYNCS)", method: .post, parameters: parameters, headers: headers).responseJSON { response in
+			
 			completed()
 		}
 	}

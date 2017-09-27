@@ -12,7 +12,7 @@ import RealmSwift
 class RUser: Object {
 	@objc dynamic var id = 0
 	@objc dynamic var email = ""
-	@objc dynamic var password = ""
+    @objc dynamic var password = ""
 	
 	override static func primaryKey() -> String? {
 		return "id"

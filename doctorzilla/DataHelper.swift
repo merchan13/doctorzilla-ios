@@ -128,70 +128,70 @@ class DataHelper {
 	}
 	
 	
-	/// Descargar Historia Medicas
+	/// Descargar Historia Medica por Id
 	//
-	func downloadRecords(rUser: RUser, completed: @escaping DownloadComplete) {
-		let url = "\(URL_BASE)\(URL_MEDICAL_RECORDS)"
+	func downloadRecord(recordId: Int, completed: @escaping DownloadComplete) {
+		
+		let url = "\(URL_BASE)\(URL_MEDICAL_RECORDS)\(recordId)"
 		
 		let headers: HTTPHeaders = [
 			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
 		]
 		
 		Alamofire.request(url, method: .get, headers: headers).responseJSON { response in
-			if let dict = response.result.value as? [Dictionary<String, AnyObject>]{
+			
+			if let recordDict = response.result.value as? Dictionary<String, AnyObject> {
+				
 				try! self.realm.write {
-					for recordDict in dict {
-						let rMedRecord = self.parseMedicalRecord(recordDict: recordDict)
-						
-						rMedRecord.user = rUser
-						self.realm.add(rMedRecord, update: true)
-					}
+					
+					let rMedRecord = self.parseMedicalRecord(recordDict: recordDict)
+					
+					rMedRecord.user = self.realm.objects(RUser.self).first
+					
+					self.realm.add(rMedRecord, update: true)
 				}
 			}
+			
 			completed()
 		}
 	}
 	
 	
-	/// Descargar Consultas
+	/// Descargar Consultas de una Historia Medica
 	//
-	func downloadConsultations(completed: @escaping DownloadComplete) {
+	func downloadConsultations(recordId: Int, completed: @escaping DownloadComplete) {
+		
 		let consultationURL = "\(URL_BASE)\(URL_CONSULTATIONS)"
 		
 		let headers: HTTPHeaders = [
 			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
 		]
 		
-		let records = realm.objects(RMedicalRecord.self).sorted(byKeyPath: "id")
+		let record = self.realm.object(ofType: RMedicalRecord.self, forPrimaryKey: recordId)!
 		
-		if records.count > 0 {
-			for record in records {
-				let parameters: Parameters = [
-					"record": record.id
-				]
+		let parameters: Parameters = [
+			"record": recordId
+		]
+		
+		Alamofire.request(consultationURL, method: .get, parameters: parameters, headers: headers).responseJSON { (response) in
+			
+			if let dict = response.result.value as? [Dictionary<String, AnyObject>] {
 				
-				Alamofire.request(consultationURL, method: .get, parameters: parameters, headers: headers).responseJSON { (response) in
-					if let dict = response.result.value as? [Dictionary<String, AnyObject>] {
+				try! self.realm.write {
+					
+					record.consultations.removeAll()
+					
+					for consultationDict in dict {
 						
-						try! self.realm.write {
-							
-							record.consultations.removeAll()
-							
-							for consultationDict in dict {
-								let rConsultation = self.parseConsultation(consultationDict: consultationDict)
-								
-								self.realm.add(rConsultation, update: true)
-								record.consultations.append(rConsultation)
-							}
-						}
-					}
-					if record.id == records.last?.id {
-						completed()
+						let rConsultation = self.parseConsultation(consultationDict: consultationDict)
+						
+						self.realm.add(rConsultation, update: true)
+						
+						record.consultations.append(rConsultation)
 					}
 				}
 			}
-		}
-		else {
+			
 			completed()
 		}
 	}
@@ -432,7 +432,9 @@ class DataHelper {
 	/// Parse MedicalRecrod Dictionary into Realm Object - [NOTA: al invocar esta funcion, se debe rodear de un bloque de escritura de Realm]
 	//
 	func parseMedicalRecord(recordDict: Dictionary<String, AnyObject>) -> RMedicalRecord {
+		
 		let rMedRecord = RMedicalRecord()
+		
 		// ID
 		if let recordId = recordDict["id"] as? Int {
 			rMedRecord.id = recordId
@@ -860,6 +862,71 @@ class DataHelper {
 		}
 	}
 	
+	
+	/// Search de Historia
+	//
+	func searchRecord(search: String, completion: @escaping (_ result: [RMedicalRecord]) -> Void) {
+		
+		var searchResult = [RMedicalRecord]()
+		
+		let url = "\(URL_BASE)\(URL_SEARCH_RECORDS)"
+		
+		let headers: HTTPHeaders = [
+			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
+		]
+		
+		let parameters: Parameters = [
+			"search_param": search
+		]
+		
+		Alamofire.request(url, method: .get, parameters: parameters, headers: headers).responseJSON { response in
+			
+			if let dict = response.result.value as? [Dictionary<String, AnyObject>]{
+				
+				for recordDict in dict {
+					
+					let rMedRecord = self.parseSearchRecord(recordDict: recordDict)
+
+					searchResult.append(rMedRecord)
+				}
+			}
+			
+			completion(searchResult)
+		}
+	}
+	
+	
+	/// Parse simple de resultado de busqueda de historia
+	//
+	func parseSearchRecord(recordDict: Dictionary<String, AnyObject>) -> RMedicalRecord {
+		
+		let rMedRecord = RMedicalRecord()
+		
+		// ID
+		if let recordId = recordDict["id"] as? Int {
+			rMedRecord.id = recordId
+		}
+		// DOCUMENT
+		if let documentType = recordDict["document_type"] as? String {
+			if let document = recordDict["document"] as? String {
+				rMedRecord.document = "\(documentType)-\(document)"
+			}
+		}
+		// LAST NAME
+		if let lastName = recordDict["last_name"] as? String {
+			rMedRecord.lastName = lastName
+		}
+		// NAME
+		if let name = recordDict["name"] as? String {
+			rMedRecord.name = name
+		}
+		// PROFILE PICTURE URL
+		if let profilePictureURL = recordDict["profile_picture"] as? String {
+			rMedRecord.profilePicURL = profilePictureURL
+		}
+		
+		return rMedRecord
+	}
 	
 }
 

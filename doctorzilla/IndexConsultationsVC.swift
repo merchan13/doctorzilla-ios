@@ -64,14 +64,13 @@ class IndexConsultationsVC: UIViewController, UITableViewDelegate, UITableViewDa
 		
 		let rConsultation = self.sortedConsultations[indexPath.row]
 		
-		performSegue(withIdentifier: "ConsultationDetailVC", sender: rConsultation)
-		//performSegue(withIdentifier: "ShowConsultationVC", sender: rConsultation)
+		performSegue(withIdentifier: "ShowConsultationVC", sender: rConsultation)
 	}
 	
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		
-		if let vc = segue.destination as? ConsultationDetailVC, segue.identifier == "ConsultationDetailVC" {
+		if let vc = segue.destination as? ShowConsultationVC, segue.identifier == "ShowConsultationVC" {
 			
 			if let rConsultation = sender as? RConsultation {
 				

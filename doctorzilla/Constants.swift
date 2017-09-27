@@ -33,9 +33,10 @@ let URL_CONSULTATION_DIAGNOSTICS =	"/consultations/:consultation_id/diagnostics/
 let URL_RECORD_BACKGROUND_UPDATE = "/medical_records/:medical_record_id/backgrounds/"
 
 let URL_SYNCS =				"/syncs/"
-//let URL_LATEST_UPDATES =	"/latest_updates/"
 let URL_LATEST_UPDATES =	"/latest_data/"
 let URL_LAST_SYNC =			"/last_sync/"
+
+let URL_SEARCH_RECORDS = "/search_records/"
 
 let RECORDS_CSV = "Records.csv"
 

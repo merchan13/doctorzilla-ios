@@ -36,7 +36,7 @@ class ReachabilityManager: NSObject {
 	/// Called whenever there is a change in NetworkReachibility Status.
 	///
 	/// — parameter notification: Notification with the Reachability instance.
-	func reachabilityChanged(notification: Notification) {
+	@objc func reachabilityChanged(notification: Notification) {
 		let reachability = notification.object as! Reachability
 		
 		switch reachability.currentReachabilityStatus {
