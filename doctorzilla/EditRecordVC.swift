@@ -55,6 +55,7 @@ class EditRecordVC: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
     }
 	
 	
+	// Cargar valores
 	func loadValues() {
 		
 		self.nameTextField.text = self.rMedrecord.name
@@ -85,6 +86,7 @@ class EditRecordVC: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
 	}
 	
 	
+	// Guardar cambios
 	@IBAction func saveChangesButtonTapped(_ sender: UIButton) {
 		
 		let refreshAlert = UIAlertController(title: "Alerta", message: "¿Está seguro de que quiere editar la Historia Médica?", preferredStyle: UIAlertControllerStyle.alert)
@@ -139,15 +141,16 @@ class EditRecordVC: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
 				
 				if NetworkConnection.sharedInstance.haveConnection {
 					
-					//self.dataHelper.updateRecord(record: self.rMedrecord, completed: {
+					self.dataHelper.updateRecord(record: self.rMedrecord, completed: {
 						
-						//self.synchronizer.saveSync(syncDesc: "Sincronización de actualización de Historia Médica en app móvil") {
+						self.synchronizer.saveSync(syncDesc: "Actualización de Historia Médica en App Móvil") {
 					
 							self.navigationController?.popViewController(animated: true)
-						//}
+						}
 						
-					//})
-				} else {
+					})
+				}
+				else {
 					
 					self.navigationController?.popViewController(animated: true)
 				}
@@ -163,12 +166,14 @@ class EditRecordVC: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
 	}
 	
 	
+	// Secciones en los pickers
 	func numberOfComponents(in pickerView: UIPickerView) -> Int {
 		
 		return 1
 	}
 	
 	
+	// Elementos en pickers
 	func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
 		
 		if pickerView == self.occupationPickerView {
@@ -184,6 +189,7 @@ class EditRecordVC: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
 	}
 	
 	
+	// Titulos en pickers
 	func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		
 		if pickerView == self.occupationPickerView {
@@ -194,6 +200,7 @@ class EditRecordVC: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
 			
 			return self.insurances[row].name
 		}
+		
 		return ""
 	}
 	
@@ -209,7 +216,6 @@ class EditRecordVC: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		
 		self.nameTextField.resignFirstResponder()
-		
 		
 		self.lastNameTextField.resignFirstResponder()
 		

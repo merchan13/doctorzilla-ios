@@ -55,6 +55,9 @@
 		FAACA5101EE67BAE006C39BB /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAACA50F1EE67BAE006C39BB /* Extensions.swift */; };
 		FAB955E51F5CEA940007EAA2 /* EditBackgroundsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB955E41F5CEA940007EAA2 /* EditBackgroundsVC.swift */; };
 		FACF9A6C1F7B64C6004D8B31 /* ShowConsultationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACF9A6B1F7B64C6004D8B31 /* ShowConsultationVC.swift */; };
+		FAD7110A1F7D876500F4194B /* IndexReportsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD711091F7D876500F4194B /* IndexReportsVC.swift */; };
+		FAD7110C1F7D87EF00F4194B /* ShowReportVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD7110B1F7D87EF00F4194B /* ShowReportVC.swift */; };
+		FAD7110E1F7D880A00F4194B /* ReportCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD7110D1F7D880A00F4194B /* ReportCell.swift */; };
 		FADF11581EDE20AA00BB54E7 /* ConsultationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADF11571EDE20AA00BB54E7 /* ConsultationCell.swift */; };
 		FAE3BB951EE8FE76005E3904 /* ReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE3BB941EE8FE76005E3904 /* ReachabilityManager.swift */; };
 		FAE433771EFDEB02003EB268 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE433761EFDEB02003EB268 /* SettingsVC.swift */; };
@@ -140,6 +143,9 @@
 		FAACA50F1EE67BAE006C39BB /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		FAB955E41F5CEA940007EAA2 /* EditBackgroundsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditBackgroundsVC.swift; sourceTree = "<group>"; };
 		FACF9A6B1F7B64C6004D8B31 /* ShowConsultationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowConsultationVC.swift; sourceTree = "<group>"; };
+		FAD711091F7D876500F4194B /* IndexReportsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexReportsVC.swift; sourceTree = "<group>"; };
+		FAD7110B1F7D87EF00F4194B /* ShowReportVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowReportVC.swift; sourceTree = "<group>"; };
+		FAD7110D1F7D880A00F4194B /* ReportCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportCell.swift; sourceTree = "<group>"; };
 		FADF11571EDE20AA00BB54E7 /* ConsultationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsultationCell.swift; sourceTree = "<group>"; };
 		FAE3BB941EE8FE76005E3904 /* ReachabilityManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReachabilityManager.swift; sourceTree = "<group>"; };
 		FAE433761EFDEB02003EB268 /* SettingsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
@@ -256,11 +262,12 @@
 		FA518F6F1ED3BA3B00EAC1C4 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				FA1E7AB71F788991000612F3 /* Operative_Notes */,
 				FAA629041F7369FE006301ED /* Activities */,
 				FA42448E1F72226A002EA743 /* Consultations */,
 				FA973CB51F6C8FC00010CD92 /* Medical_Records */,
+				FA1E7AB71F788991000612F3 /* Operative_Notes */,
 				FAA629031F7369F4006301ED /* Profiles */,
+				FAD711081F7D872900F4194B /* Reports */,
 				FAB955E41F5CEA940007EAA2 /* EditBackgroundsVC.swift */,
 				FA4C7CDF1EC3CA2800A58937 /* LoginVC.swift */,
 				FA4C7CE11EC3CC8E00A58937 /* RecoverPasswordVC.swift */,
@@ -279,6 +286,7 @@
 				FA5E6DA41F7C2F660088771F /* ExamCell.swift */,
 				FAA6290D1F736FF1006301ED /* MedicalRecordCell.swift */,
 				FA34C74E1F60DA2900F0964D /* OperativeNoteCell.swift */,
+				FAD7110D1F7D880A00F4194B /* ReportCell.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -333,6 +341,15 @@
 				FAA629051F736A5F006301ED /* ActivitiesVC.swift */,
 			);
 			name = Activities;
+			sourceTree = "<group>";
+		};
+		FAD711081F7D872900F4194B /* Reports */ = {
+			isa = PBXGroup;
+			children = (
+				FAD711091F7D876500F4194B /* IndexReportsVC.swift */,
+				FAD7110B1F7D87EF00F4194B /* ShowReportVC.swift */,
+			);
+			name = Reports;
 			sourceTree = "<group>";
 		};
 		FAF732221E9044C700FA6030 = {
@@ -718,12 +735,15 @@
 				FA9A6DD71F4530A7007EA577 /* RReport.swift in Sources */,
 				FA4D055F1EF21C77005574B1 /* Synchronize.swift in Sources */,
 				FAE433771EFDEB02003EB268 /* SettingsVC.swift in Sources */,
+				FAD7110E1F7D880A00F4194B /* ReportCell.swift in Sources */,
 				FA71DDD81F6A447A001EB5F6 /* ShowRecordVC.swift in Sources */,
 				FA2D0AD31EEB9A3E009BFBFA /* RConsultation.swift in Sources */,
 				FAA6290C1F736AE7006301ED /* IndexConsultationsVC.swift in Sources */,
 				FA2D0AD51EEBA393009BFBFA /* RPlan.swift in Sources */,
 				FA34C7511F60E28200F0964D /* ShowOperativeNoteVC.swift in Sources */,
+				FAD7110C1F7D87EF00F4194B /* ShowReportVC.swift in Sources */,
 				FA5E6D9F1F7C04420088771F /* ShowConsultationExamsVC.swift in Sources */,
+				FAD7110A1F7D876500F4194B /* IndexReportsVC.swift in Sources */,
 				FA2D0AC71EEB99C5009BFBFA /* RMedicalRecord.swift in Sources */,
 				FAE8E7A71EDF774F00E1489C /* BackgroundCell.swift in Sources */,
 				FA3A9CF91EE1DDBB000EAB8B /* EditRecordVC.swift in Sources */,

@@ -37,6 +37,7 @@ class ShowRecordVC: UITableViewController {
 	@IBOutlet weak var backgroundsCounter: UILabel!
 	@IBOutlet weak var notesCounter: UILabel!
 	@IBOutlet weak var attachmentsCounter: UILabel!
+	@IBOutlet weak var reportsCounter: UILabel!
 	
 	var rMedrecord: RMedicalRecord!
 	let realm = try! Realm()
@@ -144,6 +145,7 @@ class ShowRecordVC: UITableViewController {
 		
 		attachmentsCounter.text = "Anexos (\(self.rMedrecord.attachments.count))"
 		
+		reportsCounter.text = "Informes Médicos (\(self.rMedrecord.reports.count))"
 	}
 	
 	
@@ -215,6 +217,16 @@ class ShowRecordVC: UITableViewController {
 				}
 			}
 		}
+		else if segue.identifier == "IndexReportsVC" {
+			
+			if let indexReportsVC = segue.destination as? IndexReportsVC {
+				
+				if let rReports = sender as? List<RReport> {
+					
+					indexReportsVC.rReports = rReports
+				}
+			}
+		}
 	}
 	
 	
@@ -241,6 +253,10 @@ class ShowRecordVC: UITableViewController {
 			else if indexPath.row == 8 {
 				
 				performSegue(withIdentifier: "ShowRecordAttachmentsVC", sender: self.rMedrecord.attachments)
+			}
+			else if indexPath.row == 9 {
+				
+				performSegue(withIdentifier: "IndexReportsVC", sender: self.rMedrecord.reports)
 			}
 		}
 	}

@@ -209,10 +209,12 @@ class DataHelper {
 		var insurance = ""
 		
 		if let occupationRLM = record.occupation {
+			
 			occupation = "\(occupationRLM.id)"
 		}
 		
 		if let insuranceRLM = record.insurance {
+			
 			insurance = "\(insuranceRLM.id)"
 		}
 		
@@ -222,7 +224,6 @@ class DataHelper {
 				"last_name": record.lastName,
 				"occupation_id": occupation,
 				"birthday": record.birthday,
-				"gender": record.gender,
 				"phone_number": record.phone,
 				"cellphone_number": record.cellphone,
 				"email": record.email,
@@ -233,7 +234,9 @@ class DataHelper {
 		]
 		
 		Alamofire.request("\(URL_BASE)\(URL_MEDICAL_RECORDS)\(record.id)", method: .put, parameters: parameters, headers: headers).responseJSON { response in
+			
 			//print(response.response?.statusCode)
+			
 			completed()
 		}
 	}
@@ -840,7 +843,7 @@ class DataHelper {
 	}
 
 	
-	/// Descargar URL de Anexo
+	/// Descargar URL de Anexo (AWS)
 	//
 	func downloadAttachmentURL(id: Int, completed: @escaping (_ result: String) -> () ) {
 		

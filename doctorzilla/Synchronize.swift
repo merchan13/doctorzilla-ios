@@ -143,7 +143,7 @@ class Synchronize {
 	
 	
 	/// Carga de los records actualizados despues de la ultima fecha de sincronizacion. [Servidor]
-	//
+	// REVISAR!
 	func latestUpdates(completed: @escaping DownloadComplete) {
 		
 		let headers: HTTPHeaders = [
@@ -350,6 +350,7 @@ class Synchronize {
 			completed()
 		})
 	}
+
 }
 
 
