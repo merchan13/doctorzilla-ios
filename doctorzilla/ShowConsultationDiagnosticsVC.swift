@@ -15,6 +15,7 @@ class ShowConsultationDiagnosticsVC: UITableViewController {
 	@IBOutlet var diagnosticsTable: UITableView!
 	
 	var rDiagnostics: List<RDiagnostic>!
+	var sortedDiagnostics: Results<RDiagnostic>!
 	let realm = try! Realm()
 	let dataHelper = DataHelper()
 	let sync = Synchronize()
@@ -23,7 +24,7 @@ class ShowConsultationDiagnosticsVC: UITableViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		self.rDiagnostics.sorted(byKeyPath: "lastUpdate", ascending: false)
+		self.sortedDiagnostics = self.rDiagnostics.sorted(byKeyPath: "lastUpdate", ascending: false)
 		
 		self.navigationItem.backBarButtonItem?.title = "Consulta"
 		
@@ -52,7 +53,7 @@ class ShowConsultationDiagnosticsVC: UITableViewController {
 		
 		if let cell = tableView.dequeueReusableCell(withIdentifier: "DiagnosticCell", for: indexPath) as? DiagnosticCell {
 			
-			let rDiagnostic = self.rDiagnostics[indexPath.row]
+			let rDiagnostic = self.sortedDiagnostics[indexPath.row]
 			
 			cell.configureCell(rDiagnostic: rDiagnostic)
 			
@@ -67,7 +68,7 @@ class ShowConsultationDiagnosticsVC: UITableViewController {
 	
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		
-		return self.rDiagnostics.count
+		return self.sortedDiagnostics.count
 	}
 
 }

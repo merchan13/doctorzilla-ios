@@ -10,8 +10,9 @@ import UIKit
 import RealmSwift
 import ReachabilitySwift
 
-class EditRecordVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate, UITextViewDelegate {
+class EditRecordVC: UITableViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate, UITextViewDelegate {
 
+	
 	@IBOutlet weak var nameTextField: UITextField!
 	@IBOutlet weak var lastNameTextField: UITextField!
 	@IBOutlet weak var occupationPickerView: UIPickerView!
@@ -34,7 +35,7 @@ class EditRecordVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSour
 	
     override func viewDidLoad() {
         super.viewDidLoad()
-		
+		/*
 		self.nameTextField.delegate = self
 		self.lastNameTextField.delegate = self
 		self.phoneTextField.delegate = self
@@ -54,6 +55,7 @@ class EditRecordVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataSour
 		self.genderPickerView.dataSource = self
 		
 		loadValues()
+		*/
     }
 	
 	
