@@ -24,9 +24,6 @@ class IndexRecordsVC: UIViewController, UITableViewDelegate, UITableViewDataSour
 	let dataHelper = DataHelper()
 	let sync = Synchronize()
 	
-	var firstTime = true
-	var reloadImages = false
-	
 
 	override func viewDidLoad() {
 		
@@ -68,23 +65,32 @@ class IndexRecordsVC: UIViewController, UITableViewDelegate, UITableViewDataSour
 			self.recordsTable.deselectRow(at: index, animated: true)
 		}
 		
-		checkNetwork()
-		
 		parseMedicalRecordsRLM {
+			
 			self.recordsTable.reloadData()
 			
-			/*
-			if self.networkConnection && self.firstTime || self.networkConnection && self.reloadImages {
-			for rec in self.rMedrecords {
-			self.dataHelper.downloadProfilePicture(rec: rec, completed: {
-			self.collection.reloadData()
-			self.firstTime = false
-			print("Fotos descargadas")
-			})
+			self.checkNetwork()
+			
+			if NetworkConnection.sharedInstance.haveConnection {
+				
+				for rec in self.rMedrecords {
+					
+					if rec.profilePic.length == 0 {
+						
+						if rec.profilePicURL.isEmpty {
+							
+							// pedir url y descargar
+						}
+						else {
+							
+							self.dataHelper.downloadProfilePicture(rec: rec, completed: {
+								
+								self.recordsTable.reloadData()
+							})
+						}
+					}
+				}
 			}
-			self.reloadImages = false
-			}
-			*/
 		}
 	}
 	

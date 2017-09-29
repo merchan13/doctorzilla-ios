@@ -83,17 +83,25 @@ class ShowRecordVC: UITableViewController {
 			? "Nueva en DoctorZilla"
 			: "[ #HV \(self.rMedrecord.hv) ]"
 		
-		/*
 		if self.rMedrecord.profilePic.length == 0 {
 		
-			// si hay senal descargar, sino no hacer nada
-			self.dataHelper.downloadProfilePicture(rec: self.rMedrecord, completed: {
-				self.profilePictureImage.image = UIImage(data: self.rMedrecord.profilePic as Data)
-			})
-		} else {
-			profilePictureImage.image = UIImage(data: self.rMedrecord.profilePic as Data)
+			checkNetwork()
+			
+			if NetworkConnection.sharedInstance.haveConnection {
+				
+				self.dataHelper.downloadProfilePicture(rec: self.rMedrecord, completed: {
+					
+					if self.rMedrecord.profilePic.length != 0 {
+						
+						self.profilePicture.image = UIImage(data: self.rMedrecord.profilePic as Data)
+					}
+				})
+			}
 		}
-		*/
+		else {
+		
+			profilePicture.image = UIImage(data: self.rMedrecord.profilePic as Data)
+		}
 		
 		name.text = "\(self.rMedrecord.name.capitalized) \(self.rMedrecord.lastName.capitalized)"
 		

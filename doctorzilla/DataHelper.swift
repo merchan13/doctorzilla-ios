@@ -18,18 +18,25 @@ class DataHelper {
 	func downloadProfilePicture(rec: RMedicalRecord, completed: @escaping DownloadComplete) {
 		
 		Alamofire.request(rec.profilePicURL).responseImage { response in
+			
 			if let image = response.result.value {
+				
 				let size = CGSize(width: 100.0, height: 100.0)
+				
 				let resizedImage = image.af_imageAspectScaled(toFit: size)
+				
 				let circularImage = resizedImage.af_imageRoundedIntoCircle()
+				
 				let imageData:NSData = UIImageJPEGRepresentation(circularImage, 0.30)! as NSData
 				
 				NSLog("Data length: %u KB",(imageData.length/1024));
 				
 				try! self.realm.write {
+					
 					rec.profilePic = imageData
 				}
 			}
+			
 			completed()
 		}
 	}
