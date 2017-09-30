@@ -11,6 +11,7 @@ import UIKit
 class AttachmentCell: UITableViewCell {
 
 	@IBOutlet weak var descriptionLabel: UILabel!
+	@IBOutlet weak var dateLabel: UILabel!
 	
 	var rAttachment: RAttachment!
 	
@@ -22,6 +23,7 @@ class AttachmentCell: UITableViewCell {
 		self.rAttachment = rAttachment
 		
 		descriptionLabel.text = self.rAttachment.attachmentDescription
+		dateLabel.text = self.rAttachment.parsedCreationDate()
 	}
 
 }

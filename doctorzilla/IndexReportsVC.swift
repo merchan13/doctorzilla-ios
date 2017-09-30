@@ -15,6 +15,7 @@ class IndexReportsVC: UIViewController, UITableViewDelegate, UITableViewDataSour
 	@IBOutlet weak var reportsTable: UITableView!
 	
 	var rReports: List<RReport>!
+	var sortedReports: Results<RReport>!
 	let realm = try! Realm()
 	let dataHelper = DataHelper()
 	let sync = Synchronize()
@@ -24,6 +25,8 @@ class IndexReportsVC: UIViewController, UITableViewDelegate, UITableViewDataSour
 		
         super.viewDidLoad()
 
+		self.sortedReports = self.rReports.sorted(byKeyPath: "date", ascending: false)
+		
 		self.reportsTable.delegate = self
 		self.reportsTable.dataSource = self
     }
@@ -42,7 +45,7 @@ class IndexReportsVC: UIViewController, UITableViewDelegate, UITableViewDataSour
 		
 		if let cell = tableView.dequeueReusableCell(withIdentifier: "ReportCell", for: indexPath) as? ReportCell {
 			
-			let rReport = self.rReports[indexPath.row]
+			let rReport = self.sortedReports[indexPath.row]
 			
 			cell.configureCell(rReport: rReport)
 			
@@ -57,13 +60,13 @@ class IndexReportsVC: UIViewController, UITableViewDelegate, UITableViewDataSour
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		
-		return self.rReports.count
+		return self.sortedReports.count
 	}
 	
 	
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		
-		let rReport = self.rReports[indexPath.row]
+		let rReport = self.sortedReports[indexPath.row]
 		
 		performSegue(withIdentifier: "ShowReportVC", sender: rReport)
 	}

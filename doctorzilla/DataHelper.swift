@@ -477,6 +477,9 @@ class DataHelper {
 						if let attachmentDescription = attachDict["description"] as? String {
 							rAttachment.attachmentDescription = attachmentDescription
 						}
+						if let attachmentDate = attachDict["updated_at"] as? String {
+							rAttachment.date = attachmentDate
+						}
 						
 						realm.add(rAttachment, update: true)
 						rMedRecord.attachments.append(rAttachment)
@@ -648,6 +651,9 @@ class DataHelper {
 						}
 						if let reportDescription = reportDict["description"] as? String {
 							rReport.reportDescription = reportDescription
+						}
+						if let reportDate = reportDict["updated_at"] as? String {
+							rReport.date = reportDate
 						}
 						
 						realm.add(rReport, update: true)

@@ -16,6 +16,7 @@ class ShowRecordAttachmentsVC: UIViewController, UITableViewDelegate, UITableVie
 	@IBOutlet var attachmentsTable: UITableView!
 	
 	var rAttachments: List<RAttachment>!
+	var sortedAttachments: Results<RAttachment>!
 	let realm = try! Realm()
 	let dataHelper = DataHelper()
 	let sync = Synchronize()
@@ -24,6 +25,8 @@ class ShowRecordAttachmentsVC: UIViewController, UITableViewDelegate, UITableVie
 	override func viewDidLoad() {
 		
 		super.viewDidLoad()
+		
+		self.sortedAttachments = self.rAttachments.sorted(byKeyPath: "date", ascending: false)
 		
 		self.attachmentsTable.delegate = self
 		self.attachmentsTable.dataSource = self
@@ -50,7 +53,7 @@ class ShowRecordAttachmentsVC: UIViewController, UITableViewDelegate, UITableVie
 		
 		if let cell = tableView.dequeueReusableCell(withIdentifier: "AttachmentCell", for: indexPath) as? AttachmentCell {
 			
-			let rAttachment = self.rAttachments[indexPath.row]
+			let rAttachment = self.sortedAttachments[indexPath.row]
 			
 			cell.configureCell(rAttachment: rAttachment)
 			
@@ -64,7 +67,7 @@ class ShowRecordAttachmentsVC: UIViewController, UITableViewDelegate, UITableVie
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		
-		return self.rAttachments.count
+		return self.sortedAttachments.count
 	}
 	
 	
@@ -74,7 +77,7 @@ class ShowRecordAttachmentsVC: UIViewController, UITableViewDelegate, UITableVie
 		
 		if NetworkConnection.sharedInstance.haveConnection {
 			
-			let rAttachment = self.rAttachments[indexPath.row]
+			let rAttachment = self.sortedAttachments[indexPath.row]
 			
 			self.dataHelper.downloadAttachmentURL(id: rAttachment.id) { (result: String) in
 				

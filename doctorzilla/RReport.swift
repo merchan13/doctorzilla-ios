@@ -14,8 +14,26 @@ class RReport: Object {
 	@objc dynamic var reportType = ""
 	@objc dynamic var reportDescription = ""
 	@objc dynamic var recordId = 0
+	@objc dynamic var date = ""
 	
 	override static func primaryKey() -> String? {
 		return "id"
+	}
+	
+	func parsedCreationDate() -> String {
+		var parsedDate = " "
+		
+		let dateFormatterGet = DateFormatter()
+		dateFormatterGet.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+		
+		let dateFormatterResult = DateFormatter()
+		dateFormatterResult.dateFormat = "dd MMM yyyy"
+		
+		
+		if let date: Date = dateFormatterGet.date(from: self.date){
+			parsedDate = dateFormatterResult.string(from: date)
+		}
+		
+		return parsedDate
 	}
 }

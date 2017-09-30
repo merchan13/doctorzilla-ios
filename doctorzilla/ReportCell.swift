@@ -25,7 +25,7 @@ class ReportCell: UITableViewCell {
 		
 		//reportInfo.text = self.rReport.parsedDate()
 		
-		reportInfo.text = "Informe - "
+		reportInfo.text = self.rReport.parsedCreationDate()
 	}
 
 }
