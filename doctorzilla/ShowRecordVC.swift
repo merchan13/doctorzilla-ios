@@ -71,7 +71,18 @@ class ShowRecordVC: UITableViewController {
 	
 	override func viewDidAppear(_ animated: Bool) {
 		
-		//...
+		if NetworkConnection.sharedInstance.haveConnection {
+			
+			self.dataHelper.downloadRecord(recordId: rMedrecord.id, completed: {
+				
+				self.dataHelper.downloadConsultations(recordId: self.rMedrecord.id, completed: {
+					
+					print("Check - Historia al día")
+					
+					self.updateUI()
+				})
+			})
+		}
 	}
 	
 	
