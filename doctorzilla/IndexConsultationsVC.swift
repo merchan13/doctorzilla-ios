@@ -14,7 +14,7 @@ class IndexConsultationsVC: UIViewController, UITableViewDelegate, UITableViewDa
 
 	@IBOutlet weak var consultationTable: UITableView!
 	
-	var rConsultations: List<RConsultation>!
+	var rMedicalrecord: RMedicalRecord!
 	var sortedConsultations: Results<RConsultation>!
 	let realm = try! Realm()
 	
@@ -22,7 +22,7 @@ class IndexConsultationsVC: UIViewController, UITableViewDelegate, UITableViewDa
 		
 		super.viewDidLoad()
 		
-		self.sortedConsultations = self.rConsultations.sorted(byKeyPath: "date", ascending: false)
+		self.sortedConsultations = self.rMedicalrecord.consultations.sorted(byKeyPath: "date", ascending: false)
 		
 		self.consultationTable.delegate = self
 		self.consultationTable.dataSource = self
@@ -35,6 +35,10 @@ class IndexConsultationsVC: UIViewController, UITableViewDelegate, UITableViewDa
 			
 			self.consultationTable.deselectRow(at: index, animated: true)
 		}
+		
+		self.sortedConsultations = self.rMedicalrecord.consultations.sorted(byKeyPath: "date", ascending: false)
+		
+		self.consultationTable.reloadData()
 	}
 	
 
@@ -70,12 +74,32 @@ class IndexConsultationsVC: UIViewController, UITableViewDelegate, UITableViewDa
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		
-		if let vc = segue.destination as? ShowConsultationVC, segue.identifier == "ShowConsultationVC" {
+		if segue.identifier == "ShowConsultationVC" {
 			
-			if let rConsultation = sender as? RConsultation {
+			if let showConsultationVC = segue.destination as? ShowConsultationVC {
 				
-				vc.rConsultation = rConsultation
+				if let rConsultation = sender as? RConsultation {
+					
+					showConsultationVC.rConsultation = rConsultation
+				}
+			}
+		}
+		else if segue.identifier == "NewConsultationVC" {
+			
+			if let newConsultationVC = segue.destination as? NewConsultationVC {
+				
+				if let rMedrecord = sender as? RMedicalRecord {
+					
+					newConsultationVC.rMedrecord = rMedrecord
+				}
 			}
 		}
 	}
+
+	
+	@IBAction func newConsultationButtonTapped(_ sender: Any) {
+		
+		performSegue(withIdentifier: "NewConsultationVC", sender: self.rMedicalrecord)
+	}
+	
 }

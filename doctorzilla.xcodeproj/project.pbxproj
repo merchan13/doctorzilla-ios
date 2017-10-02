@@ -54,6 +54,7 @@
 		FAACA50E1EE5E1BD006C39BB /* DataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAACA50D1EE5E1BD006C39BB /* DataHelper.swift */; };
 		FAACA5101EE67BAE006C39BB /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAACA50F1EE67BAE006C39BB /* Extensions.swift */; };
 		FAB955E51F5CEA940007EAA2 /* EditBackgroundsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB955E41F5CEA940007EAA2 /* EditBackgroundsVC.swift */; };
+		FACE45501F82ABAD00D0F328 /* NewConsultationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACE454F1F82ABAD00D0F328 /* NewConsultationVC.swift */; };
 		FACF9A6C1F7B64C6004D8B31 /* ShowConsultationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACF9A6B1F7B64C6004D8B31 /* ShowConsultationVC.swift */; };
 		FAD7110A1F7D876500F4194B /* IndexReportsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD711091F7D876500F4194B /* IndexReportsVC.swift */; };
 		FAD7110C1F7D87EF00F4194B /* ShowReportVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD7110B1F7D87EF00F4194B /* ShowReportVC.swift */; };
@@ -142,6 +143,7 @@
 		FAACA50D1EE5E1BD006C39BB /* DataHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataHelper.swift; sourceTree = "<group>"; };
 		FAACA50F1EE67BAE006C39BB /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		FAB955E41F5CEA940007EAA2 /* EditBackgroundsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditBackgroundsVC.swift; sourceTree = "<group>"; };
+		FACE454F1F82ABAD00D0F328 /* NewConsultationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConsultationVC.swift; sourceTree = "<group>"; };
 		FACF9A6B1F7B64C6004D8B31 /* ShowConsultationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowConsultationVC.swift; sourceTree = "<group>"; };
 		FAD711091F7D876500F4194B /* IndexReportsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexReportsVC.swift; sourceTree = "<group>"; };
 		FAD7110B1F7D87EF00F4194B /* ShowReportVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowReportVC.swift; sourceTree = "<group>"; };
@@ -252,6 +254,7 @@
 			children = (
 				FAA6290B1F736AE7006301ED /* IndexConsultationsVC.swift */,
 				FA3A9CFC1EE1DE0F000EAB8B /* EditConsultationVC.swift */,
+				FACE454F1F82ABAD00D0F328 /* NewConsultationVC.swift */,
 				FACF9A6B1F7B64C6004D8B31 /* ShowConsultationVC.swift */,
 				FA5E6D9E1F7C04420088771F /* ShowConsultationExamsVC.swift */,
 				FA5E6DA01F7C04C60088771F /* ShowConsultationDiagnosticsVC.swift */,
@@ -739,6 +742,7 @@
 				FA71DDD81F6A447A001EB5F6 /* ShowRecordVC.swift in Sources */,
 				FA2D0AD31EEB9A3E009BFBFA /* RConsultation.swift in Sources */,
 				FAA6290C1F736AE7006301ED /* IndexConsultationsVC.swift in Sources */,
+				FACE45501F82ABAD00D0F328 /* NewConsultationVC.swift in Sources */,
 				FA2D0AD51EEBA393009BFBFA /* RPlan.swift in Sources */,
 				FA34C7511F60E28200F0964D /* ShowOperativeNoteVC.swift in Sources */,
 				FAD7110C1F7D87EF00F4194B /* ShowReportVC.swift in Sources */,

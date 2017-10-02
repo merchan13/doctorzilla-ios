@@ -190,9 +190,9 @@ class ShowRecordVC: UITableViewController {
 			
 			if let indexConsultationsVC = segue.destination as? IndexConsultationsVC {
 			
-				if let rConsultations = sender as? List<RConsultation> {
+				if let rMedicarecord = sender as? RMedicalRecord {
 					
-					indexConsultationsVC.rConsultations = rConsultations
+					indexConsultationsVC.rMedicalrecord = rMedicarecord
 				}
 			}
 		}
@@ -255,7 +255,7 @@ class ShowRecordVC: UITableViewController {
 			
 			if indexPath.row == 4 {
 				
-				performSegue(withIdentifier: "IndexConsultationsVC", sender: self.rMedrecord.consultations)
+				performSegue(withIdentifier: "IndexConsultationsVC", sender: self.rMedrecord)
 			}
 			else if indexPath.row == 5 {
 				

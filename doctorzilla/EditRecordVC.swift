@@ -12,7 +12,6 @@ import ReachabilitySwift
 
 class EditRecordVC: UITableViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate, UITextViewDelegate {
 
-	
 	@IBOutlet weak var nameTextField: UITextField!
 	@IBOutlet weak var lastNameTextField: UITextField!
 	@IBOutlet weak var occupationPickerView: UIPickerView!
@@ -236,6 +235,7 @@ class EditRecordVC: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
 		if(text == "\n") {
 			
 			textView.resignFirstResponder()
+			addressTextView.resignFirstResponder()
 			
 			return false
 		}

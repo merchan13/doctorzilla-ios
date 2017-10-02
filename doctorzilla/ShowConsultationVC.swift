@@ -14,15 +14,15 @@ class ShowConsultationVC: UITableViewController {
 
 	@IBOutlet weak var date: UILabel!
 	@IBOutlet weak var reason: UILabel!
-	@IBOutlet weak var affliction: UILabel!
+	@IBOutlet weak var affliction: UITextView!
 	@IBOutlet weak var weight: UILabel!
 	@IBOutlet weak var height: UILabel!
 	@IBOutlet weak var pressure: UILabel!
 	@IBOutlet weak var imc: UILabel!
-	@IBOutlet weak var physicalExamsButton: UILabel!
+	@IBOutlet weak var physicalExamsCounter: UILabel!
 	@IBOutlet weak var evolution: UITextView!
 	@IBOutlet weak var notes: UITextView!
-	@IBOutlet weak var diagnosticsButton: UILabel!
+	@IBOutlet weak var diagnosticsCounter: UILabel!
 	@IBOutlet weak var plan: UITextView!
 	
 	var rConsultation: RConsultation!
@@ -96,6 +96,10 @@ class ShowConsultationVC: UITableViewController {
 			: self.rConsultation.note
 		
 		self.plan.text = self.rConsultation.plan?.planDescription
+		
+		self.physicalExamsCounter.text = "Exámenes Físicos (\(self.rConsultation.physicalExams.count))"
+		
+		self.diagnosticsCounter.text = "Diagnósticos (\(self.rConsultation.diagnostics.count))"
 	}
 	
 	
@@ -151,5 +155,5 @@ class ShowConsultationVC: UITableViewController {
 			}
 		}
 	}
-
+	
 }

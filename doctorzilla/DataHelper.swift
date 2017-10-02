@@ -283,6 +283,30 @@ class DataHelper {
 	}
 	
 	
+	/// Crear Consulta Médica (Servidor)
+	//
+	func createConsultation(consultation: RConsultation, completed: @escaping DownloadComplete) {
+		
+		let headers: HTTPHeaders = [
+			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
+		]
+		
+		let parameters: Parameters = [
+			"consultation": [
+				"note": consultation.note
+			],
+			"record": consultation.recordId
+		]
+		
+		Alamofire.request("\(URL_BASE)\(URL_CONSULTATIONS)", method: .post, parameters: parameters, headers: headers).responseJSON { response in
+			
+			//print(response.response?.statusCode)
+			
+			completed()
+		}
+	}
+	
+	
 	/// Actualizar Antecedente (Servidor)
 	//
 	func updateBackgrounds(record: RMedicalRecord, recordBgs: List<RBackground>, completed: @escaping DownloadComplete) {
