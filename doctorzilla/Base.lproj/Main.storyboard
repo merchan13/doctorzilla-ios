@@ -286,7 +286,6 @@
                         <outlet property="profilePictureImageView" destination="smi-c5-jTV" id="yFF-dz-SR9"/>
                         <outlet property="resetActivityIndicator" destination="aMr-MM-yer" id="iki-D3-sAd"/>
                         <outlet property="syncActivityIndicator" destination="X33-JA-RQc" id="2un-hB-uT7"/>
-                        <segue destination="BYZ-38-t0r" kind="presentation" identifier="LoginVC" id="2qI-4w-jYK"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="b6E-TY-45G" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1629,8 +1628,54 @@
                     <view key="view" contentMode="scaleToFill" id="wgV-Jp-wMn">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YKh-l7-9QU">
+                                <rect key="frame" x="0.0" y="64" width="320" height="50"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="miscdetailsbg" translatesAutoresizingMaskIntoConstraints="NO" id="KKc-PQ-RXK">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Informe [23 May 2017]" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="asZ-cu-LNI">
+                                        <rect key="frame" x="57.5" y="13.5" width="205.5" height="24"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                                        <color key="textColor" red="0.93725490570000003" green="0.93725490570000003" blue="0.95686274770000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="asZ-cu-LNI" firstAttribute="centerX" secondItem="YKh-l7-9QU" secondAttribute="centerX" id="48F-0S-0WC"/>
+                                    <constraint firstItem="asZ-cu-LNI" firstAttribute="centerY" secondItem="YKh-l7-9QU" secondAttribute="centerY" id="4Wx-KW-UDj"/>
+                                    <constraint firstAttribute="trailing" secondItem="KKc-PQ-RXK" secondAttribute="trailing" id="4lv-JV-u6t"/>
+                                    <constraint firstAttribute="height" constant="50" id="Dlw-nV-glQ"/>
+                                    <constraint firstItem="KKc-PQ-RXK" firstAttribute="top" secondItem="YKh-l7-9QU" secondAttribute="top" id="Zgw-54-JO7"/>
+                                    <constraint firstItem="KKc-PQ-RXK" firstAttribute="leading" secondItem="YKh-l7-9QU" secondAttribute="leading" id="eJs-aG-sSj"/>
+                                    <constraint firstAttribute="bottom" secondItem="KKc-PQ-RXK" secondAttribute="bottom" id="ecG-Dt-u8d"/>
+                                </constraints>
+                            </view>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="8ST-C7-9d2">
+                                <rect key="frame" x="8" y="119" width="304" height="441"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="8ST-C7-9d2" firstAttribute="leading" secondItem="wgV-Jp-wMn" secondAttribute="leading" constant="8" id="JdV-0i-X8f"/>
+                            <constraint firstItem="iqA-Q7-A3g" firstAttribute="top" secondItem="8ST-C7-9d2" secondAttribute="bottom" constant="8" id="MZB-xj-4c1"/>
+                            <constraint firstAttribute="trailing" secondItem="8ST-C7-9d2" secondAttribute="trailing" constant="8" id="Tmc-tI-4Ug"/>
+                            <constraint firstItem="8ST-C7-9d2" firstAttribute="top" secondItem="YKh-l7-9QU" secondAttribute="bottom" constant="5" id="WIb-6s-RMP"/>
+                            <constraint firstItem="YKh-l7-9QU" firstAttribute="leading" secondItem="wgV-Jp-wMn" secondAttribute="leading" id="Y1w-Uc-KZu"/>
+                            <constraint firstAttribute="trailing" secondItem="YKh-l7-9QU" secondAttribute="trailing" id="dT0-D9-MTF"/>
+                            <constraint firstItem="YKh-l7-9QU" firstAttribute="top" secondItem="TVi-pr-rWg" secondAttribute="bottom" id="w4j-0J-rin"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="date" destination="asZ-cu-LNI" id="m6K-BH-gfL"/>
+                        <outlet property="reportContent" destination="8ST-C7-9d2" id="WpM-87-yz1"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Yaw-ga-bYk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1857,7 +1902,7 @@
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wfM-ye-9o7">
                                         <rect key="frame" x="64" y="20" width="160" height="40"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="160" id="l3x-vu-fvb"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="160" id="l3x-vu-fvb"/>
                                             <constraint firstAttribute="height" constant="40" id="xKU-SG-d4Q"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
@@ -2493,7 +2538,6 @@
                                     </connections>
                                 </button>
                             </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstItem="b9C-tE-OVI" firstAttribute="centerY" secondItem="cfw-gj-VoR" secondAttribute="centerY" id="0xx-Kf-FoE"/>
                                 <constraint firstItem="b9C-tE-OVI" firstAttribute="centerX" secondItem="cfw-gj-VoR" secondAttribute="centerX" id="TMf-Ih-dIr"/>
@@ -2512,7 +2556,6 @@
                                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="WuA-IF-UJ5">
                                                     <rect key="frame" x="8" y="8" width="304" height="136.5"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                 </textView>
@@ -3151,26 +3194,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MDv-0K-Hwa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="8603" y="-910"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="apH-bb-LjZ">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="SZL-BT-IyO" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="nKU-AR-ob7">
-                        <rect key="frame" x="0.0" y="20" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                        <color key="barTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="Mxc-uc-vav" kind="relationship" relationship="rootViewController" id="iVW-WV-fSj"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="j94-vf-YQ1" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="4178" y="-1147"/>
         </scene>
         <!--Actividades-->
         <scene sceneID="vpW-Mq-8yk">

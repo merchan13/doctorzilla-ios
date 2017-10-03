@@ -78,7 +78,7 @@ class IndexReportsVC: UIViewController, UITableViewDelegate, UITableViewDataSour
 			
 			if let rReport = sender as? RReport {
 				
-				//vc.rReport = rReport
+				vc.rReport = rReport
 			}
 		}
 	}
