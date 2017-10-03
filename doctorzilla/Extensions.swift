@@ -118,6 +118,7 @@ extension UIViewController: NetworkStatusListener {
 	func recoveredNetworkData() {
 		
 		let realm = try! Realm()
+		let sync = Synchronize()
 		
 		let activeUser = realm.objects(RUser.self).first!
 		
@@ -128,7 +129,28 @@ extension UIViewController: NetworkStatusListener {
 			print("[ \(AuthToken.sharedInstance.token!) ]\n")
 		}
 		
-		// Preguntar si quiere sincronizar..
+		let syncAlert = UIAlertController(title: "ALERTA", message: "Se ha recuperado la conexión a internet, se recomienda que sincronice los datos antes de seguir.", preferredStyle: UIAlertControllerStyle.alert)
+		
+		syncAlert.addAction(UIAlertAction(title: "Sincronizar", style: .destructive, handler: { (action: UIAlertAction!) in
+			
+			sync.synchronizeDatabases {
+				
+				let successAlert = UIAlertController(title: "Sincronización", message: "Los datos han sido sincronizados con éxito", preferredStyle: UIAlertControllerStyle.alert)
+				
+				successAlert.addAction(UIAlertAction(title: "Cerrar", style: .default, handler: { (action: UIAlertAction!) in
+					
+				}))
+				
+				self.present(successAlert, animated: true, completion: nil)
+			}
+		}))
+		
+		syncAlert.addAction(UIAlertAction(title: "Cancelar", style: .cancel, handler: { (action: UIAlertAction!) in
+			
+			print("Sync Canceled")
+		}))
+		
+		self.present(syncAlert, animated: true, completion: nil)
 	}
 	
 }

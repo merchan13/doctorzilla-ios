@@ -11,40 +11,20 @@ import RealmSwift
 import ReachabilitySwift
 
 class SettingsVC: UITableViewController {
-
-	@IBOutlet weak var profilePictureImageView: UIImageView!
-	@IBOutlet weak var nameLabel: UILabel!
-	@IBOutlet weak var emailLabel: UILabel!
-	@IBOutlet weak var syncActivityIndicator: UIActivityIndicatorView!
-	@IBOutlet weak var resetActivityIndicator: UIActivityIndicatorView!
 	
 	var rUser: RUser!
 	let realm = try! Realm()
 	let sync = Synchronize()
 	
-	
     override func viewDidLoad() {
+		
         super.viewDidLoad()
 		
-		self.rUser = self.realm.object(ofType: RUser.self, forPrimaryKey: 1)
-		
-		self.updateUI()
+		if let user = self.realm.objects(RUser.self).first {
+			
+			self.rUser = user
+		}
     }
-	
-	func updateUI() {
-		
-		//self.nameLabel.text = "Dr. \(self.rUser.name) \(self.rUser.lastName)."
-		
-		self.emailLabel.text = self.rUser.email
-		
-		//self.profilePictureImageView.image = self.rUser.profilePicture
-	}
-	
-	
-	@IBAction func backButtonTapped(_ sender: Any) {
-		
-		dismiss(animated: true, completion: nil)
-	}
 	
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -54,32 +34,24 @@ class SettingsVC: UITableViewController {
 
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		
 		if indexPath.section == 0 {
-			
-			if indexPath.row == 0 {
-				// Ver perfil
-			}
-			
-		} else if indexPath.section == 1 {
 			
 			checkNetwork()
 			
 			if NetworkConnection.sharedInstance.haveConnection {
 				
-				// [Sincronizacion]
 				if indexPath.row == 0 {
 					
 					self.synchronizeDrZilla()
-					
-				} else if indexPath.row == 1 { // [Restauracion]
+				}
+				else if indexPath.row == 1 {
 					
 					self.resetDrZilla()
-					
 				}
 			} else {
 				
 				self.offlineAlert()
-				
 			}
 		}
 	}
@@ -93,27 +65,17 @@ class SettingsVC: UITableViewController {
 		
 		syncAlert.addAction(UIAlertAction(title: "Si", style: .destructive, handler: { (action: UIAlertAction!) in
 			
-			DispatchQueue.main.async {
-				
-				self.syncActivityIndicator.startAnimating()
-			}
-			
-			self.sync.synchronizeDatabases(user: self.rUser, completed: {
-				
-				DispatchQueue.main.async {
-					
-					self.syncActivityIndicator.stopAnimating()
-				}
+			self.sync.downloadRecords {
 				
 				let successAlert = UIAlertController(title: "Sincronización", message: "Los datos han sido sincronizados con éxito", preferredStyle: UIAlertControllerStyle.alert)
 				
 				successAlert.addAction(UIAlertAction(title: "Cerrar", style: .default, handler: { (action: UIAlertAction!) in
 					
-					self.dismiss(animated: true, completion: nil)
+					self.navigationController?.popViewController(animated: true)
 				}))
 				
 				self.present(successAlert, animated: true, completion: nil)
-			})
+			}
 		}))
 		
 		syncAlert.addAction(UIAlertAction(title: "Cancelar", style: .cancel, handler: { (action: UIAlertAction!) in
@@ -127,33 +89,25 @@ class SettingsVC: UITableViewController {
 	}
 	
 	
-	/// Borrar base de datos del teléfono y descarga toda la información del servidor.
+	/// Borrar base de datos del teléfono.
 	//
 	func resetDrZilla() {
 		
-		let syncAlert = UIAlertController(title: "Alerta", message: "¿Está seguro de que quiere eliminar y restaurar los datos?\n\nLuego de realizar esta acción, deberá iniciar sesión nuevamente.", preferredStyle: UIAlertControllerStyle.alert)
+		let syncAlert = UIAlertController(title: "Alerta", message: "¿Está seguro de que quiere restaurar la aplicación a su estado inicial?\n\nLuego de realizar esta acción, deberá iniciar sesión nuevamente.", preferredStyle: UIAlertControllerStyle.alert)
 		
 		syncAlert.addAction(UIAlertAction(title: "Si", style: .destructive, handler: { (action: UIAlertAction!) in
 			
-			DispatchQueue.main.async {
-				self.resetActivityIndicator.startAnimating()
-			}
-			
-			self.sync.resetDatabase(user: self.rUser, completed: {
-				
-				DispatchQueue.main.async {
-					self.resetActivityIndicator.stopAnimating()
-				}
+			self.sync.resetDatabase{
 				
 				let successAlert = UIAlertController(title: "Sincronización", message: "Los datos han sido restaurados con éxito", preferredStyle: UIAlertControllerStyle.alert)
 				
 				successAlert.addAction(UIAlertAction(title: "Cerrar", style: .default, handler: { (action: UIAlertAction!) in
 					
-					self.performSegue(withIdentifier: "LoginVC", sender: nil)
+					self.performSegue(withIdentifier: "unwindSegueToLoginVC", sender: self)
 				}))
 				
 				self.present(successAlert, animated: true, completion: nil)
-			})
+			}
 		}))
 		
 		syncAlert.addAction(UIAlertAction(title: "Cancelar", style: .cancel, handler: { (action: UIAlertAction!) in

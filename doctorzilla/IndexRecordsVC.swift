@@ -275,6 +275,4 @@ class IndexRecordsVC: UIViewController, UITableViewDelegate, UITableViewDataSour
 		//..
 	}
 	
-	
-	
 }

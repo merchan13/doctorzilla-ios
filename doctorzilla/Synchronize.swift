@@ -29,52 +29,69 @@ class Synchronize {
 	
 	private var newData = false
 	
-	func synchronizeDatabases(user: RUser, completed: @escaping DownloadComplete) {
-		self.user = user
-		self.lastSync {
-			self.lastSynchRLM {
-				print("FECHA SERVIDOR: \(self.lastSync)")
-				print("FECHA REALM: \(self.lastSyncRLM)\n")
-				
-				if self.lastSync != nil && self.lastSyncRLM != nil && self.lastSync == self.lastSyncRLM {
-					print("Comenzando sincronizacion...\n")
-					self.latestUpdatesRLM {
-						self.latestUpdates {
-							self.syncMedicalRecords()
-							self.syncConsultations()
-							
-							if self.newData {
-								self.saveSync(syncDesc: "Sincronizacion de datos entre app móvil y app web") {
-									completed()
-								}
-							} else {
-								completed()
-							}
-							
-						}
-					}
-				} else {
-					print("Descarga completa de datos...\n")
-					self.dataHelper.downloadOccupations { print("Occupations DONE")
-						
-						self.dataHelper.downloadInsurances { print("Insurances DONE")
-							
-							self.dataHelper.downloadReasons { print("Reasons DONE")
-								
-								self.saveSync(syncDesc: "Sincronizacion de todos los datos") {
-									
-									completed()
-								}
-							}
-						}
-					}
-				}
-			}
+	
+	func synchronizeDatabases(completed: @escaping DownloadComplete) {
+		
+		self.recordsUpdateDictionary { (result: [Int:Int]) in
+			
+			// TEST THIS!!
+			print(result)
 		}
 	}
 	
 	
-	/// Descargar todos los datos cuando se inicia sesion por primera vez
+	/// Diccionario de fechas de actualizacion e ids de historias
+	//
+	func recordsUpdateDictionary(completed: @escaping (_ result: [Int:Int]) -> Void) {
+		
+		let records = self.realm.objects(RMedicalRecord.self)
+		
+		var recordsDictionary = [String:Any]()
+		var actionsDictionary = [Int:Int]()
+		
+		for record in records {
+			
+			recordsDictionary["\(record.id)"] = "\(record.lastUpdate.iso8601)"
+		}
+		
+		print(recordsDictionary)
+		
+		let headers: HTTPHeaders = [
+			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
+		]
+		
+		let parameters: Parameters = [
+			"sync": [
+				"records_dictionary": recordsDictionary
+			]
+		]
+		
+		print(parameters)
+		
+		//let parameters: Parameters = recordsDictionary
+		
+		Alamofire.request("\(URL_BASE)\(URL_SET_ACTIONS)", method: .post, parameters: parameters, headers: headers).responseJSON { response in
+			
+			if let actions = response.result.value as? [Dictionary<String, AnyObject>] {
+				
+				for dict in actions {
+					
+					if let recordId = dict["id"] as? Int {
+						
+						if let recordAction = dict["action"] as? Int {
+							
+							actionsDictionary[recordId] = recordAction
+						}
+					}
+				}
+			}
+			
+			completed(actionsDictionary)
+		}
+	}
+	
+	
+	/// Descargar todos los datos cuando se inicia sesion por primera vez (NEW)
 	//
 	func downloadRecords(completed: @escaping DownloadComplete) {
 		
@@ -109,7 +126,7 @@ class Synchronize {
 	}
 	
 	
-	/// Fecha de ultima sincronizacion en Servidor
+	/// Fecha de ultima sincronizacion en Servidor (IN USE) (CHECK!!)
 	//
 	func lastSync(completed: @escaping DownloadComplete) {
 		
@@ -132,7 +149,7 @@ class Synchronize {
 	}
 	
 	
-	/// Fecha de ultima sincronizacion en Realm
+	/// Fecha de ultima sincronizacion en Realm (IN USE) (CHECK!!)
 	//
 	func lastSynchRLM(completed: @escaping DownloadComplete) {
 		
@@ -142,8 +159,8 @@ class Synchronize {
 	}
 	
 	
-	/// Carga de los records actualizados despues de la ultima fecha de sincronizacion. [Servidor]
-	// REVISAR!
+	/// Carga de los Xs Records mas actualizados (IN USE)
+	//
 	func latestUpdates(completed: @escaping DownloadComplete) {
 		
 		let headers: HTTPHeaders = [
@@ -334,21 +351,18 @@ class Synchronize {
 	
 	/// Borrar la BD y descargar toda la informacion.
 	//
-	func resetDatabase(user: RUser, completed: @escaping DownloadComplete) {
-		let rUser = RUser()
-		rUser.id = user.id
-		rUser.email = user.email
-		rUser.password = user.password
+	func resetDatabase(completed: @escaping DownloadComplete) {
 		
 		try! self.realm.write {
+			
 			self.realm.deleteAll()
 			
-			self.realm.add(rUser, update: true)
+			let user = User()
+			
+			user.signOut {
+				completed()
+			}
 		}
-		
-		self.synchronizeDatabases(user: rUser, completed: {
-			completed()
-		})
 	}
 
 }

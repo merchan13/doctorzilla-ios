@@ -53,7 +53,6 @@
 		FAA6290E1F736FF1006301ED /* MedicalRecordCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA6290D1F736FF1006301ED /* MedicalRecordCell.swift */; };
 		FAACA50E1EE5E1BD006C39BB /* DataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAACA50D1EE5E1BD006C39BB /* DataHelper.swift */; };
 		FAACA5101EE67BAE006C39BB /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAACA50F1EE67BAE006C39BB /* Extensions.swift */; };
-		FAB955E51F5CEA940007EAA2 /* EditBackgroundsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB955E41F5CEA940007EAA2 /* EditBackgroundsVC.swift */; };
 		FACE45501F82ABAD00D0F328 /* NewConsultationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACE454F1F82ABAD00D0F328 /* NewConsultationVC.swift */; };
 		FACF9A6C1F7B64C6004D8B31 /* ShowConsultationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACF9A6B1F7B64C6004D8B31 /* ShowConsultationVC.swift */; };
 		FAD7110A1F7D876500F4194B /* IndexReportsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD711091F7D876500F4194B /* IndexReportsVC.swift */; };
@@ -142,7 +141,6 @@
 		FAA6290D1F736FF1006301ED /* MedicalRecordCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicalRecordCell.swift; sourceTree = "<group>"; };
 		FAACA50D1EE5E1BD006C39BB /* DataHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataHelper.swift; sourceTree = "<group>"; };
 		FAACA50F1EE67BAE006C39BB /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
-		FAB955E41F5CEA940007EAA2 /* EditBackgroundsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditBackgroundsVC.swift; sourceTree = "<group>"; };
 		FACE454F1F82ABAD00D0F328 /* NewConsultationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConsultationVC.swift; sourceTree = "<group>"; };
 		FACF9A6B1F7B64C6004D8B31 /* ShowConsultationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowConsultationVC.swift; sourceTree = "<group>"; };
 		FAD711091F7D876500F4194B /* IndexReportsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexReportsVC.swift; sourceTree = "<group>"; };
@@ -271,7 +269,6 @@
 				FA1E7AB71F788991000612F3 /* Operative_Notes */,
 				FAA629031F7369F4006301ED /* Profiles */,
 				FAD711081F7D872900F4194B /* Reports */,
-				FAB955E41F5CEA940007EAA2 /* EditBackgroundsVC.swift */,
 				FA4C7CDF1EC3CA2800A58937 /* LoginVC.swift */,
 				FA4C7CE11EC3CC8E00A58937 /* RecoverPasswordVC.swift */,
 				FAE433761EFDEB02003EB268 /* SettingsVC.swift */,
@@ -721,7 +718,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAB955E51F5CEA940007EAA2 /* EditBackgroundsVC.swift in Sources */,
 				FAACA50E1EE5E1BD006C39BB /* DataHelper.swift in Sources */,
 				FA5E6DA31F7C0A490088771F /* NetworkConnection.swift in Sources */,
 				FA4C7CE01EC3CA2800A58937 /* LoginVC.swift in Sources */,

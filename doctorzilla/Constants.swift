@@ -35,6 +35,7 @@ let URL_RECORD_BACKGROUND_UPDATE = "/medical_records/:medical_record_id/backgrou
 let URL_SYNCS =				"/syncs/"
 let URL_LATEST_UPDATES =	"/latest_data/"
 let URL_LAST_SYNC =			"/last_sync/"
+let URL_SET_ACTIONS = 		"/set_syncs_actions/"
 
 let URL_SEARCH_RECORDS = "/search_records/"
 
