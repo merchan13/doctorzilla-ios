@@ -111,7 +111,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 	}
 	
 	
-	///
+	/// Checkeo de si es un nuevo usuario el que inicia sesión
 	//
 	func checkNewUser(email: String, password: String, completed: @escaping DownloadComplete) {
 	
@@ -124,9 +124,10 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 				rUser.id = self.user.id
 				rUser.email = self.user.email
 				rUser.password = self.user.password
-				//rUser.name = self.user.name
-				//rUser.lastName = self.user.lastName
-				//rUser.document = self.user.document
+				rUser.name = self.user.name
+				rUser.lastName = self.user.lastName
+				rUser.document = self.user.document
+				rUser.phone = self.user.phone
 				
 				self.realm.add(rUser, update: true)
 				
@@ -146,9 +147,13 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 				rUser.id = self.user.id
 				rUser.email = self.user.email
 				rUser.password = self.user.password
-				//rUser.name = self.user.name
-				//rUser.lastName = self.user.lastName
-				//rUser.document = self.user.document
+				rUser.name = self.user.name
+				rUser.lastName = self.user.lastName
+				rUser.document = self.user.document
+				rUser.phone = self.user.phone
+				
+				print("aqui")
+				print(rUser)
 				
 				self.realm.add(rUser, update: true)
 				
@@ -211,9 +216,10 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 							rUser.id = self.user.id
 							rUser.email = self.user.email
 							rUser.password = self.user.password
-							//rUser.name = self.user.name
-							//rUser.lastName = self.user.lastName
-							//rUser.document = self.user.document
+							rUser.name = self.user.name
+							rUser.lastName = self.user.lastName
+							rUser.document = self.user.document
+							rUser.phone = self.user.phone
 							
 							self.realm.add(rUser, update: true)
 							

@@ -13,6 +13,11 @@ class RUser: Object {
 	@objc dynamic var id = 0
 	@objc dynamic var email = ""
     @objc dynamic var password = ""
+	@objc dynamic var document = ""
+	@objc dynamic var name = ""
+	@objc dynamic var lastName = ""
+	@objc dynamic var phone = ""
+	
 	
 	override static func primaryKey() -> String? {
 		return "id"
@@ -26,6 +31,4 @@ class RUser: Object {
 			return false
 		}
 	}
-	
-	// Do sign out (for offline purposes)
 }

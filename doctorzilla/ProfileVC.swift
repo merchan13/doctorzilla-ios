@@ -14,6 +14,12 @@ import ReachabilitySwift
 
 class ProfileVC: UITableViewController {
 
+	@IBOutlet weak var photo: UIImageView!
+	@IBOutlet weak var name: UILabel!
+	@IBOutlet weak var document: UILabel!
+	@IBOutlet weak var email: UILabel!
+	@IBOutlet weak var phone: UILabel!
+	
 	let realm = try! Realm()
 	let dataHelper = DataHelper()
 	let sync = Synchronize()
@@ -23,6 +29,27 @@ class ProfileVC: UITableViewController {
         super.viewDidLoad()
 
         print("ProfileVC")
+		
+		if let loggedUser = self.realm.objects(RUser.self).first {
+			
+			self.name.text = "Dr. \(loggedUser.name) \(loggedUser.lastName)"
+			
+			self.document.text = loggedUser.document
+			
+			self.email.text = loggedUser.email
+			
+			self.phone.text = loggedUser.phone
+		}
+		else {
+			
+			self.name.text = "No disponible"
+			
+			self.document.text = "No disponible"
+			
+			self.email.text = "No disponible"
+			
+			self.phone.text = "No disponible"
+		}
     }
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -31,7 +58,18 @@ class ProfileVC: UITableViewController {
 			
 			if indexPath.row == 0 {
 				
-				self.user.signOut {
+				checkNetwork()
+				
+				if NetworkConnection.sharedInstance.haveConnection {
+					
+					self.user.signOut {
+						
+						AuthToken.sharedInstance.token = ""
+						
+						self.performSegue(withIdentifier: "unwindSegueToLoginVC", sender: self)
+					}
+				}
+				else {
 					
 					AuthToken.sharedInstance.token = ""
 					

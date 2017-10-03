@@ -32,29 +32,69 @@ class Synchronize {
 	
 	func synchronizeDatabases(completed: @escaping DownloadComplete) {
 		
-		self.recordsUpdateDictionary { (result: [Int:Int]) in
+		self.recordsUpdateDictionary { (result: [Dictionary<String, AnyObject>]) in
 			
-			// TEST THIS!!
-			print(result)
+			for actionDict in result {
+			
+				if let action = actionDict["action"] as? Int {
+					
+					// Subir (Realm -> Server)
+					if action == 1 {
+						
+						if let record = self.realm.object(ofType: RMedicalRecord.self, forPrimaryKey: actionDict["id"]) {
+							
+							self.dataHelper.updateRecord(record: record, completed: {
+								
+								let consultations = record.consultations
+								
+								for consultation in consultations {
+								
+									if consultation.reason == nil {
+										
+										self.dataHelper.createConsultation(consultation: consultation, completed: {
+											
+											print("\nSincronizacion[1]: realm -> server")
+										})
+									}
+								}
+								
+								
+							})
+						}
+					}
+					// Descargar (Server -> Realm)
+					else if action == 2 {
+						
+						if let record = self.realm.object(ofType: RMedicalRecord.self, forPrimaryKey: actionDict["id"]) {
+							
+							self.dataHelper.downloadRecord(recordId: record.id, completed: {
+								
+								self.dataHelper.downloadConsultations(recordId: record.id, completed: {
+									
+									print("\nSincronizacion[2]: server -> realm")
+								})
+							})
+						}
+					}
+				}
+			}
 		}
 	}
 	
 	
 	/// Diccionario de fechas de actualizacion e ids de historias
 	//
-	func recordsUpdateDictionary(completed: @escaping (_ result: [Int:Int]) -> Void) {
+	func recordsUpdateDictionary(completed: @escaping (_ result: [Dictionary<String, AnyObject>]) -> Void) {
 		
 		let records = self.realm.objects(RMedicalRecord.self)
 		
 		var recordsDictionary = [String:Any]()
-		var actionsDictionary = [Int:Int]()
+		var actionsDictionary = [Dictionary<String, AnyObject>]()
 		
 		for record in records {
 			
 			recordsDictionary["\(record.id)"] = "\(record.lastUpdate.iso8601)"
 		}
-		
-		print(recordsDictionary)
 		
 		let headers: HTTPHeaders = [
 			"Authorization": "Token token=\(AuthToken.sharedInstance.token!)"
@@ -66,24 +106,11 @@ class Synchronize {
 			]
 		]
 		
-		print(parameters)
-		
-		//let parameters: Parameters = recordsDictionary
-		
 		Alamofire.request("\(URL_BASE)\(URL_SET_ACTIONS)", method: .post, parameters: parameters, headers: headers).responseJSON { response in
 			
 			if let actions = response.result.value as? [Dictionary<String, AnyObject>] {
 				
-				for dict in actions {
-					
-					if let recordId = dict["id"] as? Int {
-						
-						if let recordAction = dict["action"] as? Int {
-							
-							actionsDictionary[recordId] = recordAction
-						}
-					}
-				}
+				actionsDictionary = actions
 			}
 			
 			completed(actionsDictionary)
@@ -253,101 +280,7 @@ class Synchronize {
 			completed()
 		}
 	}
-	
-	
-	/// Sincronizar Historias
-	//
-	func syncMedicalRecords() {
-		if self.latestMedicalRecords.count == 0 && self.latestMedicalRecordsRLM.count == 0 {
-			print("Historias Medicas al dia")
-		} else {
-			print("Historias")
-			
-			self.newData = true
-			
-			try! self.realm.write {
-				// Check de las actualizaciones en Realm.
-				for record in self.latestMedicalRecordsRLM {
-					if let serverRecordLastUpdate = self.latestMedicalRecords.filter({$0.id == record.id}).first {
-						if record.lastUpdate > serverRecordLastUpdate.lastUpdate {
-							print("    Conflicto de Realm con Servidor\n      < Realm --> Servidor >")
-							self.dataHelper.updateRecord(record: record, completed: {
-								self.dataHelper.updateBackgrounds(record: record, recordBgs: record.backgrounds, completed: { 
-									self.dataHelper.fixNewBackgrounds(record: record, recordBgs: record.backgrounds, completed: { 
-										// Do nothing..
-									})
-								})
-							})
-						}
-					} else {
-						print("    < Realm --> Servidor >")
-						self.dataHelper.updateRecord(record: record, completed: {
-							self.dataHelper.updateBackgrounds(record: record, recordBgs: record.backgrounds, completed: {
-								self.dataHelper.fixNewBackgrounds(record: record, recordBgs: record.backgrounds, completed: {
-									// Do nothing..
-								})
-							})
-						})
-					}
-				}
-				
-				// Check de las actualizaciones en la Web.
-				for record in self.latestMedicalRecords {
-					if let realmRecordLastUpdate = self.latestMedicalRecordsRLM.filter({$0.id == record.id}).first {
-						if record.lastUpdate > realmRecordLastUpdate.lastUpdate {
-							print("    Conflicto de Servidor  con Realm\n      < Servidor --> Realm >")
-							self.dataHelperRLM.updateMedicalRecord(record: record)
-						}
-					} else {
-						print("    < Servidor --> Realm >")
-						self.dataHelperRLM.updateMedicalRecord(record: record)
-					}
-				}
-			}
-		}
-	}
-	
-	
-	/// Sincronizar Consultas
-	//
-	func syncConsultations() {
-		if self.latestConsultations.count == 0 && self.latestConsultationsRLM.count == 0 {
-			print("Consultas al dia")
-		} else  {
-			print("Consultas")
-			
-			self.newData = true
-			
-			try! self.realm.write {
-				// Check de las actualizaciones en Realm.
-				for consultation in self.latestConsultationsRLM {
-					if let serverConsultationLastUpdate = self.latestConsultations.filter({$0.id == consultation.id}).first {
-						if consultation.lastUpdate > serverConsultationLastUpdate.lastUpdate {
-							print("    Conflicto de Realm con Servidor\n      < Realm --> Servidor >")
-							self.dataHelper.updateConsultation(consultation: consultation, completed: {})
-						}
-					} else {
-						print("    < Realm --> Servidor >")
-						self.dataHelper.updateConsultation(consultation: consultation, completed: {})
-					}
-				}
-				
-				// Check de las actualizaciones en la Web.
-				for consultation in self.latestConsultations {
-					if let realmConsultationLastUpdate = self.latestConsultationsRLM.filter({$0.id == consultation.id}).first {
-						if consultation.lastUpdate > realmConsultationLastUpdate.lastUpdate {
-							print("    Conflicto de Servidor  con Realm\n      < Servidor --> Realm >")
-							self.dataHelperRLM.updateConsultation(consultation: consultation)
-						}
-					} else {
-						print("    < Servidor --> Realm >")
-						self.dataHelperRLM.updateConsultation(consultation: consultation)
-					}
-				}
-			}
-		}
-	}
-	
+
 	
 	/// Borrar la BD y descargar toda la informacion.
 	//

@@ -43,6 +43,8 @@ class NewConsultationVC: UITableViewController, UITextViewDelegate {
 				
 				rConsultation.date = Date().iso8601
 				
+				self.rMedrecord.lastUpdate = rConsultation.date.dateFromISO8601!
+				
 				self.realm.add(rConsultation, update: true)
 				
 				self.rMedrecord.consultations.append(rConsultation)
