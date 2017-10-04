@@ -16,6 +16,7 @@ class DataHelperRLM {
 	/// Actualizar Historia Medica [Realm]
 	//
 	func updateMedicalRecord(record: RMedicalRecord) {
+		
 		if self.realm.object(ofType: RMedicalRecord.self, forPrimaryKey: record.id) != nil {
 			
 			let newData =	[
@@ -36,10 +37,12 @@ class DataHelperRLM {
 			self.realm.create(RMedicalRecord.self, value: newData, update: true)
 			
 			if let occupation = record.occupation {
+				
 				self.realm.create(RMedicalRecord.self, value: ["id": record.id, "occupation":occupation], update: true)
 			}
 			
 			if let insurance = record.insurance {
+				
 				self.realm.create(RMedicalRecord.self, value: ["id": record.id, "insurance":insurance], update: true)
 			}
 			
@@ -48,15 +51,20 @@ class DataHelperRLM {
 			self.realm.create(RMedicalRecord.self, value: ["id": record.id, "backgrounds":record.backgrounds], update: true)
 			
 		} else {
+			
 			self.realm.add(record, update: true)
-			let user = self.realm.object(ofType: RUser.self, forPrimaryKey: 1)!
-			record.user = user
+			
+			if let user = self.realm.objects(RUser.self).first {
+				
+				record.user = user
+			}
 		}
 	}
 	
 	/// /// Actualizar Consulta [Realm]
 	//
 	func updateConsultation(consultation: RConsultation) {
+		
 		if self.realm.object(ofType: RConsultation.self, forPrimaryKey: consultation.id) != nil {
 			
 			let newData =	[
@@ -75,18 +83,23 @@ class DataHelperRLM {
 			self.realm.create(RConsultation.self, value: newData, update: true)
 			
 			if let reason = consultation.reason {
+				
 				self.realm.create(RConsultation.self, value: ["id": consultation.id, "reason":reason], update: true)
 			}
 			
 			if let plan = consultation.plan {
+				
 				self.realm.create(RConsultation.self, value: ["id": consultation.id, "plan":plan], update: true)
 			}
 			
 			self.realm.create(RConsultation.self, value: ["id": consultation.id, "physicalExams":consultation.physicalExams], update: true)
 			
 		} else {
+			
 			if let record = self.realm.object(ofType: RMedicalRecord.self, forPrimaryKey: consultation.recordId) {
+				
 				self.realm.add(consultation, update: true)
+				
 				record.consultations.append(consultation)
 			}
 		}
