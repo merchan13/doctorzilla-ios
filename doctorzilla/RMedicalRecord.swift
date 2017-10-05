@@ -30,6 +30,7 @@ class RMedicalRecord: Object {
 	@objc dynamic var lastUpdate = Date()
 	@objc dynamic var profilePicURL = ""
 	@objc dynamic var profilePic = NSData()
+	@objc dynamic var important = false
 	@objc dynamic var user: RUser?
 	@objc dynamic var occupation: ROccupation?
 	@objc dynamic var insurance: RInsurance?

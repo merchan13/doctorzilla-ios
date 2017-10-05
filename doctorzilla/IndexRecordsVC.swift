@@ -16,6 +16,7 @@ class IndexRecordsVC: UIViewController, UITableViewDelegate, UITableViewDataSour
 
 	@IBOutlet weak var searchBar: UISearchBar!
 	@IBOutlet weak var recordsTable: UITableView!
+	@IBOutlet weak var segmentedControl: UISegmentedControl!
 	
 	var rMedrecords = [RMedicalRecord]()
 	var rFilteredRecords = [RMedicalRecord]()
@@ -65,32 +66,41 @@ class IndexRecordsVC: UIViewController, UITableViewDelegate, UITableViewDataSour
 			self.recordsTable.deselectRow(at: index, animated: true)
 		}
 		
-		parseMedicalRecordsRLM {
+		if segmentedControl.selectedSegmentIndex == 0 {
 			
-			self.recordsTable.reloadData()
-			
-			self.checkNetwork()
-			
-			if NetworkConnection.sharedInstance.haveConnection {
+			parseMedicalRecordsRLM {
 				
-				for rec in self.rMedrecords {
+				self.recordsTable.reloadData()
+				
+				self.checkNetwork()
+				
+				if NetworkConnection.sharedInstance.haveConnection {
 					
-					if rec.profilePic.length == 0 {
+					for rec in self.rMedrecords {
 						
-						if rec.profilePicURL.isEmpty {
+						if rec.profilePic.length == 0 {
 							
-							// pedir url y descargar
-						}
-						else {
-							
-							self.dataHelper.downloadProfilePicture(rec: rec, completed: {
+							if rec.profilePicURL.isEmpty {
 								
-								self.recordsTable.reloadData()
-							})
+								// pedir url y descargar
+							}
+							else {
+								
+								self.dataHelper.downloadProfilePicture(rec: rec, completed: {
+									
+									self.recordsTable.reloadData()
+								})
+							}
 						}
 					}
 				}
 			}
+		}
+		else {
+			
+			self.rMedrecords = self.rMedrecords.filter({$0.important == true})
+			
+			self.recordsTable.reloadData()
 		}
 	}
 	
@@ -272,7 +282,23 @@ class IndexRecordsVC: UIViewController, UITableViewDelegate, UITableViewDataSour
 	
 	@IBAction func segmentedControl(_ sender: UISegmentedControl) {
 		
-		//..
+		switch segmentedControl.selectedSegmentIndex
+		{
+		case 0:
+			
+			parseMedicalRecordsRLM{
+				
+				self.recordsTable.reloadData()
+			}
+		case 1:
+			
+			self.rMedrecords = self.rMedrecords.filter({$0.important == true})
+			
+			self.recordsTable.reloadData()
+		default:
+			
+			break
+		}
 	}
 	
 }

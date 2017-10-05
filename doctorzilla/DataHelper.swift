@@ -420,6 +420,10 @@ class DataHelper {
 		if let gender = recordDict["gender"] as? String {
 			rMedRecord.gender = gender
 		}
+		// IMPORTANT
+		if let important = recordDict["important"] as? Bool {
+			rMedRecord.important = important
+		}
 		// INSURANCE
 		if let insuranceDict = recordDict["insurance"] as? Dictionary<String, AnyObject> {
 			if let insurance = insuranceDict["id"] as? Int {

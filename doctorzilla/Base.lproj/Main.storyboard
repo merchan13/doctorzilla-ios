@@ -2623,9 +2623,6 @@
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logoutbg" translatesAutoresizingMaskIntoConstraints="NO" id="bAC-hm-9bp">
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="60" id="Pmj-Xu-IIE"/>
-                                                    </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cerrar sesión" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kOP-l8-fZ1">
                                                     <rect key="frame" x="104" y="19" width="112" height="22"/>
@@ -2768,6 +2765,7 @@
                         <outlet property="recordsTable" destination="VcA-v6-1OO" id="gvW-XQ-APp"/>
                         <outlet property="searchBar" destination="zTA-so-xI2" id="Zxe-bm-mwQ"/>
                         <outlet property="searchDisplayController" destination="uBx-rJ-Cd1" id="Z5E-fI-eEJ"/>
+                        <outlet property="segmentedControl" destination="CKY-nW-9BN" id="Mvw-Ir-8iP"/>
                         <segue destination="ozZ-9s-48F" kind="show" identifier="ShowRecordVC" id="4nW-CJ-QgE"/>
                     </connections>
                 </viewController>
