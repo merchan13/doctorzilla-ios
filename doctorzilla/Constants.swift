@@ -13,7 +13,6 @@ let URL_SIGN_IN =			"/sign-in"
 let URL_SIGN_OUT =			"/sign-out"
 let URL_USERS =				"/users/"
 let URL_MEDICAL_RECORDS =	"/medical_records/"
-
 let URL_ATTACHMENTS =		"/attachments/"
 let URL_BACKGROUNDS =		"/backgrounds/"
 let URL_CONSULTATIONS =		"/consultations/"
@@ -36,6 +35,7 @@ let URL_SYNCS =				"/syncs/"
 let URL_LATEST_UPDATES =	"/latest_data/"
 let URL_LAST_SYNC =			"/last_sync/"
 let URL_SET_ACTIONS = 		"/set_syncs_actions/"
+let URL_ACTIVITIES = 		"/activities_report"
 
 let URL_SEARCH_RECORDS = "/search_records/"
 

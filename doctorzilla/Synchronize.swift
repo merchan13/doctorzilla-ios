@@ -34,49 +34,65 @@ class Synchronize {
 		
 		self.recordsUpdateDictionary { (result: [Dictionary<String, AnyObject>]) in
 			
-			for actionDict in result {
-			
-				if let action = actionDict["action"] as? Int {
+			if result.count > 0 {
+				
+				for actionDict in result {
 					
-					// Subir (Realm -> Server)
-					if action == 1 {
+					if let action = actionDict["action"] as? Int {
 						
-						if let record = self.realm.object(ofType: RMedicalRecord.self, forPrimaryKey: actionDict["id"]) {
+						// Subir (Realm -> Server)
+						if action == 1 {
 							
-							self.dataHelper.updateRecord(record: record, completed: {
+							if let record = self.realm.object(ofType: RMedicalRecord.self, forPrimaryKey: actionDict["id"]) {
 								
-								let consultations = record.consultations
-								
-								for consultation in consultations {
-								
-									if consultation.reason == nil {
+								self.dataHelper.updateRecord(record: record, completed: {
+									
+									let consultations = record.consultations
+									
+									for consultation in consultations {
 										
-										self.dataHelper.createConsultation(consultation: consultation, completed: {
+										if consultation.reason == nil {
 											
-											print("\nSincronizacion[1]: realm -> server")
-										})
+											self.dataHelper.createConsultation(consultation: consultation, completed: {
+												
+												print("\nSincronizacion[1]: realm -> server")
+											})
+										}
 									}
-								}
+									
+									
+								})
+							}
+						}
+							// Descargar (Server -> Realm)
+						else if action == 2 {
+							
+							if let record = self.realm.object(ofType: RMedicalRecord.self, forPrimaryKey: actionDict["id"]) {
 								
-								
-							})
+								self.dataHelper.downloadRecord(recordId: record.id, completed: {
+									
+									self.dataHelper.downloadConsultations(recordId: record.id, completed: {
+										
+										print("\nSincronizacion[2]: server -> realm")
+									})
+								})
+							}
 						}
 					}
-					// Descargar (Server -> Realm)
-					else if action == 2 {
+					
+					if NSDictionary(dictionary: result.last!).isEqual(to: actionDict) {
 						
-						if let record = self.realm.object(ofType: RMedicalRecord.self, forPrimaryKey: actionDict["id"]) {
-							
-							self.dataHelper.downloadRecord(recordId: record.id, completed: {
-								
-								self.dataHelper.downloadConsultations(recordId: record.id, completed: {
-									
-									print("\nSincronizacion[2]: server -> realm")
-								})
-							})
-						}
+						print("Sync done")
+						
+						completed()
 					}
 				}
+			}
+			else {
+				
+				print("Sync done")
+				
+				completed()
 			}
 		}
 	}
