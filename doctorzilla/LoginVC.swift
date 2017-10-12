@@ -99,7 +99,14 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 						
 						self.activityIndicatorView.stopAnimating()
 						
-						self.loginFailAlert(error: "La contraseña o correo que introdujo son inválidos")
+						if !self.user.error.isEmpty {
+							
+							self.loginFailAlert(error: self.user.error)
+						}
+						else {
+							
+							self.loginFailAlert(error: "La contraseña o correo que introdujo son inválidos")
+						}
 					}
 				}
 			})
